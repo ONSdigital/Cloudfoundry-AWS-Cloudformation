@@ -1,0 +1,30 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh - preamble",
+
+  "Outputs": {
+    "TemplatesBucketName": {
+      "Description": "S3 Bucket Name",
+      "Value": { "Ref": "S3Bucket" }
+    },
+    "TemplatesBucketHttpUrl": {
+      "Description": "S3 Bucket HTTP URL",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "https://s3.", 
+            { "Ref": "AWS::Region" },
+            ".amazonaws.com/",
+            { "Ref": "S3Bucket" }
+          ]
+        ]
+      }
+    }
+  },
+
+  "Resources": {
+    "S3Bucket": {
+      "Type": "AWS::S3::Bucket"
+    }
+  }
+}
