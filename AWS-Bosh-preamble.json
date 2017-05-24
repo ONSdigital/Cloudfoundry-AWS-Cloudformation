@@ -5,7 +5,17 @@
   "Outputs": {
     "TemplatesBucketName": {
       "Description": "S3 Bucket Name",
-      "Value": { "Ref": "S3Bucket" }
+      "Value": { "Ref": "S3Bucket" },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            "-", [
+              { "Ref": "AWS::StackName" },
+              "TemplatesBucketName"
+            ]
+          ]
+        }
+      }
     },
     "TemplatesBucketHttpUrl": {
       "Description": "S3 Bucket HTTP URL",
@@ -18,6 +28,16 @@
             { "Ref": "S3Bucket" }
           ]
         ]
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            "-", [
+              { "Ref": "AWS::StackName" },
+              "TemplatesBucketHttpUrl"
+            ]
+          ]
+        }
       }
     }
   },
