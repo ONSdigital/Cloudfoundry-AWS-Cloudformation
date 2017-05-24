@@ -25,7 +25,7 @@
       "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,}$",
       "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
     },
-    "TemplateBucketHttpUrl": {
+    "TemplatesBucketHttpUrl": {
       "Type": "String",
       "AllowedPattern": "^https?://[a-z0-9./-]+$",
       "Description": "Template Bucket HTTP URL",
@@ -528,7 +528,7 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-	      { "Ref": "TemplateBucketHttpUrl" },
+	      { "Ref": "TemplatesBucketHttpUrl" },
               "AWS-Bosh-whitelist-template.json"
             ]
           ]
@@ -554,7 +554,7 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-	      { "Ref": "TemplateBucketHttpUrl" },
+	      { "Ref": "TemplatesBucketHttpUrl" },
               "AWS-Bosh-whitelist-template.json"
             ]
           ]
@@ -580,7 +580,7 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-	      { "Ref": "TemplateBucketHttpUrl" },
+	      { "Ref": "TemplatesBucketHttpUrl" },
               "AWS-Bosh-whitelist-template.json"
             ]
           ]
@@ -606,7 +606,7 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-	      { "Ref": "TemplateBucketHttpUrl" },
+	      { "Ref": "TemplatesBucketHttpUrl" },
               "AWS-Bosh-whitelist-template.json"
             ]
           ]
