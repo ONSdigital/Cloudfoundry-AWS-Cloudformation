@@ -527,7 +527,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "TemplatesBucketHttpUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
@@ -562,7 +562,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "TemplatesBucketHttpUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
@@ -597,7 +597,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "TemplatesBucketHttpUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
@@ -632,7 +632,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "TemplatesBucketHttpUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
