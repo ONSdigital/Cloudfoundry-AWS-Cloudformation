@@ -84,14 +84,14 @@
     "RdsServicesAz1Cidr": {
       "Type": "String",
       "Default": "10.0.111.0/24",
-      "Description": "Services Subnet",
+      "Description": "RDS Services Az1 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "RdsServicesAz2Cidr": {
       "Type": "String",
       "Default": "10.0.121.0/24",
-      "Description": "Services Subnet",
+      "Description": "RDS Services Az2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
