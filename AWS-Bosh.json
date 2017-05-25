@@ -435,6 +435,10 @@
         ]
       }
     },
+    "ServicesSecurityGroups": {
+      "Description": "Services Security Groups",
+      "Value": { "Ref": "ServicesSecurityGroup" }
+    },
     "DomainName": {
       "Description": "Main DNS name",
       "Value": { "Fn::Join": [
@@ -1060,6 +1064,48 @@
       }
     },
 
+    "DatabaseSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Database Security Group",
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "DatabaseSecurityGroup"
+                ]
+              ]
+            }
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": {
+              "Fn::Join": [
+                "/",[
+                  { "Ref": "NatIp" },
+                  "32"
+                ]
+              ]
+            },
+            "FromPort": "5432",
+            "ToPort": "5432",
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "PrivateCidr" },
+            "FromPort": "5432",
+            "ToPort": "5432" ,
+            "IpProtocol": "tcp"
+          }
+        ]
+      }
+    },
+
     "DmzSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -1122,7 +1168,6 @@
         ]
       }
     },
-
     "PrivateSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -1211,11 +1256,10 @@
         ]
       }
     },
-
-    "DatabaseSecurityGroup": {
+    "ServicesSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "Database Security Group",
+        "GroupDescription": "Services In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
           {
@@ -1224,7 +1268,7 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "DeploymentName" },
-                  "DatabaseSecurityGroup"
+                  "ServicesSecurityGroup"
                 ]
               ]
             }
@@ -1240,14 +1284,34 @@
                 ]
               ]
             },
-            "FromPort": "5432",
-            "ToPort": "5432",
+            "FromPort": "22",
+            "ToPort": "22" ,
             "IpProtocol": "tcp"
           },
           {
-            "CidrIp": { "Ref": "PrivateCidr" },
-            "FromPort": "5432",
-            "ToPort": "5432" ,
+            "CidrIp": {
+              "Fn::Join": [
+                "/",[
+                  { "Ref": "NatIp" },
+                  "32"
+                ]
+              ]
+            },
+            "FromPort": "6379",
+            "ToPort": "6379" ,
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": {
+              "Fn::Join": [
+                "/",[
+                  { "Ref": "NatIp" },
+                  "32"
+                ]
+              ]
+            },
+            "FromPort": "5671",
+            "ToPort": "5672" ,
             "IpProtocol": "tcp"
           }
         ]
