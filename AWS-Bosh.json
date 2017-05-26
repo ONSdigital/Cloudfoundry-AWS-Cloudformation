@@ -95,10 +95,10 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "ServicesCidr": {
+    "RabbitmqServicesCidr": {
       "Type": "String",
       "Default": "10.0.4.0/24",
-      "Description": "Services Subnet",
+      "Description": "RabbitMQ Services Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
@@ -245,30 +245,30 @@
         ]
       }
     },
-    "ServicesSubnet": {
-      "Description": "Services Subnet",
-      "Value": { "Ref": "ServicesSubnet" }
+    "RabbitmqServicesSubnet": {
+      "Description": "RabbitMQ Services Subnet",
+      "Value": { "Ref": "RabbitmqServicesSubnet" }
     },
-    "ServicesCidrPrefix": {
-      "Description": "Servicese CIDR Prefix",
+    "RabbitmqServicesCidrPrefix": {
+      "Description": "RabbitMQ Services CIDR Prefix",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "ServicesCidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "ServicesCidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "ServicesCidr" } ] } ] }
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] }
           ]
         ]
       }
     },
-    "ServicesDefaultRoute": {
-      "Description": "Services Default Route",
+    "RabbitmqServicesDefaultRoute": {
+      "Description": "RabbitMQ Services Default Route",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "ServicesCidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "ServicesCidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "ServicesCidr" } ] } ] },
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
             "1"
           ]
         ]
@@ -435,9 +435,9 @@
         ]
       }
     },
-    "ServicesSecurityGroups": {
-      "Description": "Services Security Groups",
-      "Value": { "Ref": "ServicesSecurityGroup" }
+    "RabbitmqServicesSecurityGroups": {
+      "Description": "RabbitMQ Services Security Groups",
+      "Value": { "Ref": "RabbitmqServicesSecurityGroup" }
     },
     "DomainName": {
       "Description": "Main DNS name",
@@ -715,11 +715,11 @@
         ]
       }
     },
-    "ServicesSubnet": {
+    "RabbitmqServicesSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
-        "CidrBlock": { "Ref": "ServicesCidr" },
+        "CidrBlock": { "Ref": "RabbitmqServicesCidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -729,7 +729,7 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "DeploymentName" },
-                  "ServicesSubnet"
+                  "RabbitmqServicesSubnet"
                 ]
               ]
             }
@@ -977,12 +977,12 @@
         "RouteTableId": { "Ref": "PrivateRouteTable" }
       }
     },
-    "ServicesInternetRoute": {
+    "RabbitmqServicesInternetRoute": {
       "Type": "AWS::EC2::Route",
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
         "GatewayId": { "Ref": "InternetGateway" },
-        "RouteTableId": { "Ref": "ServicesRouteTable" }
+        "RouteTableId": { "Ref": "RabbitmqServicesRouteTable" }
       }
     },
 
@@ -1022,14 +1022,14 @@
         ]
       }
     },
-    "ServicesRouteTable": {
+    "RabbitmqServicesRouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
           {
             "Key": "Name",
-            "Value": "ServicesRouteTable"
+            "Value": "RabbitmqServicesRouteTable"
           }
         ]
       }
@@ -1056,11 +1056,11 @@
         "RouteTableId": { "Ref": "PrivateRouteTable" }
       }
     },
-    "ServicesSubnetRouteTableAssociation": {
+    "RabbitmqServicesSubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
-        "SubnetId": { "Ref": "ServicesSubnet" },
-        "RouteTableId": { "Ref": "ServicesRouteTable" }
+        "SubnetId": { "Ref": "RabbitmqServicesSubnet" },
+        "RouteTableId": { "Ref": "RabbitmqServicesRouteTable" }
       }
     },
 
@@ -1256,10 +1256,10 @@
         ]
       }
     },
-    "ServicesSecurityGroup": {
+    "RabbitmqServicesSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "Services In Out",
+        "GroupDescription": "RabbitMQ Services In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
           {
@@ -1268,7 +1268,7 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "DeploymentName" },
-                  "ServicesSecurityGroup"
+                  "RabbitmqServicesSecurityGroup"
                 ]
               ]
             }
@@ -1286,19 +1286,6 @@
             },
             "FromPort": "22",
             "ToPort": "22" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatIp" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "6379",
-            "ToPort": "6379" ,
             "IpProtocol": "tcp"
           },
           {
