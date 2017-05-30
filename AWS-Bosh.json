@@ -777,6 +777,28 @@
         ]
       }
     },
+    "RedisServicesSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "CidrBlock": { "Ref": "RedisServicesCidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "RedisServicesSubnet"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
     "NatSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
