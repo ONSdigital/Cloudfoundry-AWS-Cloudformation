@@ -495,11 +495,11 @@
     },
     "RedisAddress": {
       "Description": "ElastiCache Access Address",
-      "Value": { "Fn::GetAtt": [ "ElastiCache", "RedisEndpoint.Address" ] }
+      "Value": { "Fn::GetAtt": [ "ElastiCacheCluster", "RedisEndpoint.Address" ] }
     },
     "RedisPort": {
       "Description": "ElastiCache Port",
-      "Value": { "Fn::GetAtt": [ "ElastiCache", "RedisEndpoint.Port" ] }
+      "Value": { "Fn::GetAtt": [ "ElastiCacheCluster", "RedisEndpoint.Port" ] }
     },
     "ElastiCacheBrokerAccessKeyId": {
       "Description": "ElastiCache Broker Access Key Id",
