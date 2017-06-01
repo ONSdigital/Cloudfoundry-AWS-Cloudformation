@@ -74,6 +74,13 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "ElastiCacheServicesAzCidr": {
+      "Type": "String",
+      "Default": "10.0.101.0/24",
+      "Description": "ElastiCache Subnet",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
     "NatCidr": {
       "Type": "String",
       "Default": "10.0.2.0/24",
@@ -90,7 +97,7 @@
     },
     "RdsServicesAz2Cidr": {
       "Type": "String",
-      "Default": "10.0.121.0/24",
+      "Default": "10.0.112.0/24",
       "Description": "RDS Services Az2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
@@ -113,6 +120,19 @@
         "db.t2.small",
         "db.t2.medium",
         "db.t2.large"
+      ]
+    },
+    "ElastiCacheInstanceSize": {
+      "Type": "String",
+      "Default": "cache.t2.small",
+      "Description": "Cache Size",
+      "AllowedValues": [
+        "cache.m4.large",
+        "cache.m4.xlarge",
+        "cache.t2.micro",
+        "cache.t2.small",
+        "cache.t2.medium",
+        "cache.t2.large"
       ]
     },
     "DatabaseStorageSize": {
@@ -322,6 +342,10 @@
           ]
         ]
       }
+    },
+    "ElastiCacheServicesAz1Subnet": {
+      "Description": "ElastiCache Subnet",
+      "Value": { "Ref": "ElastiCacheAzSubnet" }
     },
     "RdsServicesAz1Subnet": {
       "Description": "RDS Services AZ1 Subnet",
@@ -686,6 +710,28 @@
                 ":", [
                   { "Ref": "DeploymentName" },
                   "DmzSubnet"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "ElastiCacheServicesAzSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "CidrBlock": { "Ref": "ElastiCacheServicesAzCidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "ElastiCacheServicesAzSubnet"
                 ]
               ]
             }
@@ -1168,6 +1214,47 @@
         ]
       }
     },
+    "ElastiCacheSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "ElastiCache Security Group",
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "ElastiCacheSecurityGroup"
+                ]
+              ]
+            }
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": {
+              "Fn::Join": [
+                "/",[
+                  { "Ref": "NatIp" },
+                  "32"
+                ]
+              ]
+            },
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "PrivateCidr" },
+            "FromPort": "6379",
+            "ToPort": "6379" ,
+            "IpProtocol": "tcp"
+          }
+        ]
+      }
+    },
     "PrivateSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -1328,7 +1415,28 @@
         ]
       }
     },
-
+    "ElastiCacheServicesSubnetGroup": {
+      "Type" : "AWS::ElastiCache::DBSubnetGroup",
+      "Properties" : {
+        "CacheSubnetGroupName" : "ElastiCache Subnet Group",
+        "SubnetIds" : [
+          { "Ref": "ElastiCacheServicesAzSubnet" }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "ElastiCacheServicesSubnetGroup"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
     "Database": {
       "Type" : "AWS::RDS::DBInstance",
       "Properties": {
@@ -1364,6 +1472,71 @@
       }
     },
 
+    "ElastiCacheCluster": {
+      "Type" : "AWS::ElastiCache::CacheCluster",
+      "Properties": {
+        "CacheNodeType": { "Ref": "ElastiCacheInstanceSize" },
+        "CacheSubnetGroupName": { "Ref": "ElastiCacheServicesSubnetGroup" },
+        "Engine": "redis",
+        "NumCacheNodes": 1,
+        "VpcSecurityGroupIds": [ { "Ref": "ElastiCacheSecurityGroup" } ],
+        "PreferredAvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "CloudFoundryVpc"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+
+    "ElastiCacheBrokerUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "_", [
+                  { "Ref": "DeploymentName" },
+                  "CfElastiCachePolicy"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "elasticache:CreateCacheCluster",
+                    "elasticache:CreateReplicationGroup",
+                    "elasticache:DescribeCacheClusters",
+                    "elasticache:ModifyCacheCluster",
+                    "elasticache:RebootCacheCluster"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": { "Ref": "ElastiCacheCluster" }
+                },
+                {
+                  "Action": [
+                    "iam:GetUser"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
     "RdsBrokerUser": {
       "Type": "AWS::IAM::User",
       "Properties": {
@@ -1409,6 +1582,12 @@
       }
     },
 
+    "ElastiCacheBrokerAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "UserName": { "Ref": "ElastiCacheBrokerUser" }
+      }
+    },
     "RdsBrokerAccessKey": {
       "Type": "AWS::IAM::AccessKey",
       "Properties": {
