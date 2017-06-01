@@ -345,7 +345,7 @@
     },
     "ElastiCacheServicesAz1Subnet": {
       "Description": "ElastiCache Subnet",
-      "Value": { "Ref": "ElastiCacheAzSubnet" }
+      "Value": { "Ref": "ElastiCacheServicesAzSubnet" }
     },
     "RdsServicesAz1Subnet": {
       "Description": "RDS Services AZ1 Subnet",
@@ -492,6 +492,26 @@
     "DatabasePort": {
       "Description": "Database Port",
       "Value": { "Fn::GetAtt": [ "Database", "Endpoint.Port" ] }
+    },
+    "RedisAddress": {
+      "Description": "ElastiCache Access Address",
+      "Value": { "Fn::GetAtt": [ "ElastiCache", "RedisEndpoint.Address" ] }
+    },
+    "RedisPort": {
+      "Description": "ElastiCache Port",
+      "Value": { "Fn::GetAtt": [ "ElastiCache", "RedisEndpoint.Port" ] }
+    },
+    "ElastiCacheBrokerAccessKeyId": {
+      "Description": "ElastiCache Broker Access Key Id",
+      "Value": { "Ref": "ElastiCacheBrokerAccessKey" }
+    },
+    "ElastiCacheBrokerAccessKey": {
+      "Description": "ElastiCache Broker Access Key",
+      "Value": { "Fn::GetAtt": [ "ElastiCacheBrokerAccessKey", "SecretAccessKey" ] }
+    },
+    "ElastiCacheBrokerUserName": {
+      "Description": "ElastiCache Broker User Name",
+      "Value": { "Ref": "ElastiCacheBrokerUser" }
     },
     "RdsBrokerAccessKeyId": {
       "Description": "RDS Broker Access Key Id",
