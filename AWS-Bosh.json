@@ -1436,7 +1436,7 @@
       }
     },
     "ElastiCacheServicesSubnetGroup": {
-      "Type" : "AWS::ElastiCache::DBSubnetGroup",
+      "Type" : "AWS::ElastiCache::SubnetGroup",
       "Properties" : {
         "CacheSubnetGroupName" : "ElastiCache Subnet Group",
         "SubnetIds" : [
