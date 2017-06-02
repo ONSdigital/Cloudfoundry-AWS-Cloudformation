@@ -1441,19 +1441,6 @@
         "CacheSubnetGroupName" : "ElastiCache Subnet Group",
         "SubnetIds" : [
           { "Ref": "ElastiCacheServicesAzSubnet" }
-        ],
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ElastiCacheServicesSubnetGroup"
-                ]
-              ]
-            }
-          }
         ]
       }
     },
