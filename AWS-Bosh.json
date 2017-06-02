@@ -411,6 +411,10 @@
         ]
       }
     },
+    "ElastiCacheSecurityGroup": {
+      "Description": "ElastiCache Security Group",
+      "Value": { "Ref": "ElastiCacheSecurityGroup" }
+    },
     "PrivateSecurityGroups": {
       "Description": "Private Security Groups",
       "Value": {
@@ -1529,7 +1533,7 @@
                     "elasticache:RebootCacheCluster"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Ref": "ElastiCacheCluster" }
+                  "Resource": "*"
                 },
                 {
                   "Action": [
