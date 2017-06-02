@@ -1439,6 +1439,7 @@
       "Type" : "AWS::ElastiCache::SubnetGroup",
       "Properties" : {
         "CacheSubnetGroupName" : "ElastiCache Subnet Group",
+        "Description": "ElastiCache Subnet Group",
         "SubnetIds" : [
           { "Ref": "ElastiCacheServicesAzSubnet" }
         ]
