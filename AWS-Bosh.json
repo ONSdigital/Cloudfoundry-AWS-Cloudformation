@@ -125,7 +125,7 @@
     "ElastiCacheInstanceSize": {
       "Type": "String",
       "Default": "cache.t2.small",
-      "Description": "Cache Size",
+      "Description": "ElastiCache Instance Size",
       "AllowedValues": [
         "cache.m4.large",
         "cache.m4.xlarge",
