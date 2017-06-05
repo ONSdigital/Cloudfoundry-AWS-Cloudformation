@@ -513,6 +513,10 @@
       "Description": "ElastiCache Broker Access Key",
       "Value": { "Fn::GetAtt": [ "ElastiCacheBrokerAccessKey", "SecretAccessKey" ] }
     },
+    "ElastiCacheSubnetGroup": {
+      "Description": "ElastiCache Subnet Group",
+      "Value": "ElastiCacheSubnetGroup"
+    },
     "ElastiCacheBrokerUserName": {
       "Description": "ElastiCache Broker User Name",
       "Value": { "Ref": "ElastiCacheBrokerUser" }
@@ -1439,7 +1443,7 @@
         ]
       }
     },
-    "ElastiCacheServicesSubnetGroup": {
+    "ElastiCacheSubnetGroup": {
       "Type" : "AWS::ElastiCache::SubnetGroup",
       "Properties" : {
         "Description": "ElastiCache Subnet Group",
@@ -1487,7 +1491,7 @@
       "Type" : "AWS::ElastiCache::CacheCluster",
       "Properties": {
         "CacheNodeType": { "Ref": "ElastiCacheInstanceSize" },
-        "CacheSubnetGroupName": { "Ref": "ElastiCacheServicesSubnetGroup" },
+        "CacheSubnetGroupName": { "Ref": "ElastiCacheSubnetGroup" },
         "Engine": "redis",
         "NumCacheNodes": 1,
         "VpcSecurityGroupIds": [ { "Ref": "ElastiCacheSecurityGroup" } ],
