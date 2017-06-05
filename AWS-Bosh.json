@@ -497,14 +497,6 @@
       "Description": "Database Port",
       "Value": { "Fn::GetAtt": [ "Database", "Endpoint.Port" ] }
     },
-    "RedisAddress": {
-      "Description": "ElastiCache Access Address",
-      "Value": { "Fn::GetAtt": [ "ElastiCacheCluster", "RedisEndpoint.Address" ] }
-    },
-    "RedisPort": {
-      "Description": "ElastiCache Port",
-      "Value": { "Fn::GetAtt": [ "ElastiCacheCluster", "RedisEndpoint.Port" ] }
-    },
     "ElastiCacheBrokerAccessKeyId": {
       "Description": "ElastiCache Broker Access Key Id",
       "Value": { "Ref": "ElastiCacheBrokerAccessKey" }
@@ -1479,31 +1471,6 @@
                 ":", [
                   { "Ref": "DeploymentName" },
                   "Database"
-                ]
-              ]
-            }
-          }
-        ]
-      }
-    },
-
-    "ElastiCacheCluster": {
-      "Type" : "AWS::ElastiCache::CacheCluster",
-      "Properties": {
-        "CacheNodeType": { "Ref": "ElastiCacheInstanceSize" },
-        "CacheSubnetGroupName": { "Ref": "ElastiCacheSubnetGroup" },
-        "Engine": "redis",
-        "NumCacheNodes": 1,
-        "VpcSecurityGroupIds": [ { "Ref": "ElastiCacheSecurityGroup" } ],
-        "PreferredAvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "CloudFoundryVpc"
                 ]
               ]
             }
