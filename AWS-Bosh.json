@@ -1560,10 +1560,15 @@
                     "s3:*"
                   ],
                   "Resource": [
+                    { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "BlobstoreBucket" } ] ] },
                     { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "BlobstoreBucket" }, "/*" ] ] },
+                    { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "BuildpackBucket" } ] ] },
                     { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "BuildpackBucket" }, "/*" ] ] },
+                    { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "DropletBucket" } ] ] },
                     { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "DropletBucket" }, "/*" ] ] },
+                    { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "PackageBucket" } ] ] },
                     { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "PackageBucket" }, "/*" ] ] },
+                    { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "ResourceBucket" } ] ] },
                     { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "ResourceBucket" }, "/*" ] ] }
                   ]
                 }
