@@ -1536,6 +1536,15 @@
     "S3BucketAccessRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
+        "RoleName": {
+          "Fn::Join": [
+            "-", [
+              { "Ref": "AWS::StackName" },
+              { "Ref": "AWS::Region" },
+              "s3bucket-role"
+            ]
+          ]
+        },
         "AssumeRolePolicyDocument": {
           "Version" : "2012-10-17",
           "Statement": [
