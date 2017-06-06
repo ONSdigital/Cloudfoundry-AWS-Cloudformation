@@ -525,9 +525,9 @@
       "Description": "RDS Broker User Name",
       "Value": { "Ref": "RdsBrokerUser" }
     },
-    "S3BucketAccessRole": {
-      "Description": "S3 Bucket Access Role",
-      "Value": { "Ref": "S3BucketAccessRole" }
+    "S3BucketAccessInstanceProfile": {
+      "Description": "S3 Bucket Access Instance Profile",
+      "Value": { "Ref": "S3BucketAccessInstanceProfile" }
     },
     "BlobstoreBucket": {
       "Description": "S3 Blobstore Bucket",
@@ -1570,6 +1570,15 @@
               ]
             }
           }
+        ]
+      }
+    },
+
+    "S3BucketAccessInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          { "Ref": "S3BucketAccessRole" }
         ]
       }
     },
