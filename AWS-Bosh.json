@@ -525,6 +525,10 @@
       "Description": "RDS Broker User Name",
       "Value": { "Ref": "RdsBrokerUser" }
     },
+    "S3BucketAccessRole": {
+      "Description": "S3 Bucket Access Role",
+      "Value": { "Ref": "S3BucketAccessRole" }
+    },
     "BlobstoreBucket": {
       "Description": "S3 Blobstore Bucket",
       "Value": { "Ref": "BlobstoreBucket" }
@@ -544,18 +548,6 @@
     "ResourceBucket": {
       "Description": "S3 Resource Bucket",
       "Value": { "Ref": "ResourceBucket" }
-    },
-    "S3BucketAccessKeyId": {
-      "Description": "S3 Bucket Access Key Id",
-      "Value": { "Ref": "S3BucketAccessKey" }
-    },
-    "S3BucketAccessKey": {
-      "Description": "S3 Bucket Access Key",
-      "Value": { "Fn::GetAtt": [ "S3BucketAccessKey", "SecretAccessKey" ] }
-    },
-    "S3BucketUserName": {
-      "Description": "S3 Bucket User Name",
-      "Value": { "Ref": "S3BucketUser" }
     }
   },
 
@@ -1527,6 +1519,46 @@
       "Type": "AWS::S3::Bucket"
     },
 
+    "S3BucketAccessRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "ec2.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "S3BucketAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": [
+                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "BuildpackBucket" }, "/*" ] ],
+                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "DropletBucket" }, "/*" ] ],
+                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "PackageBucket" }, "/*" ] ],
+                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "ResourceBucket" }, "/*" ] ]
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+
     "ElastiCacheBrokerUser": {
       "Type": "AWS::IAM::User",
       "Properties": {
@@ -1611,40 +1643,6 @@
         ]
       }
     },
-    "S3BucketUser": {
-      "Type": "AWS::IAM::User",
-      "Properties": {
-        "Policies": [
-          {
-            "PolicyName": {
-              "Fn::Join": [
-                "_", [
-                  { "Ref": "DeploymentName" },
-                  "CfS3BucketPolicy"
-                ]
-              ]
-            },
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Action": [
-                    "s3:*"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": {
-                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "BuildpackBucket" }, "/*" ] ],
-                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "DropletBucket" }, "/*" ] ],
-                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "PackageBucket" }, "/*" ] ],
-                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "ResourceBucket" }, "/*" ] ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
 
     "ElastiCacheBrokerAccessKey": {
       "Type": "AWS::IAM::AccessKey",
@@ -1656,12 +1654,6 @@
       "Type": "AWS::IAM::AccessKey",
       "Properties": {
         "UserName": { "Ref": "RdsBrokerUser" }
-      }
-    },
-    "S3BucketAccessKey": {
-      "Type": "AWS::IAM::AccessKey",
-      "Properties": {
-        "UserName": { "Ref": "S3BucketUser" }
       }
     }
   }
