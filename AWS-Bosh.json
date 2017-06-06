@@ -1511,6 +1511,9 @@
       }
     },
 
+    "BlobstoreBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
     "BuildpackBucket": {
       "Type": "AWS::S3::Bucket"
     },
