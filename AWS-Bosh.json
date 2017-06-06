@@ -343,7 +343,7 @@
         ]
       }
     },
-    "ElastiCacheServicesAz1Subnet": {
+    "ElastiCacheServicesAzSubnet": {
       "Description": "ElastiCache Subnet",
       "Value": { "Ref": "ElastiCacheServicesAzSubnet" }
     },
@@ -507,7 +507,7 @@
     },
     "ElastiCacheSubnetGroup": {
       "Description": "ElastiCache Subnet Group",
-      "Value": "ElastiCacheSubnetGroup"
+      "Value": { "Ref": "ElastiCacheSubnetGroup" }
     },
     "ElastiCacheBrokerUserName": {
       "Description": "ElastiCache Broker User Name",
