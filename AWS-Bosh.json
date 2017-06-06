@@ -529,10 +529,6 @@
       "Description": "S3 Bucket Access Role",
       "Value": { "Ref": "S3BucketAccessRole" }
     },
-    "S3BucketAccessRoleArn": {
-      "Description": "S3 Bucket Access Role Arn",
-      "Value": { "Fn::GetAtt": [ "S3BucketAccessRole", "Arn" ] }
-    },
     "BlobstoreBucket": {
       "Description": "S3 Blobstore Bucket",
       "Value": { "Ref": "BlobstoreBucket" }
