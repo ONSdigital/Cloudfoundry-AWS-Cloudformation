@@ -547,11 +547,11 @@
     },
     "S3BucketAccessKeyId": {
       "Description": "S3 Bucket Access Key Id",
-      "Value": { "Ref": "S3BucketUserAccessKey" }
+      "Value": { "Ref": "S3BucketAccessKey" }
     },
     "S3BucketAccessKey": {
       "Description": "S3 Bucket Access Key",
-      "Value": { "Fn::GetAtt": [ "S3BucketUserAccessKey", "SecretAccessKey" ] }
+      "Value": { "Fn::GetAtt": [ "S3BucketAccessKey", "SecretAccessKey" ] }
     },
     "S3BucketUserName": {
       "Description": "S3 Bucket User Name",
@@ -1658,7 +1658,7 @@
         "UserName": { "Ref": "RdsBrokerUser" }
       }
     },
-    "S3BucketKey": {
+    "S3BucketAccessKey": {
       "Type": "AWS::IAM::AccessKey",
       "Properties": {
         "UserName": { "Ref": "S3BucketUser" }
