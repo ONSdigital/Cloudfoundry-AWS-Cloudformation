@@ -25,14 +25,14 @@
         "PolicyName": "PreventStackDeletion",
         "Users": [ "*" ],
         "PolicyDocument": {
-          "Version": "2012-10-17",
+          "Version":"2012-10-17",
           "Statement": [
             {
-              "Effect": { "Ref": "DeleteAllowDeny" },
-              "Action": [
+              "Effect":"Deny",
+              "Action":[
                 "cloudformation:DeleteStack"
               ],
-              "Resource": { "Ref": "StackArn" }
+              "Resource": { "Ref": "AWS::StackId" }
             }
           ]
         }
