@@ -548,7 +548,7 @@
     "ResourceBucket": {
       "Description": "S3 Resource Bucket",
       "Value": { "Ref": "ResourceBucket" }
-    }
+    },
     "S3Buckets": {
       "Description": "S3 Buckets - used during stack deletion",
       "Value": {
@@ -1560,6 +1560,7 @@
                     "s3:*"
                   ],
                   "Resource": [
+                    "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "BlobstoreBucket" }, "/*" ] ],
                     "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "BuildpackBucket" }, "/*" ] ],
                     "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "DropletBucket" }, "/*" ] ],
                     "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref": "PackageBucket" }, "/*" ] ],
