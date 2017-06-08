@@ -1152,7 +1152,7 @@
     "PrivateAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
-        "SubnetId": { "Ref": "PrivateSubnet" },
+        "SubnetId": { "Ref": "PrivateAz2Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
