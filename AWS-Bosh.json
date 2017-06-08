@@ -951,16 +951,18 @@
             ]
           ]
         },
-        "SubjectAlternativeNames": {
-          "Fn::Join": [
-            ".", [
-              "*",
-              "system",
-              { "Ref": "DeploymentName" },
-              { "Ref": "HostedZone" }
+        "SubjectAlternativeNames": [
+          {
+            "Fn::Join": [
+              ".", [
+                "*",
+                "system",
+                { "Ref": "DeploymentName" },
+                { "Ref": "HostedZone" }
+              ]
             ]
-          ]
-        },
+          }
+        ],
         "Tags": [
           {
             "Key": "Name",
