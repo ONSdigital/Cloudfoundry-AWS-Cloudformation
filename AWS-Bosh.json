@@ -946,7 +946,7 @@
           { "Ref": "PrivateAz1Subnet" },
           { "Ref": "PrivateAz2Subnet" }
         ],
-        "Listener": [
+        "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
           { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS" }
 	],
