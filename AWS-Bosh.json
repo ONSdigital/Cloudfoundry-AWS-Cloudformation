@@ -647,7 +647,7 @@
       ]
     },
     "GenerateElbSslCertificate": { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] },
-    "UseElbSslCertificateArn": { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } },
+    "UseElbSslCertificateArn": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } ] },
     "PlainTextElb": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
