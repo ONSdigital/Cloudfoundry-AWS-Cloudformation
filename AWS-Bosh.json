@@ -387,7 +387,7 @@
               "Fn::Join": [
                 "", [
                   "\"",
-                  { "Fn::GetAtt": [ "ExternalElb", "LoadBalancerName" ] },
+                  { "Ref": "ExternalElb" },
                   "\""
                 ]
               ]
