@@ -1004,7 +1004,7 @@
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Properties": {
         "Scheme": "internal",
-        "Subnets": [ "DmzSubnet" ],
+        "Subnets": [ "DmzAz1Subnet","DmzAz2Subnet" ],
         "IpAddressType": "ipv4",
         "Tags": [
           {
