@@ -44,8 +44,8 @@
       "Type": "String",
       "Default": "NONE",
       "Description": "Use pre-loaded SSL certificate - unless one is loaded or GenerateElbSslCertificate set to true an ELB will not be created",
-      "AllowedPattern": "^arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+$",
-      "ConstraintDescription": "AWS ACM SSL certificate ARN"
+      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+|NONE)$",
+      "ConstraintDescription": "AWS ACM SSL certificate ARN or NONE"
     },
     "HostedZone": {
       "Type": "String",
