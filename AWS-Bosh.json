@@ -946,7 +946,10 @@
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Properties": {
         "Scheme": "internal",
-        "Subnets": [ "PrivateAz1Subnet","PrivateAz2Subnet" ],
+        "Subnets": [
+          { "Ref": "PrivateAz1Subnet" },
+          { "Ref": "PrivateAz2Subnet" }
+        ],
         "IpAddressType": "ipv4",
         "Tags": [
           {
