@@ -33,6 +33,20 @@
       "MinValue": "0",
       "MaxValue": "9"
     },
+    "GenerateElbSslCertificate": {
+      "Type": "String",
+      "Default": "false",
+      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
+      "AllowedPattern": "^(true|false)$",
+      "ConstraintDescription": "true or false"
+    },
+    "ElbSslCertificateArn": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": "Use pre-loaded SSL certificate - unless one is loaded or GenerateElbSslCertificate set to true an ELB will not be created",
+      "AllowedPattern": "^arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+$",
+      "ConstraintDescription": "AWS ACM SSL certificate ARN"
+    },
     "HostedZone": {
       "Type": "String",
       "Description": "DNS Zone",
@@ -598,24 +612,26 @@
   "Conditions": {
     "PermitExternalCidr1": {
       "Fn::Not": [
-        { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr1" } ] }
+        { "Fn::Equals": [ { "Ref": "ExternalCidr1" }, "127.0.0.0/8" ] }
       ]
     },
     "PermitExternalCidr2": {
       "Fn::Not": [
-        { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr2" } ] }
+        { "Fn::Equals": [ { "Ref": "ExternalCidr2" }, "127.0.0.0/8" ] }
       ]
     },
     "PermitExternalCidr3": {
       "Fn::Not": [
-        { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr3" } ] }
+        { "Fn::Equals": [ { "Ref": "ExternalCidr3" }, "127.0.0.0/8" ] }
       ]
     },
     "PermitExternalCidr4": {
       "Fn::Not": [
-        { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr4" } ] }
+        { "Fn::Equals": [ { "Ref": "ExternalCidr4" }, "127.0.0.0/8" ] }
       ]
-    }
+    },
+    "GenerateElbSslCertificate": { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] },
+    "UseElbSslCertificateArn": { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } }
   },
 
   "Resources": {
@@ -938,8 +954,51 @@
       }
     },
 
-    "ExternalElb": {
+    "ElbSslCertificate": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Condition": "GenerateElbSslCertificate",
+      "Properties": {
+        "DomainName": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "apps",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "SubjectAlternativeNames": [
+          {
+            "Fn::Join": [
+              ".", [
+                "*",
+                "system",
+                { "Ref": "DeploymentName" },
+                { "Ref": "HostedZone" }
+              ]
+            ]
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "ElbSslCertificate"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+
+    "ExternalAcmSslElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "GenerateElbSslCertificate",
       "Properties": {
         "Scheme": "internal",
         "Subnets": [
@@ -948,7 +1007,35 @@
         ],
         "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
-          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS" }
+          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  }
+	],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "ExternalELb"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "ExternalExistingSslElb": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "UseElbSslCertificateArn",
+      "Properties": {
+        "Scheme": "internal",
+        "Subnets": [
+          { "Ref": "PrivateAz1Subnet" },
+          { "Ref": "PrivateAz2Subnet" }
+        ],
+        "Listeners": [
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
+          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  }
 	],
         "Tags": [
           {
