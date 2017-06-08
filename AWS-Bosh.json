@@ -515,12 +515,8 @@
       "Description": "Elastic IP 1 - Bosh Lite (Bootstrap)",
       "Value": { "Ref": "BoshLitePublicIp" }
     },
-    "HaProxyIp": {
-      "Description": "Elastic IP 2 - HA Proxy IP",
-      "Value": { "Ref": "HaProxyIp" }
-    },
     "NatIp": {
-      "Description": "Elastic IP 3 - NAT IP",
+      "Description": "Elastic IP 2 - NAT IP",
       "Value": { "Ref": "NatIp" }
     },
     "DatabaseAddress": {
@@ -943,14 +939,13 @@
     },
 
     "ExternalElb": {
-      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Properties": {
         "Scheme": "internal",
         "Subnets": [
           { "Ref": "PrivateAz1Subnet" },
           { "Ref": "PrivateAz2Subnet" }
         ],
-        "IpAddressType": "ipv4",
         "Tags": [
           {
             "Key": "Name",
