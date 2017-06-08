@@ -401,7 +401,19 @@
               "Fn::Join": [
                 "", [
                   "\"",
-                  { "Ref": "ExternalElb" },
+                  {
+                    "Fn::If": [
+                      "GenerateElbSslCertificate",
+                      { "Ref": "ExternalAcmSslElb" },
+                      {
+                        "Fn::If": [
+                          "UseElbSslCertificateArn",
+                          { "Ref": "ExternalExistingSslElb" },
+                          { "Ref": "ExternalPlainTextElb" }
+                        ]
+                      }
+                    ]
+                  },
                   "\""
                 ]
               ]
@@ -1168,7 +1180,20 @@
         "Type": "CNAME",
         "ResourceRecords": [
           {
-            "Fn::GetAtt": [ "ExternalElb", "DNSName" ]
+            "Fn::GetAtt": [ 
+              "Fn::If": [
+                "GenerateElbSslCertificate",
+                { "Ref": "ExternalAcmSslElb" },
+                {
+                  "Fn::If": [
+                    "UseElbSslCertificateArn",
+                    { "Ref": "ExternalExistingSslElb" },
+                    { "Ref": "ExternalPlainTextElb" }
+                  ]
+                }
+              ],
+              "DNSName"
+            ]
           }
         ]
       }
