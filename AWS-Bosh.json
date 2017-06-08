@@ -74,24 +74,17 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "DmzAz1Cidr": {
-      "Type": "String",
-      "Default": "10.0.0.0/24",
-      "Description": "DMZ AZ1 Subnet",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "DmzAz2Cidr": {
-      "Type": "String",
-      "Default": "10.0.20.0/24",
-      "Description": "DMZ AZ2 Subnet",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "PrivateCidr": {
+    "PrivateAz1Cidr": {
       "Type": "String",
       "Default": "10.0.1.0/24",
-      "Description": "Private Subnet",
+      "Description": "Private AZ1 Subnet",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "PrivateAz2Cidr": {
+      "Type": "String",
+      "Default": "10.0.21.0/24",
+      "Description": "Private AZ2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
@@ -224,92 +217,63 @@
       "Description": "Deployment name",
       "Value": { "Ref": "DeploymentName" }
     } ,
-    "DmzAz1Subnet": {
-      "Description": "DMZ AZ1 Subnet",
-      "Value": { "Ref": "DmzAz1Subnet" }
-    },
-    "DmzAz2Subnet": {
-      "Description": "DMZ AZ2 Subnet",
-      "Value": { "Ref": "DmzAz2Subnet" }
-    },
-    "DmzAz1CidrPrefix": {
-      "Description": "DMZ AZ1 CIDR Prefix",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] }
-          ]
-        ]
-      }
-    },
-    "DmzAz2CidrPrefix": {
-      "Description": "DMZ AZ2 CIDR Prefix",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] }
-          ]
-        ]
-      }
-    },
-    "DmzAz1DefaultRoute": {
-      "Description": "DMZ AZ1 Default Route",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
-    "DmzAz2DefaultRoute": {
-      "Description": "DMZ AZ2 Default Route",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
     "NatSubnet": {
       "Description": "NAT Subnet",
       "Value": { "Ref": "NatSubnet" }
     },
-    "PrivateSubnet": {
-      "Description": "Private Subnet",
-      "Value": { "Ref": "PrivateSubnet" }
+    "PrivateAz1Subnet": {
+      "Description": "Private AZ1 Subnet",
+      "Value": { "Ref": "PrivateAz1Subnet" }
     },
-    "PrivateCidrPrefix": {
-      "Description": "Private CIDR",
+    "PrivateAz2Subnet": {
+      "Description": "Private AZ2 Subnet",
+      "Value": { "Ref": "PrivateAz2Subnet" }
+    },
+    "PrivateAz1CidrPrefix": {
+      "Description": "Private AZ1 CIDR",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateCidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateCidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateCidr" } ] } ] }
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] }
           ]
         ]
       }
     },
-    "PrivateDefaultRoute": {
-      "Description": "Private Default Route",
+    "PrivateAz2CidrPrefix": {
+      "Description": "Private AZ2 CIDR",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateCidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateCidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateCidr" } ] } ] },
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] }
+          ]
+        ]
+      }
+    },
+    "PrivateAz1DefaultRoute": {
+      "Description": "Private AZ1 Default Route",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
+            "1"
+          ]
+        ]
+      }
+    },
+    "PrivateAz2DefaultRoute": {
+      "Description": "Private AZ2 Default Route",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
             "1"
           ]
         ]
@@ -413,8 +377,8 @@
       "Description": "RDS Database Security Group",
       "Value": { "Ref": "DatabaseSecurityGroup" }
     },
-    "DmzElbs": {
-      "Description": "DMZ ELB(s)",
+    "ExternalElbs": {
+      "Description": "External ELB(s)",
       "Value": {
         "Fn::Join": [
           "", [
@@ -423,7 +387,7 @@
               "Fn::Join": [
                 "", [
                   "\"",
-                  { "Ref": "DmzElb" },
+                  { "Ref": "ExternalElb" },
                   "\""
                 ]
               ]
@@ -433,8 +397,8 @@
         ]
       }
     },
-    "DmzSecurityGroups": {
-      "Description": "DMZ Security Groups",
+    "ExternalSecurityGroups": {
+      "Description": "External Security Groups",
       "Value": {
         "Fn::Join": [
           "", [
@@ -443,7 +407,7 @@
               "Fn::Join": [
                 "", [
                   "\"",
-                  { "Ref": "DmzSecurityGroup" },
+                  { "Ref": "ExternalSecurityGroup" },
                   "\""
                 ]
               ]
@@ -451,28 +415,28 @@
             {
               "Fn::If": [
                 "PermitExternalCidr1",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr1", "Outputs.DmzSecurityGroup" ] }, "\"" ] ] },
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr1", "Outputs.ExternalSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
             {
               "Fn::If": [
                 "PermitExternalCidr2",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr2", "Outputs.DmzSecurityGroup" ] }, "\"" ] ] },
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr2", "Outputs.ExternalSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
             {
               "Fn::If": [
                 "PermitExternalCidr3",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr3", "Outputs.DmzSecurityGroup" ] }, "\"" ] ] },
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr3", "Outputs.ExternalSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
             {
               "Fn::If": [
                 "PermitExternalCidr4",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr4", "Outputs.DmzSecurityGroup" ] }, "\"" ] ] },
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr4", "Outputs.ExternalSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
@@ -823,50 +787,6 @@
       }
     },
 
-    "DmzAz1Subnet": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
-        "CidrBlock": { "Ref": "DmzAz1Cidr" },
-        "MapPublicIpOnLaunch": false,
-        "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "DmzAz1Subnet"
-                ]
-              ]
-            }
-          }
-        ]
-      }
-    },
-    "DmzAz2Subnet": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
-        "CidrBlock": { "Ref": "DmzAz2Cidr" },
-        "MapPublicIpOnLaunch": false,
-        "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "DmzAz2Subnet"
-                ]
-              ]
-            }
-          }
-        ]
-      }
-    },
     "ElastiCacheServicesAzSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
@@ -889,11 +809,11 @@
         ]
       }
     },
-    "PrivateSubnet": {
+    "PrivateAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
-        "CidrBlock": { "Ref": "PrivateCidr" },
+        "CidrBlock": { "Ref": "PrivateAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -903,7 +823,29 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "DeploymentName" },
-                  "PrivateSubnet"
+                  "PrivateAz1Subnet"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "PrivateAz2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "CidrBlock": { "Ref": "PrivateAz2Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "PrivateAz2Subnet"
                 ]
               ]
             }
@@ -1000,11 +942,11 @@
       }
     },
 
-    "DmzElb": {
+    "ExternalElb": {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Properties": {
         "Scheme": "internal",
-        "Subnets": [ "DmzAz1Subnet","DmzAz2Subnet" ],
+        "Subnets": [ "PrivateAz1Subnet","PrivateAz2Subnet" ],
         "IpAddressType": "ipv4",
         "Tags": [
           {
@@ -1013,7 +955,7 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "DeploymentName" },
-                  "DmzELb"
+                  "ExternalELb"
                 ]
               ]
             }
@@ -1086,7 +1028,7 @@
         "Type": "CNAME",
         "ResourceRecords": [
           {
-            "Fn::GetAtt": [ "DmzElb", "DNSName" ]
+            "Fn::GetAtt": [ "ExternalElb", "DNSName" ]
           }
         ]
       }
@@ -1193,20 +1135,6 @@
       }
     },
 
-    "DmzAz1SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Properties": {
-        "SubnetId": { "Ref": "DmzAz1Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
-      }
-    },
-    "DmzAz2SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Properties": {
-        "SubnetId": { "Ref": "DmzAz2Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
-      }
-    },
     "NatSubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
@@ -1214,7 +1142,14 @@
         "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
-    "PrivateSubnetRouteTableAssociation": {
+    "PrivateAz1SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "PrivateAz1Subnet" },
+        "RouteTableId": { "Ref": "InternetRouteTable" }
+      }
+    },
+    "PrivateAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "PrivateSubnet" },
@@ -1262,7 +1197,13 @@
             "IpProtocol": "tcp"
           },
           {
-            "CidrIp": { "Ref": "PrivateCidr" },
+            "CidrIp": { "Ref": "PrivateAz1Cidr" },
+            "FromPort": "5432",
+            "ToPort": "5432" ,
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "PrivateAz2Cidr" },
             "FromPort": "5432",
             "ToPort": "5432" ,
             "IpProtocol": "tcp"
@@ -1271,10 +1212,10 @@
       }
     },
 
-    "DmzSecurityGroup": {
+    "ExternalSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "DmzInOut",
+        "GroupDescription": "External In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
           {
@@ -1283,7 +1224,7 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "DeploymentName" },
-                  "DmzSecurityGroup"
+                  "ExternalSecurityGroup"
                 ]
               ]
             }
@@ -1366,7 +1307,13 @@
             "IpProtocol": "tcp"
           },
           {
-            "CidrIp": { "Ref": "PrivateCidr" },
+            "CidrIp": { "Ref": "PrivateAz1Cidr" },
+            "FromPort": "6379",
+            "ToPort": "6379" ,
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "PrivateAz2Cidr" },
             "FromPort": "6379",
             "ToPort": "6379" ,
             "IpProtocol": "tcp"

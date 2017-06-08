@@ -24,9 +24,9 @@
   },
 
   "Outputs": {
-    "DmzSecurityGroup": {
-      "Description": "DMZ Security Group",
-      "Value": { "Ref": "DmzSecurityGroup" }
+    "ExternalSecurityGroup": {
+      "Description": "External Security Group",
+      "Value": { "Ref": "ExternalSecurityGroup" }
     },
     "PrivateSecurityGroup": {
       "Description": "Private Security Group",
@@ -35,10 +35,10 @@
   },
 
   "Resources": {
-    "DmzSecurityGroup": {
+    "ExternalSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "DMZ In Out",
+        "GroupDescription": "External In Out",
         "VpcId": { "Ref": "VpcId" },
         "Tags": [
           {
@@ -47,7 +47,7 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "WhitelistName" },
-                  "DmzSecurityGroup"
+                  "ExternalSecurityGroup"
                 ]
               ]
             }
