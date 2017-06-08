@@ -938,47 +938,6 @@
       }
     },
 
-    "ElbSslCertificate": {
-      "Type": "AWS::CertificateManager::Certificate",
-      "Properties": {
-        "DomainName": {
-          "Fn::Join": [
-            ".", [
-              "*",
-              "apps",
-              { "Ref": "DeploymentName" },
-              { "Ref": "HostedZone" }
-            ]
-          ]
-        },
-        "SubjectAlternativeNames": [
-          {
-            "Fn::Join": [
-              ".", [
-                "*",
-                "system",
-                { "Ref": "DeploymentName" },
-                { "Ref": "HostedZone" }
-              ]
-            ]
-          }
-        ],
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ElbSslCertificate"
-                ]
-              ]
-            }
-          }
-        ]
-      }
-    },
-
     "ExternalElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Properties": {
@@ -989,7 +948,7 @@
         ],
         "Listener": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
-          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate" } }
+          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS" }
 	],
         "Tags": [
           {
