@@ -606,6 +606,22 @@
           ]
         ]
       }
+    },
+    "ExternalElb": {
+      "Description": "External ELB",
+      "Value": {
+        "Fn::If": [
+          "GenerateElbSslCertificate",
+          { "Ref": "ExternalAcmSslElb" },
+          {
+            "Fn::If": [
+              "UseElbSslCertificateArn",
+              { "Ref": "ExternalExistingSslElb" },
+              { "Ref": "ExternalPlainTextElb" }
+            ]
+          }
+        ]
+      }
     }
   },
 
@@ -631,7 +647,13 @@
       ]
     },
     "GenerateElbSslCertificate": { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] },
-    "UseElbSslCertificateArn": { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } }
+    "UseElbSslCertificateArn": { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } },
+    "PlainTextElb": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
+        { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
+      ]
+    }
   },
 
   "Resources": {
@@ -1007,7 +1029,7 @@
         ],
         "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
-          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  } }
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  } }
 	],
         "Tags": [
           {
@@ -1024,6 +1046,7 @@
         ]
       }
     },
+
     "ExternalExistingSslElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Condition": "UseElbSslCertificateArn",
@@ -1035,7 +1058,7 @@
         ],
         "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
-          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  } }
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  } }
 	],
         "Tags": [
           {
@@ -1052,6 +1075,34 @@
         ]
       }
     },
+    "ExternalPlainTextElb": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "PlainTextElb",
+      "Properties": {
+        "Scheme": "internal",
+        "Subnets": [
+          { "Ref": "PrivateAz1Subnet" },
+          { "Ref": "PrivateAz2Subnet" }
+        ],
+        "Listeners": [
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" }
+	],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "ExternalELb"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+
 
     "BoshLitePublicIp": {
       "Type": "AWS::EC2::EIP"
