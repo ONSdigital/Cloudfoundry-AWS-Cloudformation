@@ -363,6 +363,26 @@
       "Description": "RDS Database Security Group",
       "Value": { "Ref": "DatabaseSecurityGroup" }
     },
+    "DmzElbs": {
+      "Description": "DMZ ELB(s)",
+      "Value": {
+        "Fn::Join": [
+          "", [
+            "[",
+            {
+              "Fn::Join": [
+                "", [
+                  "\"",
+                  { "Ref": "DmzElb" },
+                  "\""
+                ]
+              ]
+            },
+            "]"
+          ]
+        ]
+      }
+    },
     "DmzSecurityGroups": {
       "Description": "DMZ Security Groups",
       "Value": {
@@ -908,6 +928,28 @@
       }
     },
 
+    "DmzElb": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "Scheme": "internal",
+        "Subnets": [ "DmzSubnet" ],
+        "IpAddressType": "ipv4",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "DeploymentName" },
+                  "DmzELb"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+
     "BoshLitePublicIp": {
       "Type": "AWS::EC2::EIP"
     },
@@ -969,10 +1011,10 @@
           ]
         },
         "TTL": "3600",
-        "Type": "A",
+        "Type": "CNAME",
         "ResourceRecords": [
           {
-            "Ref": "HaProxyIp"
+            "Fn::GetAtt": [ "DmzElb", "DNSName" ]
           }
         ]
       }
