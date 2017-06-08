@@ -1007,7 +1007,7 @@
         ],
         "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
-          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  }
+          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  } }
 	],
         "Tags": [
           {
@@ -1035,7 +1035,7 @@
         ],
         "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
-          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  }
+          { "InstancePort": "443", "InstanceProtocol": "HTTPS", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  } }
 	],
         "Tags": [
           {
