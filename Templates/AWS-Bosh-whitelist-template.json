@@ -73,6 +73,12 @@
             "FromPort": "443",
             "ToPort": "443" ,
             "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "WhitelistedCidr" },
+            "FromPort": "2222",
+            "ToPort": "2222" ,
+            "IpProtocol": "tcp"
           }
         ]
       }
