@@ -33,6 +33,20 @@
       "MinValue": "0",
       "MaxValue": "9"
     },
+    "AllocateExternalIp": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Allocate External IP (eg for HA Proxy)",
+      "AllowedPattern": "^(true|false)$",
+      "ConstraintDescription": "true or false"
+    },
+    "DeployExternalElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedPattern": "^(true|false)$",
+      "ConstraintDescription": "true or false"
+    },
     "GenerateElbSslCertificate": {
       "Type": "String",
       "Default": "false",
@@ -230,7 +244,17 @@
     "DeploymentName": {
       "Description": "Deployment name",
       "Value": { "Ref": "DeploymentName" }
-    } ,
+    },
+    "ExternalIpAllocations": {
+      "Description": "Number of external IPs allocated",
+      "Value": {
+        "Fn::If": [
+          { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
+          "1",
+          "0"
+        ]
+      }
+    },
     "NatSubnet": {
       "Description": "NAT Subnet",
       "Value": { "Ref": "NatSubnet" }
@@ -658,10 +682,21 @@
         { "Fn::Equals": [ { "Ref": "ExternalCidr4" }, "127.0.0.0/8" ] }
       ]
     },
-    "GenerateElbSslCertificate": { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] },
-    "UseElbSslCertificateArn": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } ] },
+    "GenerateElbSslCertificate": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] }
+      ]
+    },
+    "UseElbSslCertificateArn": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } ] }
+      ]
+    },
     "PlainTextElb": {
       "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
         { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
@@ -1122,8 +1157,9 @@
     "NatIp": {
       "Type": "AWS::EC2::EIP"
     },
-    "HaProxyIp": {
-      "Type": "AWS::EC2::EIP"
+    "ExternalIp": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "AllocateExternalIp"
     },
 
     "BoshDnsRr": {
@@ -1155,8 +1191,9 @@
         ]
       }
     },
-    "SystemDnsRR": {
+    "SystemExternalElbDnsRR": {
       "Type": "AWS::Route53::RecordSet",
+      "Condition": "DeployExternalElb",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -1200,6 +1237,33 @@
         ]
       }
     },
+    "SystemExternalIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "AllocateExternalIp",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "system",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [ { "Ref": "ExternalIp" } ]
+      }
+    },
     "NatDnsRr": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
@@ -1229,8 +1293,55 @@
         ]
       }
     },
-    "AppsDnsRR": {
+    "AppsExternalElbDnsRR": {
       "Type": "AWS::Route53::RecordSet",
+      "Condition": "DeployExternalElb",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "apps",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              {
+                "Fn::If": [
+                  "GenerateElbSslCertificate",
+                  { "Ref": "ExternalAcmSslElb" },
+                  {
+                    "Fn::If": [
+                      "UseElbSslCertificateArn",
+                      { "Ref": "ExternalExistingSslElb" },
+                      { "Ref": "ExternalPlainTextElb" }
+                    ]
+                  }
+                ]
+              },
+              "DNSName"
+            ]
+          }
+        ]
+      }
+    },
+    "AppsExternalIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "AllocateExternalIp",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -1252,11 +1363,7 @@
         },
         "TTL": "3600",
         "Type": "A",
-        "ResourceRecords": [
-          {
-            "Ref": "HaProxyIp"
-          }
-        ]
+        "ResourceRecords": [ { "Ref": "ExternalIp" } ]
       }
     },
 
