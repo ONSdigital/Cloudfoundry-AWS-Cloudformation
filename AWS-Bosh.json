@@ -700,7 +700,8 @@
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
         { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
-    }
+    },
+    "AllocateExternalIp": { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] }
   },
 
   "Resources": {
