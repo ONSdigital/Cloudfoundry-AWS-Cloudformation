@@ -1164,6 +1164,79 @@
       "Condition": "AllocateExternalIp"
     },
 
+    "AppsExternalElbDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "DeployExternalElb",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "apps",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              {
+                "Fn::If": [
+                  "GenerateElbSslCertificate",
+                  { "Ref": "ExternalAcmSslElb" },
+                  {
+                    "Fn::If": [
+                      "UseElbSslCertificateArn",
+                      { "Ref": "ExternalExistingSslElb" },
+                      { "Ref": "ExternalPlainTextElb" }
+                    ]
+                  }
+                ]
+              },
+              "DNSName"
+            ]
+          }
+        ]
+      }
+    },
+    "AppsExternalIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "AllocateExternalIp",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "apps",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [ { "Ref": "ExternalIp" } ]
+      }
+    },
     "BoshDnsRr": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
@@ -1189,6 +1262,35 @@
         "ResourceRecords": [
           {
             "Ref": "BoshLitePublicIp"
+          }
+        ]
+      }
+    },
+    "NatDnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "nat",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          {
+            "Ref": "NatIp"
           }
         ]
       }
@@ -1256,108 +1358,6 @@
             ".", [
               "*",
               "system",
-              { "Ref": "DeploymentName" },
-              { "Ref": "HostedZone" }
-            ]
-          ]
-        },
-        "TTL": "3600",
-        "Type": "A",
-        "ResourceRecords": [ { "Ref": "ExternalIp" } ]
-      }
-    },
-    "NatDnsRr": {
-      "Type": "AWS::Route53::RecordSet",
-      "Properties": {
-        "HostedZoneName": {
-          "Fn::Join": [
-            "", [
-              { "Ref": "HostedZone" },
-              "."
-            ]
-          ]
-        },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "nat",
-              { "Ref": "DeploymentName" },
-              { "Ref": "HostedZone" }
-            ]
-          ]
-        },
-        "TTL": "3600",
-        "Type": "A",
-        "ResourceRecords": [
-          {
-            "Ref": "NatIp"
-          }
-        ]
-      }
-    },
-    "AppsExternalElbDnsRR": {
-      "Type": "AWS::Route53::RecordSet",
-      "Condition": "DeployExternalElb",
-      "Properties": {
-        "HostedZoneName": {
-          "Fn::Join": [
-            "", [
-              { "Ref": "HostedZone" },
-              "."
-            ]
-          ]
-        },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "*",
-              "apps",
-              { "Ref": "DeploymentName" },
-              { "Ref": "HostedZone" }
-            ]
-          ]
-        },
-        "TTL": "3600",
-        "Type": "CNAME",
-        "ResourceRecords": [
-          {
-            "Fn::GetAtt": [
-              {
-                "Fn::If": [
-                  "GenerateElbSslCertificate",
-                  { "Ref": "ExternalAcmSslElb" },
-                  {
-                    "Fn::If": [
-                      "UseElbSslCertificateArn",
-                      { "Ref": "ExternalExistingSslElb" },
-                      { "Ref": "ExternalPlainTextElb" }
-                    ]
-                  }
-                ]
-              },
-              "DNSName"
-            ]
-          }
-        ]
-      }
-    },
-    "AppsExternalIpDnsRR": {
-      "Type": "AWS::Route53::RecordSet",
-      "Condition": "AllocateExternalIp",
-      "Properties": {
-        "HostedZoneName": {
-          "Fn::Join": [
-            "", [
-              { "Ref": "HostedZone" },
-              "."
-            ]
-          ]
-        },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "*",
-              "apps",
               { "Ref": "DeploymentName" },
               { "Ref": "HostedZone" }
             ]
