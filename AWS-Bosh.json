@@ -1180,18 +1180,20 @@
         "Type": "CNAME",
         "ResourceRecords": [
           {
-            "Fn::GetAtt": [ 
-              "Fn::If": [
-                "GenerateElbSslCertificate",
-                { "Ref": "ExternalAcmSslElb" },
-                {
-                  "Fn::If": [
-                    "UseElbSslCertificateArn",
-                    { "Ref": "ExternalExistingSslElb" },
-                    { "Ref": "ExternalPlainTextElb" }
-                  ]
-                }
-              ],
+            "Fn::GetAtt": [
+              {
+                "Fn::If": [
+                  "GenerateElbSslCertificate",
+                  { "Ref": "ExternalAcmSslElb" },
+                  {
+                    "Fn::If": [
+                      "UseElbSslCertificateArn",
+                      { "Ref": "ExternalExistingSslElb" },
+                      { "Ref": "ExternalPlainTextElb" }
+                    ]
+                  }
+                ]
+              },
               "DNSName"
             ]
           }
