@@ -634,6 +634,26 @@
       "Fn::Not": [
         { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr4" } ] }
       ]
+    },
+    "PermitExternalCidr5": {
+      "Fn::Not": [
+        { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr5" } ] }
+      ]
+    },
+    "PermitExternalCidr6": {
+      "Fn::Not": [
+        { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr6" } ] }
+      ]
+    },
+    "PermitExternalCidr7": {
+      "Fn::Not": [
+        { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr7" } ] }
+      ]
+    },
+    "PermitExternalCidr8": {
+      "Fn::Not": [
+        { "Fn::Equals": [ "127.0.0.0/8", { "Ref": "ExternalCidr8" } ] }
+      ]
     }
   },
 
