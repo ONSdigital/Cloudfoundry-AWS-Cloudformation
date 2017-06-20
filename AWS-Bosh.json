@@ -21,28 +21,28 @@
     "ExternalCidr1": {
       "Type": "String",
       "Default": "127.0.0.0/8",
-      "Description": "Whitelisted External CIDR 1",
+      "Description": "Whitelisted External CIDR 1 (full access)",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalCidr2": {
       "Type": "String",
       "Default": "127.0.0.0/8",
-      "Description": "Whitelisted External CIDR 2",
+      "Description": "Whitelisted External CIDR 2 (full access)",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalCidr3": {
       "Type": "String",
       "Default": "127.0.0.0/8",
-      "Description": "Whitelisted External CIDR 3",
+      "Description": "Whitelisted External CIDR 3 (full access)",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalCidr4": {
       "Type": "String",
       "Default": "127.0.0.0/8",
-      "Description": "Whitelisted External CIDR 4",
+      "Description": "Whitelisted External CIDR 4 (full access)",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
