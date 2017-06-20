@@ -12,13 +12,6 @@
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
-    "AwsRegion": {
-      "Type": "String",
-      "Default": "eu-central-1",
-      "Description": "AWS Region",
-      "AllowedPattern": "^[a-z]+-[a-z]+-[0-9]+$",
-      "ConstraintDescription": "AWS region"
-    },
     "HostedZone": {
       "Type": "String",
       "Description": "DNS Zone",
@@ -185,11 +178,11 @@
     },
     "AwsAvailabilityZone1": {
       "Description": "AWS Availability Zone 1",
-      "Value": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] }
+      "Value": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] }
     },
     "AwsAvailabilityZone2": {
       "Description": "AWS Availability Zone 2",
-      "Value": { "Fn::Select" : [ "1", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] }
+      "Value": { "Fn::Select" : [ "1", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] }
     },
     "StackName": {
       "Description": "Stack name",
@@ -756,7 +749,7 @@
     "DmzSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "DmzCidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -778,7 +771,7 @@
     "ElastiCacheServicesAzSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "ElastiCacheServicesAzCidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -800,7 +793,7 @@
     "PrivateSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "PrivateCidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -822,7 +815,7 @@
     "RabbitmqServicesSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "RabbitmqServicesCidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -844,7 +837,7 @@
     "NatSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "NatCidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -866,7 +859,7 @@
     "RdsServicesAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "RdsServicesAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -888,7 +881,7 @@
     "RdsServicesAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ "1", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "AvailabilityZone": { "Fn::Select" : [ "1", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "RdsServicesAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1495,7 +1488,7 @@
 	},
         "DBInstanceClass": { "Ref": "DatabaseInstanceSize" },
         "AllocatedStorage": { "Ref": "DatabaseStorageSize" },
-        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "Engine": "postgres",
         "DBSubnetGroupName": { "Ref": "DatabaseSubnetGroup" },
         "MasterUsername": { "Ref": "DatabaseUsername" },
