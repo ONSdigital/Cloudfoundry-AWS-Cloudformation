@@ -9,6 +9,20 @@
       "AllowedPattern": "^[A-Za-z0-9:]+$",
       "ConstraintDescription": "Alphanumeric string"
     },
+    "AllowCfSshAccess": {
+      "Type": "String",
+      "Default": "false",
+      "Description": "Allow CF SSH access (true/false)",
+      "AllowedPattern": "^(true|false)",
+      "ConstraintDescription": "true or false"
+    },
+    "AllowDirectorAccess": {
+      "Type": "String",
+      "Default": "false",
+      "Description": "Allow Director access (true/false)",
+      "AllowedPattern": "^(true|false)",
+      "ConstraintDescription": "true or false"
+    },
     "WhitelistedCidr": {
       "Type": "String",
       "Default": "127.0.0.1/32",
@@ -30,8 +44,14 @@
     },
     "PrivateSecurityGroup": {
       "Description": "Private Security Group",
+      "Condition": "AllowDirectorAccess",
       "Value": { "Ref": "PrivateSecurityGroup" }
     }
+  },
+
+ "Conditions": {
+    "AllowCfSshAccess": { "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
+    "AllowDirectorAccess": { "Fn::Equals": [ { "Ref": "AllowDirectorAccess" }, "true" ] }
   },
 
   "Resources": {
@@ -73,12 +93,6 @@
             "FromPort": "443",
             "ToPort": "443" ,
             "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "2222",
-            "ToPort": "2222" ,
-            "IpProtocol": "tcp"
           }
         ]
       }
@@ -86,6 +100,7 @@
 
     "PrivateSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "AllowDirectorAccess",
       "Properties": {
         "GroupDescription": "Private In Out",
         "VpcId": { "Ref": "VpcId" },
@@ -130,6 +145,18 @@
             "IpProtocol": "tcp"
           }
         ]
+      }
+    },
+
+    "CfSshAccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "AllowCfSshAccess",
+      "Properties": {
+        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "CidrIp": { "Ref": "WhitelistedCidr" },
+        "FromPort": "2222",
+        "ToPort": "2222" ,
+        "IpProtocol": "tcp"
       }
     }
   }

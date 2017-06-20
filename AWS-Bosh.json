@@ -46,6 +46,34 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "ExternalCidr5": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted External CIDR 5 (DMZ 80/443 only)",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "ExternalCidr6": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted External CIDR 6 (DMZ 80/443 only)",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "ExternalCidr7": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted External CIDR 7 (DMZ 80/443 only)",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "ExternalCidr8": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted External CIDR 8 (DMZ 80/443 only)",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
     "VpcCidr": {
       "Type": "String",
       "Default": "10.0.0.0/16",
@@ -399,6 +427,34 @@
                 { "Ref": "AWS::NoValue" }
               ]
             },
+            {
+              "Fn::If": [
+                "PermitExternalCidr5",
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr5", "Outputs.DmzSecurityGroup" ] }, "\"" ] ] },
+                { "Ref": "AWS::NoValue" }
+              ]
+            },
+            {
+              "Fn::If": [
+                "PermitExternalCidr6",
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr6", "Outputs.DmzSecurityGroup" ] }, "\"" ] ] },
+                { "Ref": "AWS::NoValue" }
+              ]
+            },
+            {
+              "Fn::If": [
+                "PermitExternalCidr7",
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr7", "Outputs.DmzSecurityGroup" ] }, "\"" ] ] },
+                { "Ref": "AWS::NoValue" }
+              ]
+            },
+            {
+              "Fn::If": [
+                "PermitExternalCidr8",
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistExternalCidr8", "Outputs.DmzSecurityGroup" ] }, "\"" ] ] },
+                { "Ref": "AWS::NoValue" }
+              ]
+            },
             "]"
           ]
         ]
@@ -596,7 +652,9 @@
             ]
           },
           "WhitelistedCidr": { "Ref": "ExternalCidr1" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true"
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -631,7 +689,9 @@
             ]
           },
           "WhitelistedCidr": { "Ref": "ExternalCidr2" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true"
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -666,7 +726,9 @@
             ]
           },
           "WhitelistedCidr": { "Ref": "ExternalCidr3" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true"
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -701,7 +763,157 @@
             ]
           },
           "WhitelistedCidr": { "Ref": "ExternalCidr4" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true"
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": {
+                  "Fn::Join": [
+                    "-", [
+                      { "Ref": "AWS::StackName" },
+                      "preamble-TemplatesBucketHttpUrl"
+                    ]
+                  ]
+                }
+              },
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistExternalCidr5": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitExternalCidr5",
+      "Properties": {
+        "Parameters": {
+          "WhitelistName": {
+            "Fn::Join": [
+              ":", [
+                { "Ref": "DeploymentName" },
+                "ExternalCidr5"
+              ]
+            ]
+          },
+          "WhitelistedCidr": { "Ref": "ExternalCidr5" },
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false"
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": {
+                  "Fn::Join": [
+                    "-", [
+                      { "Ref": "AWS::StackName" },
+                      "preamble-TemplatesBucketHttpUrl"
+                    ]
+                  ]
+                }
+              },
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistExternalCidr6": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitExternalCidr6",
+      "Properties": {
+        "Parameters": {
+          "WhitelistName": {
+            "Fn::Join": [
+              ":", [
+                { "Ref": "DeploymentName" },
+                "ExternalCidr6"
+              ]
+            ]
+          },
+          "WhitelistedCidr": { "Ref": "ExternalCidr6" },
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false"
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": {
+                  "Fn::Join": [
+                    "-", [
+                      { "Ref": "AWS::StackName" },
+                      "preamble-TemplatesBucketHttpUrl"
+                    ]
+                  ]
+                }
+              },
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistExternalCidr7": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitExternalCidr7",
+      "Properties": {
+        "Parameters": {
+          "WhitelistName": {
+            "Fn::Join": [
+              ":", [
+                { "Ref": "DeploymentName" },
+                "ExternalCidr7"
+              ]
+            ]
+          },
+          "WhitelistedCidr": { "Ref": "ExternalCidr7" },
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false"
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": {
+                  "Fn::Join": [
+                    "-", [
+                      { "Ref": "AWS::StackName" },
+                      "preamble-TemplatesBucketHttpUrl"
+                    ]
+                  ]
+                }
+              },
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistExternalCidr8": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitExternalCidr8",
+      "Properties": {
+        "Parameters": {
+          "WhitelistName": {
+            "Fn::Join": [
+              ":", [
+                { "Ref": "DeploymentName" },
+                "ExternalCidr8"
+              ]
+            ]
+          },
+          "WhitelistedCidr": { "Ref": "ExternalCidr8" },
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false"
         },
         "TemplateURL": {
           "Fn::Join": [
