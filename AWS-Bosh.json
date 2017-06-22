@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "AWS CloudFormation Bosh - v2",
+  "Description": "AWS CloudFormation Bosh",
 
   "Parameters": {
     "DeploymentName": {
@@ -11,6 +11,14 @@
       "MaxLength": "16",
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "MultiAz": {
+      "Type": "String",
+      "Default": "false",
+      "Description": "Deploy multiple AZs",
+      "AllowedPattern": "^(true|false)$",
+      "ConstraintDescription": "true or false"
     },
     "AwsAvailabilityZone1": {
       "Type": "Number",
@@ -26,17 +34,11 @@
       "MinValue": "0",
       "MaxValue": "9"
     },
+
     "AllocateExternalIp": {
       "Type": "String",
       "Default": "true",
       "Description": "Allocate External IP (eg for HA Proxy)",
-      "AllowedPattern": "^(true|false)$",
-      "ConstraintDescription": "true or false"
-    },
-    "MultiAz": {
-      "Type": "String",
-      "Default": "false",
-      "Description": "Deploy multiple AZs",
       "AllowedPattern": "^(true|false)$",
       "ConstraintDescription": "true or false"
     },
@@ -47,6 +49,7 @@
       "AllowedPattern": "^(true|false)$",
       "ConstraintDescription": "true or false"
     },
+
     "GenerateElbSslCertificate": {
       "Type": "String",
       "Default": "false",
@@ -61,12 +64,14 @@
       "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+|NONE)$",
       "ConstraintDescription": "AWS ACM SSL certificate ARN or NONE"
     },
+
     "HostedZone": {
       "Type": "String",
       "Description": "DNS Zone",
       "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,}$",
       "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
     },
+
     "FullAccess1Cidr": {
       "Type": "String",
       "Default": "127.0.0.0/8",
@@ -95,6 +100,7 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
+
     "HttpAccess1Cidr": {
       "Type": "String",
       "Default": "127.0.0.0/8",
@@ -123,6 +129,7 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
+
     "ExternalNatAz1Cidr": {
       "Type": "String",
       "Default": "127.0.0.0/8",
@@ -137,24 +144,11 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
+
     "VpcCidr": {
       "Type": "String",
       "Default": "10.0.0.0/16",
       "Description": "VPC CIDR",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "PrivateAz1Cidr": {
-      "Type": "String",
-      "Default": "10.0.1.0/24",
-      "Description": "Private AZ1 Subnet",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "PrivateAz2Cidr": {
-      "Type": "String",
-      "Default": "10.0.21.0/24",
-      "Description": "Private AZ2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
@@ -186,6 +180,34 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "PrivateAz1Cidr": {
+      "Type": "String",
+      "Default": "10.0.1.0/24",
+      "Description": "Private AZ1 Subnet",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "PrivateAz2Cidr": {
+      "Type": "String",
+      "Default": "10.0.21.0/24",
+      "Description": "Private AZ2 Subnet",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "RabbitmqServicesAz1Cidr": {
+      "Type": "String",
+      "Default": "10.0.4.0/24",
+      "Description": "RabbitMQ Services AZ1 Subnet",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "RabbitmqServicesAz2Cidr": {
+      "Type": "String",
+      "Default": "10.0.4.0/24",
+      "Description": "RabbitMQ Services AZ2 Subnet",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
     "RdsServicesAz1Cidr": {
       "Type": "String",
       "Default": "10.0.111.0/24",
@@ -200,17 +222,11 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "RabbitmqServicesCidr": {
-      "Type": "String",
-      "Default": "10.0.4.0/24",
-      "Description": "RabbitMQ Services Subnet",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "DatabaseInstanceSize": {
+
+    "RdsInstanceSize": {
       "Type": "String",
       "Default": "db.t2.small",
-      "Description": "Database Size",
+      "Description": "Database Instance Size",
       "AllowedValues": [
         "db.m4.large",
         "db.m4.xlarge",
@@ -233,7 +249,8 @@
         "cache.t2.large"
       ]
     },
-    "DatabaseStorageSize": {
+
+    "RdsStorageSize": {
       "Type": "Number",
       "Default": "5",
       "MinValue": "5",
@@ -248,7 +265,7 @@
       "AllowedPattern": "^[A-Za-z][^\"@]*$",
       "ConstraintDescription": "Alphanumeric characters only and must start with a letter"
     },
-    "DatabaseUsername": {
+    "RdsUsername": {
       "Type": "String",
       "Default": "postgres",
       "Description": "Database user",
@@ -257,7 +274,7 @@
       "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
       "ConstraintDescription": "Alphanumeric characters only and must start with a letter"
     },
-    "DatabasePassword": {
+    "RdsPassword": {
       "Type": "String",
       "Default": "password",
       "Description": "Database password",
@@ -275,6 +292,7 @@
       "ConstraintDescription": "Can be any printable alphanumeric character, spaces or hypens"
     }
   },
+
 
   "Outputs": {
     "AwsRegion": {
@@ -301,16 +319,6 @@
       "Description": "Deployment name",
       "Value": { "Ref": "DeploymentName" }
     },
-    "ExternalIpAllocations": {
-      "Description": "Number of external IPs allocated",
-      "Value": {
-        "Fn::If": [
-          { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
-          "1",
-          "0"
-        ]
-      }
-    },
     "NatAz1Subnet": {
       "Description": "NAT AZ1 Subnet",
       "Value": { "Ref": "NatAz1Subnet" }
@@ -326,7 +334,17 @@
     },
     "PrivateAz2Subnet": {
       "Description": "Private AZ2 Subnet",
+      "Condition": "MultiAzOrElb",
       "Value": { "Ref": "PrivateAz2Subnet" }
+    },
+    "RabbitmqServicesAz1Subnet": {
+      "Description": "RabbitMQ Services AZ1 Subnet",
+      "Value": { "Ref": "RabbitmqServicesAz1Subnet" }
+    },
+    "RabbitmqServicesAz2Subnet": {
+      "Description": "RabbitMQ Services AZ2 Subnet",
+      "Condition": "MultiAz",
+      "Value": { "Ref": "RabbitmqServicesAz2Subnet" }
     },
     "PrivateAz1CidrPrefix": {
       "Description": "Private AZ1 CIDR",
@@ -342,6 +360,7 @@
     },
     "PrivateAz2CidrPrefix": {
       "Description": "Private AZ2 CIDR",
+      "Condition": "MultiAzOrElb",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -367,6 +386,7 @@
     },
     "PrivateAz2DefaultRoute": {
       "Description": "Private AZ2 Default Route",
+      "Condition": "MultiAzOrElb",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -378,30 +398,53 @@
         ]
       }
     },
-    "RabbitmqServicesSubnet": {
-      "Description": "RabbitMQ Services Subnet",
-      "Value": { "Ref": "RabbitmqServicesSubnet" }
-    },
-    "RabbitmqServicesCidrPrefix": {
-      "Description": "RabbitMQ Services CIDR Prefix",
+    "RabbitmqServicesAz1CidrPrefix": {
+      "Description": "RabbitMQ Services AZ1 CIDR Prefix",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] }
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] }
           ]
         ]
       }
     },
-    "RabbitmqServicesDefaultRoute": {
-      "Description": "RabbitMQ Services Default Route",
+    "RabbitmqServicesAz2CidrPrefix": {
+      "Description": "RabbitMQ Services AZ2 CIDR Prefix",
+      "Condition": "MultiAz",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesCidr" } ] } ] },
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] }
+          ]
+        ]
+      }
+    },
+    "RabbitmqServicesAz1DefaultRoute": {
+      "Description": "RabbitMQ Services AZ1 Default Route",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] },
+            "1"
+          ]
+        ]
+      }
+    },
+    "RabbitmqServicesAz2DefaultRoute": {
+      "Description": "RabbitMQ Services AZ2 Default Route",
+      "Condition": "MultiAz",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] },
+            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] },
+            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] },
             "1"
           ]
         ]
@@ -484,13 +527,13 @@
       "Description": "RDS Services AZ2 Subnet",
       "Value": { "Ref": "RdsServicesAz2Subnet" }
     },
-    "DatabaseSubnetGroup": {
+    "RdsSubnetGroup": {
       "Description": "RDS Database Subnet Group",
-      "Value": { "Ref": "DatabaseSubnetGroup" }
+      "Value": { "Ref": "RdsSubnetGroup" }
     },
-    "DatabaseSecurityGroup": {
+    "RdsSecurityGroup": {
       "Description": "RDS Database Security Group",
-      "Value": { "Ref": "DatabaseSecurityGroup" }
+      "Value": { "Ref": "RdsSecurityGroup" }
     },
     "ExternalElbs": {
       "Description": "External ELB(s)",
@@ -704,6 +747,7 @@
     },
     "NatAz2Ip": {
       "Description": "Elastic IP 3 - NAT AZ2 IP",
+      "Condition": "MultiAz",
       "Value": { "Ref": "NatAz2Ip" }
     },
     "DatabaseAddress": {
@@ -860,7 +904,26 @@
     },
     "AllocateExternalIp": { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
     "DeployExternalElb": { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAzOrElb": {
+      "Fn::Or": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] }
+      ]
+    },
+    "MultiAzAndAllocateExternalIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] }
+      ]
+    },
+    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
+    "SingleAzAndAllocateExternalIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
+        { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] }
+      ]
+    }
   },
 
   "Resources": {
@@ -1176,19 +1239,7 @@
         "EnableDnsSupport": true,
         "EnableDnsHostnames": false,
         "InstanceTenancy": "default",
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "CloudFoundryVpc"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "CloudFoundryVpc" ] ] } } ]
       }
     },
 
@@ -1199,21 +1250,21 @@
         "CidrBlock": { "Ref": "ElastiCacheServicesAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ElastiCacheServicesAz1Subnet"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ElastiCacheServicesAz1Subnet" ] ] } } ]
       }
     },
+    "ElastiCacheServicesAz2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition": "MultiAz",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
+        "CidrBlock": { "Ref": "ElastiCacheServicesAz2Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ElastiCacheServicesAz2Subnet" ] ] } } ]
+      }
+    },
+
     "PrivateAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
@@ -1221,41 +1272,18 @@
         "CidrBlock": { "Ref": "PrivateAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "PrivateAz1Subnet"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "PrivateAz1Subnet" ] ] } } ]
       }
     },
     "PrivateAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
+      "Condition": "MultiAzOrElb",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
         "CidrBlock": { "Ref": "PrivateAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "PrivateAz2Subnet"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "PrivateAz2Subnet" ] ] } } ]
       }
     },
     "RabbitmqServicesSubnet": {
@@ -1265,19 +1293,7 @@
         "CidrBlock": { "Ref": "RabbitmqServicesCidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "RabbitmqServicesSubnet"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesSubnet" ] ] } } ]
       }
     },
     "NatAz1Subnet": {
@@ -1287,19 +1303,7 @@
         "CidrBlock": { "Ref": "NatAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "NatAz1Subnet"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "NatAz1Subnet" ] ] } } ]
       }
     },
     "RdsServicesAz1Subnet": {
@@ -1309,19 +1313,7 @@
         "CidrBlock": { "Ref": "RdsServicesAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "RdsServicesAz1Subnet"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsServicesAz1Subnet" ] ] } } ]
       }
     },
     "RdsServicesAz2Subnet": {
@@ -1331,19 +1323,7 @@
         "CidrBlock": { "Ref": "RdsServicesAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "RdsServicesAz2Subnet"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsServicesAz2Subnet" ] ] } } ]
       }
     },
 
@@ -1373,19 +1353,7 @@
             ]
           }
         ],
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ElbSslCertificate"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ElbSslCertificate" ] ] } } ]
       }
     },
 
@@ -1402,19 +1370,7 @@
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  } }
 	],
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ExternalELb"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalELb" ] ] } } ]
       }
     },
 
@@ -1431,19 +1387,7 @@
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  } }
 	],
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ExternalELb"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalELb" ] ] } } ]
       }
     },
     "ExternalPlainTextElb": {
@@ -1458,19 +1402,7 @@
         "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" }
 	],
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ExternalELb"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalELb" ] ] } } ]
       }
     },
 
@@ -1482,11 +1414,16 @@
       "Type": "AWS::EC2::EIP"
     },
     "NatAz2Ip": {
-      "Type": "AWS::EC2::EIP"
+      "Type": "AWS::EC2::EIP",
+      "Condition": "MultiAz"
     },
-    "ExternalIp": {
+    "ExternalAz1Ip": {
       "Type": "AWS::EC2::EIP",
       "Condition": "AllocateExternalIp"
+    },
+    "ExternalAz2Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "MultiAzAndAllocateExternalIp"
     },
 
     "AppsExternalElbDnsRR": {
@@ -1535,9 +1472,9 @@
         ]
       }
     },
-    "AppsExternalIpDnsRR": {
+    "AppsExternalSingleIpDnsRR": {
       "Type": "AWS::Route53::RecordSet",
-      "Condition": "AllocateExternalIp",
+      "Condition": "SingleAzAndAllocateExternalIp",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -1560,7 +1497,37 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Ref": "ExternalIp" }
+          { "Ref": "ExternalAz1Ip" }
+        ]
+      }
+    },
+    "AppsExternalMultiIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAzAndAllocateExternalIp",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "apps",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Ref": "ExternalAz1Ip" },
+          { "Ref": "ExternalAz2Ip" }
         ]
       }
     },
@@ -1591,8 +1558,37 @@
         ]
       }
     },
-    "NatnsRr": {
+    "NatSingleAzDnsRr": {
       "Type": "AWS::Route53::RecordSet",
+      "Condition": "SingleAz",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "nat",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Ref": "NatAz1Ip" }
+        ]
+      }
+    },
+    "NatMultiAzDnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAz",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -1648,6 +1644,7 @@
     },
     "NatAz2DnsRr": {
       "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAz",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -1719,9 +1716,9 @@
         ]
       }
     },
-    "SystemExternalIpDnsRR": {
+    "SystemExternalSingleAzIpDnsRR": {
       "Type": "AWS::Route53::RecordSet",
-      "Condition": "AllocateExternalIp",
+      "Condition": "SingleAzAndAllocateExternalIp",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -1743,7 +1740,37 @@
         },
         "TTL": "3600",
         "Type": "A",
-        "ResourceRecords": [ { "Ref": "ExternalIp" } ]
+        "ResourceRecords": [ { "Ref": "ExternalAz1Ip" } ]
+      }
+    },
+    "SystemExternalMultiAzIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAzAndAllocateExternalIp",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "system",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Ref": "ExternalAz1Ip" },
+          { "Ref": "ExternalAz2Ip" }
+        ]
       }
     },
 
@@ -1756,6 +1783,7 @@
     },
     "NatAz2Gateway": {
       "Type": "AWS::EC2::NatGateway",
+      "Condition": "MultiAz",
       "Properties": {
         "AllocationId": { "Fn::GetAtt": [ "NatAz2Ip", "AllocationId" ] },
         "SubnetId": { "Ref": "NatAz2Subnet" }
@@ -1787,12 +1815,7 @@
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": "InternetRouteTable"
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "InternetRouteTable" ] ] } } ]
       }
     },
 
@@ -1805,6 +1828,7 @@
     },
     "NatAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "MultiAz",
       "Properties": {
         "SubnetId": { "Ref": "NatAz2Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
@@ -1819,125 +1843,45 @@
     },
     "PrivateAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "PrivateAz2Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
-    "RabbitmqServicesSubnetRouteTableAssociation": {
+    "RabbitmqServicesAz1SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
-        "SubnetId": { "Ref": "RabbitmqServicesSubnet" },
+        "SubnetId": { "Ref": "RabbitmqServicesAz1Subnet" },
+        "RouteTableId": { "Ref": "InternetRouteTable" }
+      }
+    },
+    "RabbitmqServicesAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "MultiAz",
+      "Properties": {
+        "SubnetId": { "Ref": "RabbitmqServicesAz2Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
 
-    "DatabaseSecurityGroup": {
+    "RdsSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Database Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "DatabaseSecurityGroup"
-                ]
-              ]
-            }
-          }
-        ],
-        "SecurityGroupIngress": [
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "5432",
-            "ToPort": "5432",
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "5432",
-            "ToPort": "5432",
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "PrivateAz1Cidr" },
-            "FromPort": "5432",
-            "ToPort": "5432" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "PrivateAz2Cidr" },
-            "FromPort": "5432",
-            "ToPort": "5432" ,
-            "IpProtocol": "tcp"
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsSecurityGroup" ] ] } } ]
       }
     },
+
 
     "ExternalSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "External In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ExternalSecurityGroup"
-                ]
-              ]
-            }
-          }
-        ],
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalSecurityGroup" ] ] } } ],
         "SecurityGroupEgress": [
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          },
           {
             "CidrIp": "0.0.0.0/0",
             "FromPort": "0",
@@ -1947,32 +1891,6 @@
         ],
         "SecurityGroupIngress": [
           {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          },
-          {
             "CidrIp": { "Ref": "VpcCidr" },
             "FromPort": "0",
             "ToPort": "65535" ,
@@ -1981,64 +1899,13 @@
         ]
       }
     },
+
     "ElastiCacheSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "ElastiCache Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "ElastiCacheSecurityGroup"
-                ]
-              ]
-            }
-          }
-        ],
-        "SecurityGroupIngress": [
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "6379",
-            "ToPort": "6379",
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "6379",
-            "ToPort": "6379",
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "PrivateAz1Cidr" },
-            "FromPort": "6379",
-            "ToPort": "6379" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "PrivateAz2Cidr" },
-            "FromPort": "6379",
-            "ToPort": "6379" ,
-            "IpProtocol": "tcp"
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ElastiCacheSecurityGroup" ] ] } } ]
       }
     },
     "PrivateSecurityGroup": {
@@ -2046,19 +1913,7 @@
       "Properties": {
         "GroupDescription": "InOut",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "PrivateSecurityGroup"
-                ]
-              ]
-            }
-          }
-        ],
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "PrivateSecurityGroup" ] ] } } ],
         "SecurityGroupEgress": [
           {
             "CidrIp": "0.0.0.0/0",
@@ -2173,19 +2028,7 @@
       "Properties": {
         "GroupDescription": "RabbitMQ Services In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "RabbitmqServicesSecurityGroup"
-                ]
-              ]
-            }
-          }
-        ],
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesSecurityGroup" ] ] } } ],
         "SecurityGroupIngress": [
           {
             "CidrIp": {
@@ -2243,7 +2086,137 @@
       }
     },
 
-    "DatabaseSubnetGroup": {
+    "ElastiCacheNatAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "PermitNatAz1Cidr",
+      "Properties": {
+        "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
+        "CidrIp": { "Ref": "NatAz1Cidr" },
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "IpProtocol": "tcp"
+      }
+    },
+    "ElastiCacheNatAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "PermitNatAz2Cidr",
+      "Properties": {
+        "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
+        "CidrIp": { "Ref": "NatAz2Cidr" },
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "IpProtocol": "tcp"
+      }
+    },
+    "ElastiCacheNatAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz1Cidr" },
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "IpProtocol": "tcp"
+      }
+    },
+    "ElastiCacheNatAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz2Cidr" },
+        "FromPort": "6379",
+        "ToPort": "6379",
+        "IpProtocol": "tcp"
+      }
+    },
+    "ExternalSecurityAz1GroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "PermitNatAz1Cidr",
+      "Properties": {
+        "GroupId": { "Ref": "ExternalSecurityGroup" },
+        "CidrIp": { "Ref": "NatAz1Cidr" },
+        "FromPort": "65535",
+        "ToPort": "65545",
+        "IpProtocol": "-1"
+      }
+    },
+    "ExternalSecurityAz2GroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "PermitNatAz2Cidr",
+      "Properties": {
+        "GroupId": { "Ref": "ExternalSecurityGroup" },
+        "CidrIp": { "Ref": "NatAz2Cidr" },
+        "FromPort": "65535",
+        "ToPort": "65545",
+        "IpProtocol": "-1"
+      }
+    },
+    "ExternalSecurityAz1GroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "PermitNatAz1Cidr",
+      "Properties": {
+        "GroupId": { "Ref": "ExternalSecurityGroup" },
+        "CidrIp": { "Ref": "NatAz1Cidr" },
+        "FromPort": "65535",
+        "ToPort": "65545",
+        "IpProtocol": "-1"
+      }
+    },
+    "ExternalSecurityAz2GroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "PermitNatAz2Cidr",
+      "Properties": {
+        "GroupId": { "Ref": "ExternalSecurityGroup" },
+        "CidrIp": { "Ref": "NatAz2Cidr" },
+        "FromPort": "65535",
+        "ToPort": "65545",
+        "IpProtocol": "-1"
+      }
+    },
+    "NatAz1RdsIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Ref": "NatAz1Cidr" },
+        "FromPort": "5432",
+        "ToPort": "5432",
+        "IpProtocol": "tcp"
+      }
+    },
+    "NatAz2RdsIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Ref": "NatAz2Cidr" },
+        "FromPort": "5432",
+        "ToPort": "5432",
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateAz1RdsIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz1Cidr" },
+        "FromPort": "5432",
+        "ToPort": "5432",
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateAz2RdsIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAzOrElb",
+      "Properties": {
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz2Cidr" },
+        "FromPort": "5432",
+        "ToPort": "5432",
+        "IpProtocol": "tcp"
+      }
+    },
+
+    "RdsSubnetGroup": {
       "Type" : "AWS::RDS::DBSubnetGroup",
       "Properties" : {
         "DBSubnetGroupDescription" : "Database Subnet Group",
@@ -2251,19 +2224,7 @@
           { "Ref": "RdsServicesAz1Subnet" },
           { "Ref": "RdsServicesAz2Subnet" }
         ],
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "DatabaseSubnetGroup"
-                ]
-              ]
-            }
-          }
-        ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsSubnetGroup" ] ] } } ]
       }
     },
     "ElastiCacheSubnetGroup": {
@@ -2276,7 +2237,7 @@
         ]
       }
     },
-    "Database": {
+    "RdsInstance": {
       "Type" : "AWS::RDS::DBInstance",
       "Properties": {
         "DBInstanceIdentifier": {
@@ -2287,27 +2248,15 @@
             ]
           ]
 	},
-        "DBInstanceClass": { "Ref": "DatabaseInstanceSize" },
-        "AllocatedStorage": { "Ref": "DatabaseStorageSize" },
+        "DBInstanceClass": { "Ref": "RdsInstanceSize" },
+        "AllocatedStorage": { "Ref": "RdsStorageSize" },
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
         "Engine": "postgres",
-        "DBSubnetGroupName": { "Ref": "DatabaseSubnetGroup" },
-        "MasterUsername": { "Ref": "DatabaseUsername" },
-        "MasterUserPassword": { "Ref": "DatabasePassword" },
-        "VPCSecurityGroups": [ { "Ref": "DatabaseSecurityGroup" } ],
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "DeploymentName" },
-                  "Database"
-                ]
-              ]
-            }
-          }
-        ]
+        "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
+        "MasterUsername": { "Ref": "RdsUsername" },
+        "MasterUserPassword": { "Ref": "RdsPassword" },
+        "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsInstance" ] ] } } ]
       }
     },
 
