@@ -228,6 +228,7 @@
       "Default": "db.t2.small",
       "Description": "Database Instance Size",
       "AllowedValues": [
+        "NONE",
         "db.m4.large",
         "db.m4.xlarge",
         "db.t2.micro",
@@ -241,6 +242,7 @@
       "Default": "cache.t2.small",
       "Description": "ElastiCache Instance Size",
       "AllowedValues": [
+        "NONE",
         "cache.m4.large",
         "cache.m4.xlarge",
         "cache.t2.micro",
@@ -521,22 +523,27 @@
     },
     "RdsServicesAz1Subnet": {
       "Description": "RDS Services AZ1 Subnet",
+      "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsServicesAz1Subnet" }
     },
     "RdsServicesAz2Subnet": {
       "Description": "RDS Services AZ2 Subnet",
+      "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsServicesAz2Subnet" }
     },
     "RdsSubnetGroup": {
       "Description": "RDS Database Subnet Group",
+      "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsSubnetGroup" }
     },
     "RdsSecurityGroup": {
       "Description": "RDS Database Security Group",
+      "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsSecurityGroup" }
     },
     "ExternalElbs": {
       "Description": "External ELB(s)",
+      "Condition": "DeployExternalElb",
       "Value": {
         "Fn::Join": [
           "", [
@@ -760,30 +767,37 @@
     },
     "ElastiCacheBrokerAccessKeyId": {
       "Description": "ElastiCache Broker Access Key Id",
+      "Condition": "DeployElastiCacheInstance",
       "Value": { "Ref": "ElastiCacheBrokerAccessKey" }
     },
     "ElastiCacheBrokerAccessKey": {
       "Description": "ElastiCache Broker Access Key",
+      "Condition": "DeployElastiCacheInstance",
       "Value": { "Fn::GetAtt": [ "ElastiCacheBrokerAccessKey", "SecretAccessKey" ] }
     },
     "ElastiCacheSubnetGroup": {
       "Description": "ElastiCache Subnet Group",
+      "Condition": "DeployElastiCacheInstance",
       "Value": { "Ref": "ElastiCacheSubnetGroup" }
     },
     "ElastiCacheBrokerUserName": {
       "Description": "ElastiCache Broker User Name",
+      "Condition": "DeployElastiCacheInstance",
       "Value": { "Ref": "ElastiCacheBrokerUser" }
     },
     "RdsBrokerAccessKeyId": {
       "Description": "RDS Broker Access Key Id",
+      "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsBrokerAccessKey" }
     },
     "RdsBrokerAccessKey": {
       "Description": "RDS Broker Access Key",
+      "Condition": "DeployRdsInstance",
       "Value": { "Fn::GetAtt": [ "RdsBrokerAccessKey", "SecretAccessKey" ] }
     },
     "RdsBrokerUserName": {
       "Description": "RDS Broker User Name",
+      "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsBrokerUser" }
     },
     "S3BucketAccessInstanceProfile": {
@@ -904,6 +918,20 @@
     },
     "AllocateExternalIp": { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
     "DeployExternalElb": { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
+    "DeployElastiCacheInstance": { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } },
+    "DeployRdsInstance": { "Fn::Not": { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } },
+    "MultiAzAndDeployElastiCacheInstance": {
+      "Fn::And": {
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
+        { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } }
+      }
+    },
+    "MultiAzAndDeployRdsInstance": {
+      "Fn::And": {
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
+        { "Fn::Not": { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } }
+      }
+    },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
@@ -1245,6 +1273,7 @@
 
     "ElastiCacheServicesAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
+      "Condition": "DeployElastiCacheInstance",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
         "CidrBlock": { "Ref": "ElastiCacheServicesAz1Cidr" },
@@ -1255,7 +1284,7 @@
     },
     "ElastiCacheServicesAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "MultiAz",
+      "Condition": "DeployElastiCacheInstance",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
         "CidrBlock": { "Ref": "ElastiCacheServicesAz2Cidr" },
@@ -1308,6 +1337,7 @@
     },
     "RdsServicesAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
+      "Condition": "DeployRdsInstance",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
         "CidrBlock": { "Ref": "RdsServicesAz1Cidr" },
@@ -1318,6 +1348,7 @@
     },
     "RdsServicesAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
+      "Condition": "DeployRdsInstance",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AwsRegion" } } ] },
         "CidrBlock": { "Ref": "RdsServicesAz2Cidr" },
@@ -1865,16 +1896,15 @@
       }
     },
 
-    "RdsSecurityGroup": {
+    "ElastiCacheSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployElastiCacheInstance",
       "Properties": {
-        "GroupDescription": "Database Security Group",
+        "GroupDescription": "ElastiCache Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsSecurityGroup" ] ] } } ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ElastiCacheSecurityGroup" ] ] } } ]
       }
     },
-
-
     "ExternalSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -1882,147 +1912,43 @@
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalSecurityGroup" ] ] } } ],
         "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          }
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
         ],
         "SecurityGroupIngress": [
-          {
-            "CidrIp": { "Ref": "VpcCidr" },
-            "FromPort": "0",
-            "ToPort": "65535" ,
-            "IpProtocol": "-1"
-          }
+          { "CidrIp": { "Ref": "VpcCidr" }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
         ]
+      }
+    },
+    "RdsSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployRdsInstance",
+      "Properties": {
+        "GroupDescription": "Database Security Group",
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsSecurityGroup" ] ] } } ]
       }
     },
 
-    "ElastiCacheSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "ElastiCache Security Group",
-        "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ElastiCacheSecurityGroup" ] ] } } ]
-      }
-    },
     "PrivateSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "InOut",
+        "GroupDescription": "Private In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "PrivateSecurityGroup" ] ] } } ],
         "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          }
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
         ],
         "SecurityGroupIngress": [
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "HaProxyIp" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "22",
-            "ToPort": "22" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "22",
-            "ToPort": "22" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "6868",
-            "ToPort": "6868" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "6868",
-            "ToPort": "6868" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "25555",
-            "ToPort": "25555" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "25555",
-            "ToPort": "25555" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "VpcCidr" },
-            "FromPort": "0",
-            "ToPort": "65535" ,
-            "IpProtocol": "-1"
-          }
-        ]
-      }
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "HaProxyIp" }, "32" ] ] }, "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz1Ip" }, "32" ] ] }, "FromPort": "22", "ToPort": "22" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz2Ip" }, "32" ] ] }, "FromPort": "22", "ToPort": "22" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz1Ip" }, "32" ] ] }, "FromPort": "6868", "ToPort": "6868" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz2Ip" }, "32" ] ] }, "FromPort": "6868", "ToPort": "6868" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz1Ip" }, "32" ] ] }, "FromPort": "25555", "ToPort": "25555" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz2Ip" }, "32" ] ] }, "FromPort": "25555", "ToPort": "25555" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Ref": "VpcCidr" }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" } ] }
     },
+
     "RabbitmqServicesSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -2030,65 +1956,17 @@
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesSecurityGroup" ] ] } } ],
         "SecurityGroupIngress": [
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "22",
-            "ToPort": "22" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "22",
-            "ToPort": "22" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz1Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "5671",
-            "ToPort": "5672" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": {
-              "Fn::Join": [
-                "/",[
-                  { "Ref": "NatAz2Ip" },
-                  "32"
-                ]
-              ]
-            },
-            "FromPort": "5671",
-            "ToPort": "5672" ,
-            "IpProtocol": "tcp"
-          }
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz1Ip" }, "32" ] ] }, "FromPort": "22", "ToPort": "22" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz2Ip" }, "32" ] ] }, "FromPort": "22", "ToPort": "22" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz1Ip" }, "32" ] ] }, "FromPort": "5671", "ToPort": "5672" , "IpProtocol": "tcp" },
+          { "CidrIp": { "Fn::Join": [ "/",[ { "Ref": "NatAz2Ip" }, "32" ] ] }, "FromPort": "5671", "ToPort": "5672" , "IpProtocol": "tcp" }
         ]
       }
     },
 
     "ElastiCacheNatAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "PermitNatAz1Cidr",
+      "Condition": "DeployElastiCacheInstance",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
         "CidrIp": { "Ref": "NatAz1Cidr" },
@@ -2099,7 +1977,7 @@
     },
     "ElastiCacheNatAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "PermitNatAz2Cidr",
+      "Condition": "MultiAzAndDeployElastiCacheInstance",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
         "CidrIp": { "Ref": "NatAz2Cidr" },
@@ -2110,6 +1988,7 @@
     },
     "ElastiCacheNatAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployElastiCacheInstance",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz1Cidr" },
@@ -2120,7 +1999,7 @@
     },
     "ElastiCacheNatAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployElastiCacheInstance",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz2Cidr" },
@@ -2175,6 +2054,7 @@
     },
     "NatAz1RdsIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
         "CidrIp": { "Ref": "NatAz1Cidr" },
@@ -2185,7 +2065,7 @@
     },
     "NatAz2RdsIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
         "CidrIp": { "Ref": "NatAz2Cidr" },
@@ -2196,6 +2076,7 @@
     },
     "PrivateAz1RdsIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz1Cidr" },
@@ -2206,7 +2087,7 @@
     },
     "PrivateAz2RdsIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzOrElb",
+      "Condition": "MultiAzAndDeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz2Cidr" },
@@ -2218,6 +2099,7 @@
 
     "RdsSubnetGroup": {
       "Type" : "AWS::RDS::DBSubnetGroup",
+      "Condition": "DeployRdsInstance",
       "Properties" : {
         "DBSubnetGroupDescription" : "Database Subnet Group",
         "SubnetIds" : [
@@ -2229,6 +2111,7 @@
     },
     "ElastiCacheSubnetGroup": {
       "Type" : "AWS::ElastiCache::SubnetGroup",
+      "Condition": "DeployElastiCacheInstance",
       "Properties" : {
         "Description": "ElastiCache Subnet Group",
         "SubnetIds" : [
@@ -2239,6 +2122,7 @@
     },
     "RdsInstance": {
       "Type" : "AWS::RDS::DBInstance",
+      "Condition": "DeployRdsInstance",
       "Properties": {
         "DBInstanceIdentifier": {
           "Fn::Join": [
@@ -2333,6 +2217,7 @@
 
     "ElastiCacheBrokerUser": {
       "Type": "AWS::IAM::User",
+      "Condition": "DeployElastiCacheInstance",
       "Properties": {
         "Policies": [
           {
@@ -2373,6 +2258,7 @@
     },
     "RdsBrokerUser": {
       "Type": "AWS::IAM::User",
+      "Condition": "DeployRdsInstance",
       "Properties": {
         "Policies": [
           {
@@ -2418,12 +2304,14 @@
 
     "ElastiCacheBrokerAccessKey": {
       "Type": "AWS::IAM::AccessKey",
+      "Condition": "DeployElastiCacheInstance",
       "Properties": {
         "UserName": { "Ref": "ElastiCacheBrokerUser" }
       }
     },
     "RdsBrokerAccessKey": {
       "Type": "AWS::IAM::AccessKey",
+      "Condition": "DeployRdsInstance",
       "Properties": {
         "UserName": { "Ref": "RdsBrokerUser" }
       }
