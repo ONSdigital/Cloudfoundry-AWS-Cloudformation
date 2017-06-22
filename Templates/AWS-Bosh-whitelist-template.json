@@ -38,9 +38,9 @@
   },
 
   "Outputs": {
-    "ExternalSecurityGroup": {
-      "Description": "External Security Group",
-      "Value": { "Ref": "ExternalSecurityGroup" }
+    "HttpSecurityGroup": {
+      "Description": "HTTP(S) Security Group",
+      "Value": { "Ref": "HttpSecurityGroup" }
     },
     "PrivateSecurityGroup": {
       "Description": "Private Security Group",
@@ -55,10 +55,10 @@
   },
 
   "Resources": {
-    "ExternalSecurityGroup": {
+    "HttpSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "External In Out",
+        "GroupDescription": "HTTP(S) Access In Out",
         "VpcId": { "Ref": "VpcId" },
         "Tags": [
           {
@@ -67,7 +67,7 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "WhitelistName" },
-                  "ExternalSecurityGroup"
+                  "HttpSecurityGroup"
                 ]
               ]
             }
