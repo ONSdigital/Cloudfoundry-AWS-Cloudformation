@@ -921,16 +921,16 @@
     "DeployElastiCacheInstance": { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } },
     "DeployRdsInstance": { "Fn::Not": { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } },
     "MultiAzAndDeployElastiCacheInstance": {
-      "Fn::And": {
+      "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
         { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } }
-      }
+      ]
     },
     "MultiAzAndDeployRdsInstance": {
-      "Fn::And": {
+      "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
         { "Fn::Not": { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } }
-      }
+      ]
     },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
