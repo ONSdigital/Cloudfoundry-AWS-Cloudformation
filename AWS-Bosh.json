@@ -225,30 +225,30 @@
 
     "RdsInstanceSize": {
       "Type": "String",
-      "Default": "db.t2.small",
+      "Default": "NONE",
       "Description": "Database Instance Size",
       "AllowedValues": [
         "NONE",
-        "db.m4.large",
-        "db.m4.xlarge",
         "db.t2.micro",
         "db.t2.small",
         "db.t2.medium",
-        "db.t2.large"
+        "db.t2.large",
+        "db.m4.large",
+        "db.m4.xlarge"
       ]
     },
     "ElastiCacheInstanceSize": {
       "Type": "String",
-      "Default": "cache.t2.small",
+      "Default": "NONE",
       "Description": "ElastiCache Instance Size",
       "AllowedValues": [
         "NONE",
-        "cache.m4.large",
-        "cache.m4.xlarge",
         "cache.t2.micro",
         "cache.t2.small",
         "cache.t2.medium",
-        "cache.t2.large"
+        "cache.t2.large",
+        "cache.m4.large",
+        "cache.m4.xlarge"
       ]
     },
 
@@ -515,10 +515,12 @@
     },
     "ElastiCacheServicesAz1Subnet": {
       "Description": "ElastiCache AZ1 Subnet",
+      "Condition": "DeployElastiCacheInstance",
       "Value": { "Ref": "ElastiCacheServicesAz1Subnet" }
     },
     "ElastiCacheServicesAz2Subnet": {
       "Description": "ElastiCache AZ2 Subnet",
+      "Condition": "DeployElastiCacheInstance",
       "Value": { "Ref": "ElastiCacheServicesAz2Subnet" }
     },
     "RdsServicesAz1Subnet": {
