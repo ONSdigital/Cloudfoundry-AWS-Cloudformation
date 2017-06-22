@@ -9,6 +9,13 @@
       "AllowedPattern": "^[A-Za-z0-9:]+$",
       "ConstraintDescription": "Alphanumeric string"
     },
+    "WhitelistedCidr": {
+      "Type": "String",
+      "Default": "127.0.0.1/32",
+      "Description": "CIDR to whitelist",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
     "AllowCfSshAccess": {
       "Type": "String",
       "Default": "false",
@@ -22,13 +29,6 @@
       "Description": "Allow Director access (true/false)",
       "AllowedPattern": "^(true|false)",
       "ConstraintDescription": "true or false"
-    },
-    "WhitelistedCidr": {
-      "Type": "String",
-      "Default": "127.0.0.1/32",
-      "Description": "CIDR to whitelist",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
     },
     "VpcId": {
       "Type": "AWS::EC2::VPC::Id",
