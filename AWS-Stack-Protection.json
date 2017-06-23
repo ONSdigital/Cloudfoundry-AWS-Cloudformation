@@ -37,7 +37,7 @@
             {
               "Effect": { "Ref": "UpdateAllowDeny" },
               "Action": "Update:*",
-              "Resource": "LogicalResourceId/"
+              "Resource": "LogicalResourceId/*"
             }
           ]
         }
