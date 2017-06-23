@@ -1357,16 +1357,6 @@
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesSubnet" ] ] } } ]
       }
     },
-    "NatAz1Subnet": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
-        "CidrBlock": { "Ref": "NatAz1Cidr" },
-        "MapPublicIpOnLaunch": false,
-        "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "NatAz1Subnet" ] ] } } ]
-      }
-    },
     "RdsServicesAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "DeployRdsInstance",
