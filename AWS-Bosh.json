@@ -100,6 +100,21 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "FullAccess5Cidr": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted Full Access CIDR 5",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccess6Cidr": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted Full Access CIDR 6",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+
 
     "HttpAccess1Cidr": {
       "Type": "String",
@@ -126,21 +141,6 @@
       "Type": "String",
       "Default": "127.0.0.0/8",
       "Description": "Whitelisted HTTP(S) Access CIDR 4/g",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-
-    "ExternalNatAz1Cidr": {
-      "Type": "String",
-      "Default": "127.0.0.0/8",
-      "Description": "Whitelisted NAT AZ1 CIDR (full access)",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "ExternalNatAz2Cidr": {
-      "Type": "String",
-      "Default": "127.0.0.0/8",
-      "Description": "Whitelisted NAT AZ2 CIDR (full access)",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
@@ -621,6 +621,20 @@
             },
             {
               "Fn::If": [
+                "PermitFullAccess5Cidr",
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistFullAccess5Cidr", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                { "Ref": "AWS::NoValue" }
+              ]
+            },
+            {
+              "Fn::If": [
+                "PermitFullAccess6Cidr",
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistFullAccess6Cidr", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                { "Ref": "AWS::NoValue" }
+              ]
+            },
+            {
+              "Fn::If": [
                 "PermitHttpAccess1Cidr",
                 { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistHttpAccess1Cidr", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
@@ -644,20 +658,6 @@
               "Fn::If": [
                 "PermitHttpAccess4Cidr",
                 { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistHttpAccess4Cidr", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
-                { "Ref": "AWS::NoValue" }
-              ]
-            },
-            {
-              "Fn::If": [
-                "PermitNatAz1Cidr",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "ExternalNatAz1Cidr", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
-                { "Ref": "AWS::NoValue" }
-              ]
-            },
-            {
-              "Fn::If": [
-                "PermitNatAz2Cidr",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "ExternalNatAz2Cidr", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
@@ -715,15 +715,15 @@
             },
             {
               "Fn::If": [
-                "PermitNatAz1Cidr",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "ExternalNatAz1Cidr", "Outputs.PrivateSecurityGroup" ] }, "\"" ] ] },
+                "PermitFullAccess5Cidr",
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistFullAccess5Cidr", "Outputs.PrivateSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
             {
               "Fn::If": [
-                "PermitNatAz2Cidr",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "ExternalNatAz2Cidr", "Outputs.PrivateSecurityGroup" ] }, "\"" ] ] },
+                "PermitFullAccess6Cidr",
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistFullAccess6Cidr", "Outputs.PrivateSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
@@ -2012,7 +2012,7 @@
     },
     "ExternalSecurityAz1GroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "PermitNatAz1Cidr",
+      "Condition": "PermitFullAccess5Cidr",
       "Properties": {
         "GroupId": { "Ref": "ExternalSecurityGroup" },
         "CidrIp": { "Ref": "NatAz1Cidr" },
@@ -2023,7 +2023,7 @@
     },
     "ExternalSecurityAz2GroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "PermitNatAz2Cidr",
+      "Condition": "PermitFullAccess6Cidr",
       "Properties": {
         "GroupId": { "Ref": "ExternalSecurityGroup" },
         "CidrIp": { "Ref": "NatAz2Cidr" },
@@ -2034,7 +2034,7 @@
     },
     "ExternalSecurityAz1GroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "PermitNatAz1Cidr",
+      "Condition": "PermitFullAccess5Cidr",
       "Properties": {
         "GroupId": { "Ref": "ExternalSecurityGroup" },
         "CidrIp": { "Ref": "NatAz1Cidr" },
@@ -2045,7 +2045,7 @@
     },
     "ExternalSecurityAz2GroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "PermitNatAz2Cidr",
+      "Condition": "PermitFullAccess6Cidr",
       "Properties": {
         "GroupId": { "Ref": "ExternalSecurityGroup" },
         "CidrIp": { "Ref": "NatAz2Cidr" },
