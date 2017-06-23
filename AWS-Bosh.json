@@ -1139,6 +1139,82 @@
         }
       }
     },
+    "WhitelistFullAccess5Cidr": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccess5Cidr",
+      "Properties": {
+        "Parameters": {
+          "WhitelistName": {
+            "Fn::Join": [
+              ":", [
+                { "Ref": "DeploymentName" },
+                "FullAccess5Cidr"
+              ]
+            ]
+          },
+          "WhitelistedCidr": { "Ref": "FullAccess5Cidr" },
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true"
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": {
+                  "Fn::Join": [
+                    "-", [
+                      { "Ref": "AWS::StackName" },
+                      "preamble-TemplatesBucketHttpUrl"
+                    ]
+                  ]
+                }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistFullAccess6Cidr": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccess6Cidr",
+      "Properties": {
+        "Parameters": {
+          "WhitelistName": {
+            "Fn::Join": [
+              ":", [
+                { "Ref": "DeploymentName" },
+                "FullAccess6Cidr"
+              ]
+            ]
+          },
+          "WhitelistedCidr": { "Ref": "FullAccess6Cidr" },
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true"
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": {
+                  "Fn::Join": [
+                    "-", [
+                      { "Ref": "AWS::StackName" },
+                      "preamble-TemplatesBucketHttpUrl"
+                    ]
+                  ]
+                }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
     "WhitelistHttpAccess1Cidr": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitHttpAccess1Cidr",
