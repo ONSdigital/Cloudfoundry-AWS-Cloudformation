@@ -920,18 +920,18 @@
     },
     "AllocateExternalIp": { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
     "DeployExternalElb": { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
-    "DeployElastiCacheInstance": { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } },
-    "DeployRdsInstance": { "Fn::Not": { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } },
+    "DeployElastiCacheInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] },
+    "DeployRdsInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } ] },
     "MultiAzAndDeployElastiCacheInstance": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
-        { "Fn::Not": { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] }
       ]
     },
     "MultiAzAndDeployRdsInstance": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
-        { "Fn::Not": { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } ] }
       ]
     },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
