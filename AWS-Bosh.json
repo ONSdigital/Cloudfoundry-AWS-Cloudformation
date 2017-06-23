@@ -759,6 +759,26 @@
       "Condition": "MultiAz",
       "Value": { "Ref": "NatAz2Ip" }
     },
+    "ExternalIpAz1": {
+      "Description": "Unallocated external IPs",
+      "Condition": "AllocateExternalIp",
+      "Value": { "Ref": "ExternalAz1Ip" }
+    },
+    "ExternalIpAz2": {
+      "Description": "Unallocated external IPs",
+      "Condition": "MultiAzAndAllocateExternalIp",
+      "Value": { "Ref": "ExternalAz1Ip" }
+    },
+    "MultiAz": {
+      "Description": "Multi AZ?",
+      "Value": {
+        "Fn::If": [
+          "MultiAz",
+          "1",
+          "0"
+        ]
+      }
+    },
     "RdsAddress": {
       "Description": "RDS Access Address",
       "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Address" ] }
@@ -1818,7 +1838,7 @@
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
-              "GenerateElbSslCertificate",
+              "ExternalAcmSslElb",
               "DNSName"
             ]
           }
