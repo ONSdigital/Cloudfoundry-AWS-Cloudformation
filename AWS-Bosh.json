@@ -154,70 +154,70 @@
     },
     "ElastiCacheServicesAz1Cidr": {
       "Type": "String",
-      "Default": "10.0.101.0/24",
+      "Default": "10.0.10.0/24",
       "Description": "ElastiCache AZ1 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ElastiCacheServicesAz2Cidr": {
       "Type": "String",
-      "Default": "10.0.101.0/24",
+      "Default": "10.0.110.0/24",
       "Description": "ElastiCache AZ2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "NatAz1Cidr": {
       "Type": "String",
-      "Default": "10.0.2.0/24",
+      "Default": "10.0.20.0/24",
       "Description": "NAT AZ1 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "NatAz2Cidr": {
       "Type": "String",
-      "Default": "10.0.2.0/24",
+      "Default": "10.0.120.0/24",
       "Description": "NAT AZ2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "PrivateAz1Cidr": {
       "Type": "String",
-      "Default": "10.0.1.0/24",
+      "Default": "10.0.40.0/24",
       "Description": "Private AZ1 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "PrivateAz2Cidr": {
       "Type": "String",
-      "Default": "10.0.21.0/24",
+      "Default": "10.0.140.0/24",
       "Description": "Private AZ2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "RabbitmqServicesAz1Cidr": {
       "Type": "String",
-      "Default": "10.0.4.0/24",
+      "Default": "10.0.50.0/24",
       "Description": "RabbitMQ Services AZ1 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "RabbitmqServicesAz2Cidr": {
       "Type": "String",
-      "Default": "10.0.4.0/24",
+      "Default": "10.0.150.0/24",
       "Description": "RabbitMQ Services AZ2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "RdsServicesAz1Cidr": {
       "Type": "String",
-      "Default": "10.0.111.0/24",
+      "Default": "10.0.60.0/24",
       "Description": "RDS Services AZ1 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "RdsServicesAz2Cidr": {
       "Type": "String",
-      "Default": "10.0.112.0/24",
+      "Default": "10.0.160.0/24",
       "Description": "RDS Services AZ2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
@@ -1306,6 +1306,26 @@
       }
     },
 
+    "NatAz1Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "CidrBlock": { "Ref": "NatAz1Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "NatAz1Subnet" ] ] } } ]
+      }
+    },
+    "NatAz2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "CidrBlock": { "Ref": "NatAz2Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "NatAz2Subnet" ] ] } } ]
+      }
+    },
     "PrivateAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
