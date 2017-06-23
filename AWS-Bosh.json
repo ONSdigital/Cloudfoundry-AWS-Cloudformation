@@ -1914,7 +1914,7 @@
     },
     "SystemExternalElbExistingSslDnsRR": {
       "Type": "AWS::Route53::RecordSet",
-      "Condition": "DeployExternalElb",
+      "Condition": "UseElbSslCertificateArn",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
