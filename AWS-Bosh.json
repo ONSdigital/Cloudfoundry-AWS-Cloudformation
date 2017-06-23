@@ -622,14 +622,14 @@
             {
               "Fn::If": [
                 "PermitFullAccess5Cidr",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistFullAccess5Cidr", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistFullAccess5Cidr", "Outputs.ExternalSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
             {
               "Fn::If": [
                 "PermitFullAccess6Cidr",
-                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistFullAccess6Cidr", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                { "Fn::Join": [ "", [ ",", "\"", { "Fn::GetAtt": [ "WhitelistFullAccess6Cidr", "Outputs.ExternalSecurityGroup" ] }, "\"" ] ] },
                 { "Ref": "AWS::NoValue" }
               ]
             },
