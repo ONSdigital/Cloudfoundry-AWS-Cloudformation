@@ -1872,7 +1872,7 @@
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
-              "UseElbSslCertificateArn",
+              "ExternalExistingSslElb",
               "DNSName"
             ]
           }
