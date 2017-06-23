@@ -1347,7 +1347,7 @@
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "PrivateAz2Subnet" ] ] } } ]
       }
     },
-    "RabbitmqServiceAz1sSubnet": {
+    "RabbitmqServicesAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
@@ -1357,7 +1357,7 @@
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesAz1Subnet" ] ] } } ]
       }
     },
-    "RabbitmqServiceAz2sSubnet": {
+    "RabbitmqServicesAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAz",
       "Properties": {
