@@ -879,6 +879,16 @@
         { "Fn::Equals": [ { "Ref": "FullAccess4Cidr" }, "127.0.0.0/8" ] }
       ]
     },
+    "PermitFullAccess5Cidr": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "FullAccess5Cidr" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitFullAccess6Cidr": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "FullAccess6Cidr" }, "127.0.0.0/8" ] }
+      ]
+    },
     "PermitHttpAccess1Cidr": {
       "Fn::Not": [
         { "Fn::Equals": [ { "Ref": "HttpAccess1Cidr" }, "127.0.0.0/8" ] }
