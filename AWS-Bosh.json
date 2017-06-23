@@ -582,7 +582,6 @@
         "Fn::Join": [
           "", [
             "[",
-            { "Fn::Join": [ "", [ "\"", { "Ref": "HttpSecurityGroup" }, "\"" ] ] },
             {
               "Fn::If": [
                 "PermitFullAccess1Cidr",
