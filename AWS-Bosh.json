@@ -1347,14 +1347,25 @@
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "PrivateAz2Subnet" ] ] } } ]
       }
     },
-    "RabbitmqServicesSubnet": {
+    "RabbitmqServiceAz1sSubnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
-        "CidrBlock": { "Ref": "RabbitmqServicesCidr" },
+        "CidrBlock": { "Ref": "RabbitmqServicesAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesSubnet" ] ] } } ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesAz1Subnet" ] ] } } ]
+      }
+    },
+    "RabbitmqServiceAz2sSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition": "MultiAz",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "CidrBlock": { "Ref": "RabbitmqServicesAz2Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesAz2Subnet" ] ] } } ]
       }
     },
     "RdsServicesAz1Subnet": {
