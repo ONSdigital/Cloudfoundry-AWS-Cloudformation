@@ -226,7 +226,7 @@
     "RdsInstanceSize": {
       "Type": "String",
       "Default": "NONE",
-      "Description": "Database Instance Size",
+      "Description": "RDS Instance Size",
       "AllowedValues": [
         "NONE",
         "db.t2.micro",
@@ -258,8 +258,8 @@
       "MinValue": "5",
       "MaxValue": "6144"
     },
-    "DatabaseName": {
-      "Description" : "Database Name",
+    "RdsName": {
+      "Description" : "RDS Instance Name",
       "Default": "rds_database",
       "Type": "String",
       "MinLength": "1",
@@ -270,7 +270,7 @@
     "RdsUsername": {
       "Type": "String",
       "Default": "postgres",
-      "Description": "Database user",
+      "Description": "RDS user",
       "MinLength": "1",
       "MaxLength": "63",
       "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
@@ -279,7 +279,7 @@
     "RdsPassword": {
       "Type": "String",
       "Default": "password",
-      "Description": "Database password",
+      "Description": "RDS password",
       "MinLength": "1",
       "MaxLength": "63",
       "AllowedPattern": "^[^\"@]+$",
@@ -534,12 +534,12 @@
       "Value": { "Ref": "RdsServicesAz2Subnet" }
     },
     "RdsSubnetGroup": {
-      "Description": "RDS Database Subnet Group",
+      "Description": "RDS Subnet Group",
       "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsSubnetGroup" }
     },
     "RdsSecurityGroup": {
-      "Description": "RDS Database Security Group",
+      "Description": "RDS Security Group",
       "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsSecurityGroup" }
     },
@@ -759,13 +759,13 @@
       "Condition": "MultiAz",
       "Value": { "Ref": "NatAz2Ip" }
     },
-    "DatabaseAddress": {
-      "Description": "Database Access Address",
-      "Value": { "Fn::GetAtt": [ "Database", "Endpoint.Address" ] }
+    "RdsAddress": {
+      "Description": "RDS Access Address",
+      "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Address" ] }
     },
-    "DatabasePort": {
-      "Description": "Database Port",
-      "Value": { "Fn::GetAtt": [ "Database", "Endpoint.Port" ] }
+    "RdsPort": {
+      "Description": "RDS Port",
+      "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Port" ] }
     },
     "ElastiCacheBrokerAccessKeyId": {
       "Description": "ElastiCache Broker Access Key Id",
@@ -1490,9 +1490,9 @@
       "Condition": "MultiAzAndAllocateExternalIp"
     },
 
-    "AppsExternalElbDnsRR": {
+    "AppsExternalElbGeneratedSslDnsRR": {
       "Type": "AWS::Route53::RecordSet",
-      "Condition": "DeployExternalElb",
+      "Condition": "GenerateElbSslCertificate",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -1517,25 +1517,82 @@
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
-              {
-                "Fn::If": [
-                  "GenerateElbSslCertificate",
-                  { "Ref": "ExternalAcmSslElb" },
-                  {
-                    "Fn::If": [
-                      "UseElbSslCertificateArn",
-                      { "Ref": "ExternalExistingSslElb" },
-                      { "Ref": "ExternalPlainTextElb" }
-                    ]
-                  }
-                ]
-              },
+              "ExternalAcmSslElb",
               "DNSName"
             ]
           }
         ]
       }
     },
+    "AppsExternalElbExistingSslDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "UseElbSslCertificateArn",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "apps",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              "ExternalExistingSslElb",
+              "DNSName"
+            ]
+          }
+        ]
+      }
+    },
+    "AppsExternalElbPlainTextDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "PlainTextElb",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "apps",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              "ExternalPlainTextElb",
+              "DNSName"
+            ]
+          }
+        ]
+      }
+    },
+
     "AppsExternalSingleIpDnsRR": {
       "Type": "AWS::Route53::RecordSet",
       "Condition": "SingleAzAndAllocateExternalIp",
@@ -1734,7 +1791,41 @@
         ]
       }
     },
-    "SystemExternalElbDnsRR": {
+    "SystemExternalElbGenerateSslDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "GenerateElbSslCertificate",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "system",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              "GenerateElbSslCertificate",
+              "DNSName"
+            ]
+          }
+        ]
+      }
+    },
+    "SystemExternalElbExistingSslDnsRR": {
       "Type": "AWS::Route53::RecordSet",
       "Condition": "DeployExternalElb",
       "Properties": {
@@ -1761,19 +1852,41 @@
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
-              {
-                "Fn::If": [
-                  "GenerateElbSslCertificate",
-                  { "Ref": "ExternalAcmSslElb" },
-                  {
-                    "Fn::If": [
-                      "UseElbSslCertificateArn",
-                      { "Ref": "ExternalExistingSslElb" },
-                      { "Ref": "ExternalPlainTextElb" }
-                    ]
-                  }
-                ]
-              },
+              "UseElbSslCertificateArn",
+              "DNSName"
+            ]
+          }
+        ]
+      }
+    },
+    "SystemExternalElbPlainTextDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "PlainTextElb",
+      "Properties": {
+        "HostedZoneName": {
+          "Fn::Join": [
+            "", [
+              { "Ref": "HostedZone" },
+              "."
+            ]
+          ]
+        },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*",
+              "system",
+              { "Ref": "DeploymentName" },
+              { "Ref": "HostedZone" }
+            ]
+          ]
+        },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          {
+            "Fn::GetAtt": [
+              "ExternalPlainTextElb",
               "DNSName"
             ]
           }
@@ -1956,7 +2069,7 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "DeployRdsInstance",
       "Properties": {
-        "GroupDescription": "Database Security Group",
+        "GroupDescription": "RDS Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsSecurityGroup" ] ] } } ]
       }
@@ -2134,7 +2247,7 @@
       "Type" : "AWS::RDS::DBSubnetGroup",
       "Condition": "DeployRdsInstance",
       "Properties" : {
-        "DBSubnetGroupDescription" : "Database Subnet Group",
+        "DBSubnetGroupDescription" : "RDS Subnet Group",
         "SubnetIds" : [
           { "Ref": "RdsServicesAz1Subnet" },
           { "Ref": "RdsServicesAz2Subnet" }
