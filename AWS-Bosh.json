@@ -1840,7 +1840,7 @@
         "Name": {
           "Fn::Join": [
             ".", [
-              "nat-z1",
+              "nat-z2",
               { "Ref": "DeploymentName" },
               { "Ref": "HostedZone" }
             ]
