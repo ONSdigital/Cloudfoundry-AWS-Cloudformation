@@ -853,6 +853,7 @@
     },
     "ExternalElb": {
       "Description": "External ELB",
+      "Condition": "DeployExternalElb",
       "Value": {
         "Fn::If": [
           "GenerateElbSslCertificate",
