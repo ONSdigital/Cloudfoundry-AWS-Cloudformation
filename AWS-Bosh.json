@@ -52,7 +52,7 @@
 
     "GenerateElbSslCertificate": {
       "Type": "String",
-      "Default": "false",
+      "Default": "true",
       "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
       "AllowedPattern": "^(true|false)$",
       "ConstraintDescription": "true or false"
@@ -1493,7 +1493,7 @@
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  } }
 	],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalELb" ] ] } } ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
 
@@ -1510,7 +1510,7 @@
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  } }
 	],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalELb" ] ] } } ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
     "ExternalPlainTextElb": {
@@ -1525,7 +1525,7 @@
         "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" }
 	],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalELb" ] ] } } ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
 
