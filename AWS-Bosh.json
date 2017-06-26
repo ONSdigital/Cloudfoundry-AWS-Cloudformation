@@ -2299,7 +2299,7 @@
         "CidrIp": {
           "Fn::Join": [
             "/", [
-              "Ref": "NatAz1Ip",
+              { "Ref": "NatAz1Ip" },
               "32"
             ]
           ]
@@ -2317,7 +2317,7 @@
         "CidrIp": {
           "Fn::Join": [
             "/", [
-              "Ref": "NatAz2Ip",
+              { "Ref": "NatAz2Ip" },
               "/"
             ]
           ]
@@ -2356,7 +2356,7 @@
         "CidrIp": {
           "Fn::Join": [
             "/", [
-              "Ref": "NatAz1Ip",
+              { "Ref": "NatAz1Ip" },
               "/"
             ]
           ]
@@ -2374,7 +2374,7 @@
         "CidrIp": {
           "Fn::Join": [
             "/", [
-              "Ref": "NatAz1Ip",
+              { "Ref": "NatAz1Ip" },
               "/"
             ]
           ]
@@ -2391,7 +2391,7 @@
         "CidrIp": {
           "Fn::Join": [
             "/", [
-              "Ref": "NatAz1Ip",
+              { "Ref": "NatAz1Ip" },
               "/"
             ]
           ]
@@ -2409,7 +2409,7 @@
         "CidrIp": {
           "Fn::Join": [
             "/", [
-              "Ref": "NatAz2Ip",
+              { "Ref": "NatAz2Ip" },
               "/"
             ]
           ]
@@ -2426,7 +2426,7 @@
         "CidrIp": {
           "Fn::Join": [
             "/", [
-              "Ref": "NatAz1Ip",
+              { "Ref": "NatAz1Ip" },
               "/"
             ]
           ]
@@ -2444,7 +2444,7 @@
         "CidrIp": {
           "Fn::Join": [
             "/", [
-              "Ref": "NatAz2Ip",
+              { "Ref": "NatAz2Ip" },
               "/"
             ]
           ]
