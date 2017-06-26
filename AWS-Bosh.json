@@ -543,39 +543,6 @@
       "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsSecurityGroup" }
     },
-    "ExternalElbs": {
-      "Description": "External ELB(s)",
-      "Condition": "DeployExternalElb",
-      "Value": {
-        "Fn::Join": [
-          "", [
-            "[",
-            {
-              "Fn::Join": [
-                "", [
-                  "\"",
-                  {
-                    "Fn::If": [
-                      "GenerateElbSslCertificate",
-                      { "Ref": "ExternalAcmSslElb" },
-                      {
-                        "Fn::If": [
-                          "UseElbSslCertificateArn",
-                          { "Ref": "ExternalExistingSslElb" },
-                          { "Ref": "ExternalPlainTextElb" }
-                        ]
-                      }
-                    ]
-                  },
-                  "\""
-                ]
-              ]
-            },
-            "]"
-          ]
-        ]
-      }
-    },
     "HttpSecurityGroup": {
       "Description": "HTTP(S) Access Security Groups",
       "Value": {
