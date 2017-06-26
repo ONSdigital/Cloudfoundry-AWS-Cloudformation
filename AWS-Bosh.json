@@ -2296,7 +2296,14 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz1Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              "Ref": "NatAz1Ip",
+              "32"
+            ]
+          ]
+        },
         "FromPort": "6868",
         "ToPort": "6868",
         "IpProtocol": "tcp"
@@ -2307,7 +2314,14 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz2Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              "Ref": "NatAz2Ip",
+              "/"
+            ]
+          ]
+        },
         "FromPort": "6868",
         "ToPort": "6868",
         "IpProtocol": "tcp"
@@ -2339,7 +2353,14 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz1Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              "Ref": "NatAz1Ip",
+              "/"
+            ]
+          ]
+        },
         "FromPort": "25555",
         "ToPort": "25555",
         "IpProtocol": "tcp"
@@ -2350,7 +2371,14 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz2Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              "Ref": "NatAz1Ip",
+              "/"
+            ]
+          ]
+        },
         "FromPort": "25555",
         "ToPort": "25555",
         "IpProtocol": "tcp"
@@ -2360,7 +2388,14 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz1Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              "Ref": "NatAz1Ip",
+              "/"
+            ]
+          ]
+        },
         "FromPort": "6868",
         "ToPort": "6868",
         "IpProtocol": "tcp"
@@ -2371,7 +2406,14 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz2Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              "Ref": "NatAz2Ip",
+              "/"
+            ]
+          ]
+        },
         "FromPort": "6868",
         "ToPort": "6868",
         "IpProtocol": "tcp"
@@ -2381,7 +2423,14 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz1Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              "Ref": "NatAz1Ip",
+              "/"
+            ]
+          ]
+        },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2392,7 +2441,14 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz2Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              "Ref": "NatAz2Ip",
+              "/"
+            ]
+          ]
+        },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
