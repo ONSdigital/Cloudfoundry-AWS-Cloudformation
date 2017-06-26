@@ -924,12 +924,14 @@
     "GenerateElbSslCertificate": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] }
+        { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] },
+	{ "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
     },
     "UseElbSslCertificateArn": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } ] }
       ]
     },
@@ -941,9 +943,11 @@
       ]
     },
     "AllocateExternalIp": { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
+
     "DeployExternalElb": { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
     "DeployElastiCacheInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] },
     "DeployRdsInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } ] },
+
     "MultiAzAndDeployElastiCacheInstance": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
