@@ -93,12 +93,6 @@
             "FromPort": "443",
             "ToPort": "443" ,
             "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "2222",
-            "ToPort": "2222" ,
-            "IpProtocol": "tcp"
           }
         ]
       }
@@ -158,7 +152,7 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "AllowCfSshAccess",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Ref": "HttpSecurityGroup" },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "2222",
         "ToPort": "2222" ,
