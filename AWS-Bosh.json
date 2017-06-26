@@ -820,20 +820,18 @@
     },
     "ExternalElb": {
       "Description": "External ELB",
-      "Condition": "DeployExternalElb",
-      "Value": {
-        "Fn::If": [
-          "GenerateElbSslCertificate",
-          { "Ref": "ExternalAcmSslElb" },
-          {
-            "Fn::If": [
-              "UseElbSslCertificateArn",
-              { "Ref": "ExternalExistingSslElb" },
-              { "Ref": "ExternalPlainTextElb" }
-            ]
-          }
-        ]
-      }
+      "Condition": "GenerateElbSslCertificate",
+      "Value": { "Ref": "ExternalAcmSslElb" }
+    },
+    "ExternalElb": {
+      "Description": "External ELB",
+      "Condition": "UseElbSslCertificateArn",
+      "Value": { "Ref": "ExternalExistingSslElb" }
+    },
+    "ExternalElb": {
+      "Description": "External ELB",
+      "Condition": "PlainTextElb",
+      "Value": { "Ref": "ExternalPlainTextElb" }
     }
   },
 
