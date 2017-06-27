@@ -1511,6 +1511,19 @@
               ]
             },
             "ValidationDomain" : { "Ref": "HostedZone" }
+          },
+          {
+            "DomainName" : {
+              "Fn::Join": [
+                ".", [
+                  "*",
+                  "system",
+                  { "Ref": "DeploymentName" },
+                  { "Ref": "HostedZone" }
+                ]
+              ]
+            },
+            "ValidationDomain" : { "Ref": "HostedZone" }
           }
         ],
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ElbSslCertificate" ] ] } } ]
