@@ -299,6 +299,29 @@
       "MaxLength": "63",
       "AllowedPattern": "^[A-Za-z0-9 -]+$",
       "ConstraintDescription": "Can be any printable alphanumeric character, spaces or hypens"
+    },
+
+    "StackProtectionGroup": {
+      "MinLength": "1",
+      "MaxLength": "128",
+      "Description": "Stack protection group",
+      "Default": "NONE",
+      "AllowedPattern": "^[A-Za-z0-9-]+$",
+      "ConstraintDescription": "Can valid group name"
+    },
+    "DeleteAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Deletion Policy Allow/Deny",
+      "AllowedPattern": "^(Allow|Deny)$",
+      "ConstraintDescription": "Allow or Deny"
+    },
+    "UpdateAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Update Policy Allow/Deny",
+      "AllowedPattern": "^(Allow|Deny)$",
+      "ConstraintDescription": "Allow or Deny"
     }
   },
 
@@ -934,6 +957,7 @@
     "DeployElastiCacheInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] },
     "DeployRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "DeployRabbitmqNetworks" }, "true" ] },
     "DeployRdsInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } ] },
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] },
 
     "MultiAzAndDeployElastiCacheInstance": {
       "Fn::And": [
@@ -2683,6 +2707,43 @@
         "Roles": [
           { "Ref": "S3BucketAccessRole" }
         ]
+      }
+    },
+
+    "PreventStackUpdate": {
+      "Type": "AWS::IAM::Policy",
+      "Condition": "StackProtection",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Groups": [ { "Ref": "StackProtectionGroup" } ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "UpdateAllowDeny" },
+              "Action": "Update:*",
+              "Resource": "LogicalResourceId/*"
+            }
+          ]
+        }
+      }
+    },
+    "PreventStackDeletion": {
+      "Type": "AWS::IAM::Policy",
+      "Condition": "StackProtection",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Groups": [ { "Ref": "StackProtectionGroup" } ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "DeleteAllowDeny" },
+              "Action": "Delete:*",
+              "Resource": "LogicalResourceId/*"
+            }
+          ]
+        }
       }
     },
 
