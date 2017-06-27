@@ -49,6 +49,13 @@
       "AllowedPattern": "^(true|false)$",
       "ConstraintDescription": "true or false"
     },
+    "DeployRabbitmqNetworks": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy RabbitMQ network(s)",
+      "AllowedPattern": "^(true|false)$",
+      "ConstraintDescription": "true or false"
+    },
 
     "GenerateElbSslCertificate": {
       "Type": "String",
@@ -341,11 +348,12 @@
     },
     "RabbitmqServicesAz1Subnet": {
       "Description": "RabbitMQ Services AZ1 Subnet",
+      "Condition": "DeployRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqServicesAz1Subnet" }
     },
     "RabbitmqServicesAz2Subnet": {
       "Description": "RabbitMQ Services AZ2 Subnet",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqServicesAz2Subnet" }
     },
     "PrivateAz1CidrPrefix": {
@@ -402,6 +410,7 @@
     },
     "RabbitmqServicesAz1CidrPrefix": {
       "Description": "RabbitMQ Services AZ1 CIDR Prefix",
+      "Condition": "DeployRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -414,7 +423,7 @@
     },
     "RabbitmqServicesAz2CidrPrefix": {
       "Description": "RabbitMQ Services AZ2 CIDR Prefix",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -427,6 +436,7 @@
     },
     "RabbitmqServicesAz1DefaultRoute": {
       "Description": "RabbitMQ Services AZ1 Default Route",
+      "Condition": "DeployRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -440,7 +450,7 @@
     },
     "RabbitmqServicesAz2DefaultRoute": {
       "Description": "RabbitMQ Services AZ2 Default Route",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -693,6 +703,7 @@
     },
     "RabbitmqServicesSecurityGroups": {
       "Description": "RabbitMQ Services Security Groups",
+      "Condition": "DeployRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqServicesSecurityGroup" }
     },
     "DomainName": {
@@ -916,12 +927,19 @@
 
     "DeployExternalElb": { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
     "DeployElastiCacheInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] },
+    "DeployRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "DeployRabbitmqNetworks" }, "true" ] },
     "DeployRdsInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } ] },
 
     "MultiAzAndDeployElastiCacheInstance": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] }
+      ]
+    },
+    "MultiAzAndDeployRabbitmqNetworks": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
+        { "Fn::Equals": [ { "Ref": "DeployRabbitmqNetworks" }, "true" ] } 
       ]
     },
     "MultiAzAndDeployRdsInstance": {
@@ -1411,6 +1429,7 @@
     },
     "RabbitmqServicesAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
+      "Condition": "DeployRabbitmqNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "RabbitmqServicesAz1Cidr" },
@@ -1421,7 +1440,7 @@
     },
     "RabbitmqServicesAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployRabbitmqNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "RabbitmqServicesAz2Cidr" },
@@ -2090,6 +2109,7 @@
     },
     "RabbitmqServicesAz1SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "DeployRabbitmqNetworks",
       "Properties": {
         "SubnetId": { "Ref": "RabbitmqServicesAz1Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
@@ -2097,7 +2117,7 @@
     },
     "RabbitmqServicesAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployRabbitmqNetworks",
       "Properties": {
         "SubnetId": { "Ref": "RabbitmqServicesAz2Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
@@ -2152,6 +2172,7 @@
 
     "RabbitmqServicesSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployRabbitmqNetworks",
       "Properties": {
         "GroupDescription": "RabbitMQ Services In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -2471,6 +2492,7 @@
     },
     "PrivateAz1RabbitmqSshIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
         "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
@@ -2481,7 +2503,7 @@
     },
     "PrivateAz2RabbitmqSshIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
         "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
@@ -2492,6 +2514,7 @@
     },
     "PrivateAz1RabbitmqIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
         "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
@@ -2502,7 +2525,7 @@
     },
     "PrivateAz2RabbitmqIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndDeployRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
         "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
