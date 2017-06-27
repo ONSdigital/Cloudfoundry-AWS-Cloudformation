@@ -2700,7 +2700,7 @@
       "Type": "AWS::IAM::Policy",
       "Properties": {
         "PolicyName": "PreventStackUpdate",
-        "Users": [ "*" ],
+        "Users": [ "${aws:username}" ],
         "PolicyDocument": {
           "Version":"2012-10-17",
           "Statement": [
@@ -2717,7 +2717,7 @@
       "Type": "AWS::IAM::Policy",
       "Properties": {
         "PolicyName": "PreventStackDeletion",
-        "Users": [ "*" ],
+        "Users": [ "${aws:username}" ],
         "PolicyDocument": {
           "Version":"2012-10-17",
           "Statement": [
