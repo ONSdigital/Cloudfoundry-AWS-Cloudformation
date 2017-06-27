@@ -299,21 +299,6 @@
       "MaxLength": "63",
       "AllowedPattern": "^[A-Za-z0-9 -]+$",
       "ConstraintDescription": "Can be any printable alphanumeric character, spaces or hypens"
-    },
-
-    "StackDeleteAllowDeny": {
-      "Type": "String",
-      "Default": "Allow",
-      "Description": "Stack Deletion Policy Allow/Deny",
-      "AllowedPattern": "^(Allow|Deny)$",
-      "ConstraintDescription": "Allow or Deny"
-    },
-    "StackUpdateAllowDeny": {
-      "Type": "String",
-      "Default": "Allow",
-      "Description": "Stack Update Policy Allow/Deny",
-      "AllowedPattern": "^(Allow|Deny)$",
-      "ConstraintDescription": "Allow or Deny"
     }
   },
 
@@ -2693,41 +2678,6 @@
         "Roles": [
           { "Ref": "S3BucketAccessRole" }
         ]
-      }
-    },
-
-    "PreventStackUpdate": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "PreventStackUpdate",
-        "Users": [ "${aws:username}" ],
-        "PolicyDocument": {
-          "Version":"2012-10-17",
-          "Statement": [
-            {
-              "Effect": { "Ref": "StackUpdateAllowDeny" },
-              "Action": "Update:*",
-              "Resource": "LogicalResourceId/*"
-            }
-          ]
-        }
-      }
-    },
-    "PreventStackDeletion": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "PreventStackDeletion",
-        "Users": [ "${aws:username}" ],
-        "PolicyDocument": {
-          "Version":"2012-10-17",
-          "Statement": [
-            {
-              "Effect": { "Ref": "StackDeleteAllowDeny" },
-              "Action": "Delete:*",
-              "Resource": "LogicalResourceId/*"
-            }
-          ]
-        }
       }
     },
 
