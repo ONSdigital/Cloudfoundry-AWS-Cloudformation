@@ -988,7 +988,8 @@
     "MultiAzAndAllocateExternalIp": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] }
+        { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "false" ] }
       ]
     },
     "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
