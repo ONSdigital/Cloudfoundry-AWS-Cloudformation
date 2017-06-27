@@ -946,7 +946,7 @@
     "DeployExternalElb": { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
     "CreateElastiCacheNetworks": { "Fn::Equals": [ { "Ref": "CreateElastiCacheNetworks" }, "true" ] },
     "CreateRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] },
-    "DeployRdsInstance": { { "Fn::Equals": [ { "Ref": "CreateRdsNetworks" }, "true" ] },
+    "DeployRdsInstance": { "Fn::Equals": [ { "Ref": "CreateRdsNetworks" }, "true" ] },
     "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] },
 
     "MultiAzAndCreateElastiCacheNetworks": {
