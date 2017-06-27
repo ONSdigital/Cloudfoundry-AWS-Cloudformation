@@ -923,7 +923,12 @@
         { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
     },
-    "AllocateExternalIp": { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
+    "AllocateExternalIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "false" ] }
+      ]
+    },
 
     "DeployExternalElb": { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
     "DeployElastiCacheInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] },
