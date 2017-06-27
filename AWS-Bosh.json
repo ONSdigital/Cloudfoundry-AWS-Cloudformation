@@ -302,6 +302,7 @@
     },
 
     "StackProtectionGroup": {
+      "Type": "String",
       "MinLength": "1",
       "MaxLength": "128",
       "Description": "Stack protection group",
@@ -309,14 +310,14 @@
       "AllowedPattern": "^[A-Za-z0-9-]+$",
       "ConstraintDescription": "Can valid group name"
     },
-    "DeleteAllowDeny": {
+    "StackDeleteAllowDeny": {
       "Type": "String",
       "Default": "Deny",
       "Description": "Deletion Policy Allow/Deny",
       "AllowedPattern": "^(Allow|Deny)$",
       "ConstraintDescription": "Allow or Deny"
     },
-    "UpdateAllowDeny": {
+    "StackUpdateAllowDeny": {
       "Type": "String",
       "Default": "Deny",
       "Description": "Update Policy Allow/Deny",
@@ -2710,24 +2711,6 @@
       }
     },
 
-    "PreventStackUpdate": {
-      "Type": "AWS::IAM::Policy",
-      "Condition": "StackProtection",
-      "Properties": {
-        "PolicyName": "PreventStackDeletion",
-        "Groups": [ { "Ref": "StackProtectionGroup" } ],
-        "PolicyDocument": {
-          "Version":"2012-10-17",
-          "Statement": [
-            {
-              "Effect": { "Ref": "UpdateAllowDeny" },
-              "Action": "Update:*",
-              "Resource": "LogicalResourceId/*"
-            }
-          ]
-        }
-      }
-    },
     "PreventStackDeletion": {
       "Type": "AWS::IAM::Policy",
       "Condition": "StackProtection",
@@ -2738,8 +2721,26 @@
           "Version":"2012-10-17",
           "Statement": [
             {
-              "Effect": { "Ref": "DeleteAllowDeny" },
+              "Effect": { "Ref": "StackDeleteAllowDeny" },
               "Action": "Delete:*",
+              "Resource": "LogicalResourceId/*"
+            }
+          ]
+        }
+      }
+    },
+    "PreventStackUpdate": {
+      "Type": "AWS::IAM::Policy",
+      "Condition": "StackProtection",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Groups": [ { "Ref": "StackProtectionGroup" } ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "StackUpdateAllowDeny" },
+              "Action": "Update:*",
               "Resource": "LogicalResourceId/*"
             }
           ]
