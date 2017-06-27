@@ -2724,7 +2724,7 @@
             {
               "Effect": { "Ref": "StackDeleteAllowDeny" },
               "Action": "Delete:*",
-              "Resource": "LogicalResourceId/*"
+              "Resource": "*"
             }
           ]
         }
@@ -2742,7 +2742,7 @@
             {
               "Effect": { "Ref": "StackUpdateAllowDeny" },
               "Action": "Update:*",
-              "Resource": "LogicalResourceId/*"
+              "Resource": "*"
             }
           ]
         }
