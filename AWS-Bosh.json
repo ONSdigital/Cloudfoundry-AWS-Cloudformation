@@ -2332,7 +2332,14 @@
       "Condition": "AllocateExternalIp",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "ExternalAz1Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+          "/", [
+            { "Ref": "ExternalAz1Ip" },
+            "32"
+          ]
+        },
+        "FromPort": "0",
         "FromPort": "0",
         "ToPort": "65535",
         "IpProtocol": "-1"
@@ -2343,7 +2350,13 @@
       "Condition": "MultiAzAndAllocateExternalIp",
       "Properties": {
         "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "ExternalAz2Ip" },
+        "CidrIp": {
+          "Fn::Join": [
+          "/", [
+            { "Ref": "ExternalAz2Ip" },
+            "32"
+          ]
+        },
         "FromPort": "0",
         "ToPort": "65535",
         "IpProtocol": "-1"
