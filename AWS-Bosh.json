@@ -1622,7 +1622,7 @@
           ]
         },
         "TTL": "3600",
-        "Type": "DNAME",
+        "Type": "CNAME",
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
@@ -1656,7 +1656,7 @@
           ]
         },
         "TTL": "3600",
-        "Type": "DNAME",
+        "Type": "CNAME",
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
@@ -1690,7 +1690,7 @@
           ]
         },
         "TTL": "3600",
-        "Type": "DNAME",
+        "Type": "CNAME",
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
@@ -1923,7 +1923,7 @@
           ]
         },
         "TTL": "3600",
-        "Type": "DNAME",
+        "Type": "CNAME",
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
@@ -1957,7 +1957,7 @@
           ]
         },
         "TTL": "3600",
-        "Type": "DNAME",
+        "Type": "CNAME",
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
@@ -1991,7 +1991,7 @@
           ]
         },
         "TTL": "3600",
-        "Type": "DNAME",
+        "Type": "CNAME",
         "ResourceRecords": [
           {
             "Fn::GetAtt": [
