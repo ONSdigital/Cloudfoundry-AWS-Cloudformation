@@ -952,7 +952,7 @@
     "MultiAzAndCreateElastiCacheNetworks": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] }
+        { "Fn::Equals": [ { "Ref": "CreateElastiCacheNetworks" }, "true" ] }
       ]
     },
     "MultiAzAndCreateRabbitmqNetworks": {
