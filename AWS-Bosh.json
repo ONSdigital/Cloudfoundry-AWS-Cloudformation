@@ -2696,6 +2696,41 @@
       }
     },
 
+    "PreventStackUpdate": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "PreventStackUpdate",
+        "Users": [ "*" ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "StackUpdateAllowDeny" },
+              "Action": "Update:*",
+              "Resource": "LogicalResourceId/*"
+            }
+          ]
+        }
+      }
+    },
+    "PreventStackDeletion": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Users": [ "*" ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "StackDeleteAllowDeny" },
+              "Action": "Delete:*",
+              "Resource": "LogicalResourceId/*"
+            }
+          ]
+        }
+      }
+    },
+
     "ElastiCacheBrokerUser": {
       "Type": "AWS::IAM::User",
       "Condition": "DeployElastiCacheInstance",
@@ -2780,41 +2815,6 @@
             }
           }
         ]
-      }
-    },
-
-    "PreventStackUpdate": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "PreventStackDeletion",
-        "Users": [ "*" ],
-        "PolicyDocument": {
-          "Version":"2012-10-17",
-          "Statement": [
-            {
-              "Effect": { "Ref": "UpdateAllowDeny" },
-              "Action": "Update:*",
-              "Resource": "LogicalResourceId/*"
-            }
-          ]
-        }
-      }
-    },
-    "PreventStackDeletion": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "PreventStackDeletion",
-        "Users": [ "*" ],
-        "PolicyDocument": {
-          "Version":"2012-10-17",
-          "Statement": [
-            {
-              "Effect": { "Ref": "DeletionAllowDeny" },
-              "Action": "Delete:*",
-              "Resource": "LogicalResourceId/*"
-            }
-          ]
-        }
       }
     },
 
