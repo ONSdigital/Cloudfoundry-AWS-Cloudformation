@@ -2334,9 +2334,10 @@
         "GroupId": { "Ref": "PrivateSecurityGroup" },
         "CidrIp": {
           "Fn::Join": [
-          "/", [
-            { "Ref": "ExternalAz1Ip" },
-            "32"
+            "/", [
+              { "Ref": "ExternalAz1Ip" },
+              "32"
+            ]
           ]
         },
         "FromPort": "0",
@@ -2352,9 +2353,10 @@
         "GroupId": { "Ref": "PrivateSecurityGroup" },
         "CidrIp": {
           "Fn::Join": [
-          "/", [
-            { "Ref": "ExternalAz2Ip" },
-            "32"
+            "/", [
+              { "Ref": "ExternalAz2Ip" },
+              "32"
+            ]
           ]
         },
         "FromPort": "0",
