@@ -52,7 +52,7 @@
           "Version":"2012-10-17",
           "Statement": [
             {
-              "Effect": { "Ref": "DeletionAllowDeny" },
+              "Effect": { "Ref": "DeleteAllowDeny" },
               "Action": "Delete:*",
               "Resource": "LogicalResourceId/*"
             }
