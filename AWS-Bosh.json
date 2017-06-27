@@ -33,6 +33,13 @@
       "MinValue": "0",
       "MaxValue": "9"
     },
+    "ElbTimeout": {
+      "Type": "Number",
+      "Default": "60",
+      "Description": "ELB Timeout",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
 
     "AllocateExternalIp": {
       "Type": "String",
@@ -45,6 +52,12 @@
       "Default": "true",
       "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
+    },
+    "ElbScheme": {
+      "Type": "String",
+      "Default": "internet-facing",
+      "Description": "Internet facing or internal load balancer?",
+      "AllowedValues": [ "internet-facing", "internal" ]
     },
     "CreateElastiCacheNetworks": {
       "Type": "String",
@@ -1554,7 +1567,7 @@
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Condition": "GenerateElbSslCertificate",
       "Properties": {
-        "Scheme": "internal",
+        "Scheme": { "Ref": "ElbScheme" },
         "Subnets": [
           { "Ref": "PrivateAz1Subnet" },
           { "Ref": "PrivateAz2Subnet" }
@@ -1563,6 +1576,10 @@
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  } }
 	],
+        "ConnectionDrainingPolicy": {
+          "Enabled" : "true",
+          "Timeout" : { "Ref": "ElbTimeout" }
+        },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
@@ -1571,7 +1588,7 @@
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Condition": "UseElbSslCertificateArn",
       "Properties": {
-        "Scheme": "internal",
+        "Scheme": { "Ref": "ElbScheme" },
         "Subnets": [
           { "Ref": "PrivateAz1Subnet" },
           { "Ref": "PrivateAz2Subnet" }
@@ -1580,6 +1597,10 @@
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  } }
 	],
+        "ConnectionDrainingPolicy": {
+          "Enabled" : "true",
+          "Timeout" : { "Ref": "ElbTimeout" }
+        },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
@@ -1587,7 +1608,7 @@
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Condition": "PlainTextElb",
       "Properties": {
-        "Scheme": "internal",
+        "Scheme": { "Ref": "ElbScheme" },
         "Subnets": [
           { "Ref": "PrivateAz1Subnet" },
           { "Ref": "PrivateAz2Subnet" }
@@ -1595,6 +1616,10 @@
         "Listeners": [
           { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" }
 	],
+        "ConnectionDrainingPolicy": {
+          "Enabled" : "true",
+          "Timeout" : { "Ref": "ElbTimeout" }
+        },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
