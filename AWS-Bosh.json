@@ -299,6 +299,21 @@
       "MaxLength": "63",
       "AllowedPattern": "^[A-Za-z0-9 -]+$",
       "ConstraintDescription": "Can be any printable alphanumeric character, spaces or hypens"
+    },
+
+    "StackDeleteAllowDeny": {
+      "Type": "String",
+      "Default": "Allow",
+      "Description": "Stack Deletion Policy Allow/Deny",
+      "AllowedPattern": "^(Allow|Deny)$",
+      "ConstraintDescription": "Allow or Deny"
+    },
+    "StackUpdateAllowDeny": {
+      "Type": "String",
+      "Default": "Allow",
+      "Description": "Stack Update Policy Allow/Deny",
+      "AllowedPattern": "^(Allow|Deny)$",
+      "ConstraintDescription": "Allow or Deny"
     }
   },
 
@@ -2765,6 +2780,41 @@
             }
           }
         ]
+      }
+    },
+
+    "PreventStackUpdate": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Users": [ "*" ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "UpdateAllowDeny" },
+              "Action": "Update:*",
+              "Resource": "LogicalResourceId/*"
+            }
+          ]
+        }
+      }
+    },
+    "PreventStackDeletion": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Users": [ "*" ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "DeletionAllowDeny" },
+              "Action": "Delete:*",
+              "Resource": "LogicalResourceId/*"
+            }
+          ]
+        }
       }
     },
 
