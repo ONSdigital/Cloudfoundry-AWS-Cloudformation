@@ -59,7 +59,7 @@
 
     "GenerateElbSslCertificate": {
       "Type": "String",
-      "Default": "true",
+      "Default": "false",
       "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
       "AllowedPattern": "^(true|false)$",
       "ConstraintDescription": "true or false"
