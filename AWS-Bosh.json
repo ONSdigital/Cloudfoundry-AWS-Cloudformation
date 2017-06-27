@@ -17,8 +17,7 @@
       "Type": "String",
       "Default": "true",
       "Description": "Deploy multiple AZs",
-      "AllowedPattern": "^(true|false)$",
-      "ConstraintDescription": "true or false"
+      "AllowedValues": [ "true", "false" ]
     },
     "AwsAvailabilityZone1": {
       "Type": "Number",
@@ -39,30 +38,38 @@
       "Type": "String",
       "Default": "true",
       "Description": "Allocate External IP (eg for HA Proxy)",
-      "AllowedPattern": "^(true|false)$",
-      "ConstraintDescription": "true or false"
+      "AllowedValues": [ "true", "false" ]
     },
     "DeployExternalElb": {
       "Type": "String",
       "Default": "true",
       "Description": "Deploy External ELB",
-      "AllowedPattern": "^(true|false)$",
-      "ConstraintDescription": "true or false"
+      "AllowedValues": [ "true", "false" ]
     },
-    "DeployRabbitmqNetworks": {
+    "CreateElastiCacheNetworks": {
       "Type": "String",
       "Default": "true",
-      "Description": "Deploy RabbitMQ network(s)",
-      "AllowedPattern": "^(true|false)$",
-      "ConstraintDescription": "true or false"
+      "Description": "Create ElastiCache Networks",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "CreateRabbitmqNetworks": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Create RabbitMQ network(s)",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "CreateRdsNetworks": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Create RDS network(s)",
+      "AllowedValues": [ "true", "false" ]
     },
 
     "GenerateElbSslCertificate": {
       "Type": "String",
       "Default": "false",
       "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
-      "AllowedPattern": "^(true|false)$",
-      "ConstraintDescription": "true or false"
+      "AllowedValues": [ "true", "false" ]
     },
     "ElbSslCertificateArn": {
       "Type": "String",
@@ -232,30 +239,15 @@
 
     "RdsInstanceSize": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "db.t2.micro",
       "Description": "RDS Instance Size",
       "AllowedValues": [
-        "NONE",
         "db.t2.micro",
         "db.t2.small",
         "db.t2.medium",
         "db.t2.large",
         "db.m4.large",
         "db.m4.xlarge"
-      ]
-    },
-    "ElastiCacheInstanceSize": {
-      "Type": "String",
-      "Default": "NONE",
-      "Description": "ElastiCache Instance Size",
-      "AllowedValues": [
-        "NONE",
-        "cache.t2.micro",
-        "cache.t2.small",
-        "cache.t2.medium",
-        "cache.t2.large",
-        "cache.m4.large",
-        "cache.m4.xlarge"
       ]
     },
 
@@ -314,18 +306,15 @@
       "Type": "String",
       "Default": "Deny",
       "Description": "Deletion Policy Allow/Deny",
-      "AllowedPattern": "^(Allow|Deny)$",
-      "ConstraintDescription": "Allow or Deny"
+      "AllowedValues": [ "Allow", "Deny" ]
     },
     "StackUpdateAllowDeny": {
       "Type": "String",
       "Default": "Deny",
       "Description": "Update Policy Allow/Deny",
-      "AllowedPattern": "^(Allow|Deny)$",
-      "ConstraintDescription": "Allow or Deny"
+      "AllowedValues": [ "Allow", "Deny" ]
     }
   },
-
 
   "Outputs": {
     "AwsRegion": {
@@ -372,12 +361,12 @@
     },
     "RabbitmqServicesAz1Subnet": {
       "Description": "RabbitMQ Services AZ1 Subnet",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqServicesAz1Subnet" }
     },
     "RabbitmqServicesAz2Subnet": {
       "Description": "RabbitMQ Services AZ2 Subnet",
-      "Condition": "MultiAzAndDeployRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqServicesAz2Subnet" }
     },
     "PrivateAz1CidrPrefix": {
@@ -434,7 +423,7 @@
     },
     "RabbitmqServicesAz1CidrPrefix": {
       "Description": "RabbitMQ Services AZ1 CIDR Prefix",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -447,7 +436,7 @@
     },
     "RabbitmqServicesAz2CidrPrefix": {
       "Description": "RabbitMQ Services AZ2 CIDR Prefix",
-      "Condition": "MultiAzAndDeployRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -460,7 +449,7 @@
     },
     "RabbitmqServicesAz1DefaultRoute": {
       "Description": "RabbitMQ Services AZ1 Default Route",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -474,7 +463,7 @@
     },
     "RabbitmqServicesAz2DefaultRoute": {
       "Description": "RabbitMQ Services AZ2 Default Route",
-      "Condition": "MultiAzAndDeployRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -549,12 +538,12 @@
     },
     "ElastiCacheServicesAz1Subnet": {
       "Description": "ElastiCache AZ1 Subnet",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Value": { "Ref": "ElastiCacheServicesAz1Subnet" }
     },
     "ElastiCacheServicesAz2Subnet": {
       "Description": "ElastiCache AZ2 Subnet",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Value": { "Ref": "ElastiCacheServicesAz2Subnet" }
     },
     "RdsServicesAz1Subnet": {
@@ -660,7 +649,7 @@
     },
     "ElastiCacheSecurityGroup": {
       "Description": "ElastiCache Security Group",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Value": { "Ref": "ElastiCacheSecurityGroup" }
     },
     "PrivateSecurityGroups": {
@@ -727,7 +716,7 @@
     },
     "RabbitmqServicesSecurityGroups": {
       "Description": "RabbitMQ Services Security Groups",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqServicesSecurityGroup" }
     },
     "DomainName": {
@@ -785,22 +774,22 @@
     },
     "ElastiCacheBrokerAccessKeyId": {
       "Description": "ElastiCache Broker Access Key Id",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Value": { "Ref": "ElastiCacheBrokerAccessKey" }
     },
     "ElastiCacheBrokerAccessKey": {
       "Description": "ElastiCache Broker Access Key",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Value": { "Fn::GetAtt": [ "ElastiCacheBrokerAccessKey", "SecretAccessKey" ] }
     },
     "ElastiCacheSubnetGroup": {
       "Description": "ElastiCache Subnet Group",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Value": { "Ref": "ElastiCacheSubnetGroup" }
     },
     "ElastiCacheBrokerUserName": {
       "Description": "ElastiCache Broker User Name",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Value": { "Ref": "ElastiCacheBrokerUser" }
     },
     "RdsBrokerAccessKeyId": {
@@ -955,21 +944,21 @@
     },
 
     "DeployExternalElb": { "Fn::Equals": [ { "Ref": "DeployExternalElb" }, "true" ] },
-    "DeployElastiCacheInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] },
-    "DeployRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "DeployRabbitmqNetworks" }, "true" ] },
-    "DeployRdsInstance": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } ] },
+    "CreateElastiCacheNetworks": { "Fn::Equals": [ { "Ref": "CreateElastiCacheNetworks" }, "true" ] },
+    "CreateRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] },
+    "DeployRdsInstance": { { "Fn::Equals": [ { "Ref": "CreateRdsNetworks" }, "true" ] },
     "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] },
 
-    "MultiAzAndDeployElastiCacheInstance": {
+    "MultiAzAndCreateElastiCacheNetworks": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElastiCacheInstanceSize" }, "NONE" ] } ] }
       ]
     },
-    "MultiAzAndDeployRabbitmqNetworks": {
+    "MultiAzAndCreateRabbitmqNetworks": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
-        { "Fn::Equals": [ { "Ref": "DeployRabbitmqNetworks" }, "true" ] } 
+        { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] } 
       ]
     },
     "MultiAzAndDeployRdsInstance": {
@@ -1396,7 +1385,7 @@
 
     "ElastiCacheServicesAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "ElastiCacheServicesAz1Cidr" },
@@ -1407,7 +1396,7 @@
     },
     "ElastiCacheServicesAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "ElastiCacheServicesAz2Cidr" },
@@ -1460,7 +1449,7 @@
     },
     "RabbitmqServicesAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "RabbitmqServicesAz1Cidr" },
@@ -1471,7 +1460,7 @@
     },
     "RabbitmqServicesAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "MultiAzAndDeployRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "CidrBlock": { "Ref": "RabbitmqServicesAz2Cidr" },
@@ -2168,7 +2157,7 @@
     },
     "RabbitmqServicesAz1SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "SubnetId": { "Ref": "RabbitmqServicesAz1Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
@@ -2176,7 +2165,7 @@
     },
     "RabbitmqServicesAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "MultiAzAndDeployRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "SubnetId": { "Ref": "RabbitmqServicesAz2Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
@@ -2185,7 +2174,7 @@
 
     "ElastiCacheSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "GroupDescription": "ElastiCache Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -2231,7 +2220,7 @@
 
     "RabbitmqServicesSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupDescription": "RabbitMQ Services In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -2241,7 +2230,7 @@
 
     "ElastiCacheNatAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
         "CidrIp": { "Ref": "NatAz1Cidr" },
@@ -2252,7 +2241,7 @@
     },
     "ElastiCacheNatAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzAndDeployElastiCacheInstance",
+      "Condition": "MultiAzAndCreateElastiCacheNetworks",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
         "CidrIp": { "Ref": "NatAz2Cidr" },
@@ -2263,7 +2252,7 @@
     },
     "ElastiCacheNatAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz1Cidr" },
@@ -2274,7 +2263,7 @@
     },
     "ElastiCacheNatAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzAndDeployElastiCacheInstance",
+      "Condition": "MultiAzAndCreateElastiCacheNetworks",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz2Cidr" },
@@ -2551,7 +2540,7 @@
     },
     "PrivateAz1RabbitmqSshIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
         "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
@@ -2562,7 +2551,7 @@
     },
     "PrivateAz2RabbitmqSshIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzAndDeployRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
         "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
@@ -2573,7 +2562,7 @@
     },
     "PrivateAz1RabbitmqIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
         "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
@@ -2584,7 +2573,7 @@
     },
     "PrivateAz2RabbitmqIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzAndDeployRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
         "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
@@ -2608,7 +2597,7 @@
     },
     "ElastiCacheSubnetGroup": {
       "Type" : "AWS::ElastiCache::SubnetGroup",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Properties" : {
         "Description": "ElastiCache Subnet Group",
         "SubnetIds" : [
@@ -2751,7 +2740,7 @@
 
     "ElastiCacheBrokerUser": {
       "Type": "AWS::IAM::User",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "Policies": [
           {
@@ -2838,7 +2827,7 @@
 
     "ElastiCacheBrokerAccessKey": {
       "Type": "AWS::IAM::AccessKey",
-      "Condition": "DeployElastiCacheInstance",
+      "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "UserName": { "Ref": "ElastiCacheBrokerUser" }
       }
