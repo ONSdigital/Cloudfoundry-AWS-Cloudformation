@@ -2194,7 +2194,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "NatAz1Subnet" },
-        "RouteTableId": { "Ref": "InternetRoute" }
+        "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
     "NatAz2SubnetRouteTableAssociation": {
@@ -2202,7 +2202,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "SubnetId": { "Ref": "NatAz2Subnet" },
-        "RouteTableId": { "Ref": "InternetRoute" }
+        "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
     "PrivateAz1SubnetRouteTableAssociation": {
