@@ -579,7 +579,7 @@
       "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsSecurityGroup" }
     },
-    "HttpSecurityGroup": {
+    "HttpSecurityGroups": {
       "Description": "HTTP(S) Access Security Groups",
       "Value": {
         "Fn::Join": [
@@ -727,7 +727,7 @@
         ]
       }
     },
-    "RabbitmqServicesSecurityGroups": {
+    "RabbitmqServicesSecurityGroup": {
       "Description": "RabbitMQ Services Security Groups",
       "Condition": "CreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqServicesSecurityGroup" }
