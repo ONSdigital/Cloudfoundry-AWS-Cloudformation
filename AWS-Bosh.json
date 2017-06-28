@@ -679,16 +679,8 @@
             "[",
             {
               "Fn::Join": [
-                "", [
-                  "\"",
-                  { "Ref": "PrivateSecurityGroup" },
-                  "\""
-                ]
-              ]
-            },
-            {
-              "Fn::Join": [
                 ",", [
+                  { "Fn::Join": [ "", [ "\"", { "Ref": "PrivateSecurityGroup" }, "\"" ] ] },
                   {
                     "Fn::If": [
                       "PermitFullAccess1Cidr",
