@@ -2149,21 +2149,21 @@
         "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
-    "NatAz1InternetRoute": {
+    "PrivateAz1InternetRoute": {
       "Type": "AWS::EC2::Route",
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
         "NatGatewayId": { "Ref": "NatAz1Gateway" },
-        "RouteTableId": { "Ref": "NatAz1RouteTable" }
+        "RouteTableId": { "Ref": "PrivateAz1RouteTable" }
       }
     },
-    "NatAz2InternetRoute": {
+    "PrivateAz2InternetRoute": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAz",
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
         "NatGatewayId": { "Ref": "NatAz2Gateway" },
-        "RouteTableId": { "Ref": "NatAz2RouteTable" }
+        "RouteTableId": { "Ref": "PrivateAz2RouteTable" }
       }
     },
 
@@ -2174,19 +2174,19 @@
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "InternetRouteTable" ] ] } } ]
       }
     },
-    "NatAz1RouteTable": {
+    "PrivateAz1RouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "NatAz1RouteTable" ] ] } } ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "PrivateAz1RouteTable" ] ] } } ]
       }
     },
-    "NatAz2RouteTable": {
+    "PrivateAz2RouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Condition": "MultiAz",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "NatAz2RouteTable" ] ] } } ]
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "PrivateAz2RouteTable" ] ] } } ]
       }
     },
 
@@ -2194,7 +2194,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "NatAz1Subnet" },
-        "RouteTableId": { "Ref": "NatAz1InternetRoute" }
+        "RouteTableId": { "Ref": "InternetRoute" }
       }
     },
     "NatAz2SubnetRouteTableAssociation": {
@@ -2202,7 +2202,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "SubnetId": { "Ref": "NatAz2Subnet" },
-        "RouteTableId": { "Ref": "NatAz2InternetRoute" }
+        "RouteTableId": { "Ref": "InternetRoute" }
       }
     },
     "PrivateAz1SubnetRouteTableAssociation": {
