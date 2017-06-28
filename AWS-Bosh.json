@@ -2150,7 +2150,8 @@
       "Type": "AWS::EC2::Route",
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
-        "NatGatewayId": { "Ref": "NatAz1Gateway" }
+        "NatGatewayId": { "Ref": "NatAz1Gateway" },
+        "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
     "NatAz2InternetRoute": {
@@ -2158,7 +2159,8 @@
       "Condition": "MultiAz",
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
-        "NatGatewayId": { "Ref": "NatAz2Gateway" }
+        "NatGatewayId": { "Ref": "NatAz2Gateway" },
+        "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
 
