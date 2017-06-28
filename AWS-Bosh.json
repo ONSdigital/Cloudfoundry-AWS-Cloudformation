@@ -2146,6 +2146,23 @@
         "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
+    "NatAz1InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": { "Ref": "NatAz1Gateway" },
+        "RouteTableId": { "Ref": "NatAz1RouteTable" }
+      }
+    },
+    "NatAz2InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAz",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": { "Ref": "NatAz2Gateway" },
+        "RouteTableId": { "Ref": "NatAz2RouteTable" }
+      }
+    },
 
     "InternetRouteTable": {
       "Type": "AWS::EC2::RouteTable",
@@ -2159,7 +2176,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "NatAz1Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Ref": "NatAz1InternetRoute" }
       }
     },
     "NatAz2SubnetRouteTableAssociation": {
@@ -2167,7 +2184,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "SubnetId": { "Ref": "NatAz2Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Ref": "NatAz2InternetRoute" }
       }
     },
     "PrivateAz1SubnetRouteTableAssociation": {
