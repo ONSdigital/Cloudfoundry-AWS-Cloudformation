@@ -2127,7 +2127,10 @@
     },
 
     "InternetGateway": {
-      "Type": "AWS::EC2::InternetGateway"
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "InternetGateway" ] ] } } ]
+      }
     },
 
     "InternetGatewayAttachment": {
