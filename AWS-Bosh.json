@@ -2151,7 +2151,7 @@
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
         "NatGatewayId": { "Ref": "NatAz1Gateway" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Ref": "NatAz1RouteTable" }
       }
     },
     "NatAz2InternetRoute": {
@@ -2160,7 +2160,7 @@
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
         "NatGatewayId": { "Ref": "NatAz2Gateway" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Ref": "NatAz2RouteTable" }
       }
     },
 
@@ -2169,6 +2169,21 @@
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "InternetRouteTable" ] ] } } ]
+      }
+    },
+    "NatAz1RouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "NatAz1RouteTable" ] ] } } ]
+      }
+    },
+    "NatAz2RouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Condition": "MultiAz",
+      "Properties": {
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "NatAz2RouteTable" ] ] } } ]
       }
     },
 
