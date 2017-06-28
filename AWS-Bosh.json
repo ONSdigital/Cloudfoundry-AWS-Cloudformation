@@ -2737,7 +2737,11 @@
           "Statement": [
             {
               "Effect": { "Ref": "StackDeleteAllowDeny" },
-              "Action": "Delete:*",
+              "Action": [
+		"Delete:*",
+		"cloudformation:DeleteStack"
+              ],
+              "Principle": [ "*" ],
               "Resource": "*"
             }
           ]
@@ -2755,7 +2759,11 @@
           "Statement": [
             {
               "Effect": { "Ref": "StackUpdateAllowDeny" },
-              "Action": "Update:*",
+              "Action": [
+		"Update:*",
+		"cloudformation:UpdateStack"
+              ],
+              "Principle": [ "*" ],
               "Resource": "*"
             }
           ]
