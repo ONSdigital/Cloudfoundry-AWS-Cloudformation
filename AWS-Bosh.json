@@ -2209,7 +2209,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "PrivateAz1Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Ref": "PrivateAz1RouteTable" }
       }
     },
     "PrivateAz2SubnetRouteTableAssociation": {
@@ -2217,7 +2217,7 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "PrivateAz2Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Ref": "PrivateAz2RouteTable" }
       }
     },
     "RabbitmqServicesAz1SubnetRouteTableAssociation": {
