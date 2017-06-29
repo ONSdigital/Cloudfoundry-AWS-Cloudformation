@@ -2141,32 +2141,6 @@
       }
     },
 
-    "InternetRoute": {
-      "Type": "AWS::EC2::Route",
-      "Properties": {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "GatewayId": { "Ref": "InternetGateway" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
-      }
-    },
-    "PrivateAz1InternetRoute": {
-      "Type": "AWS::EC2::Route",
-      "Properties": {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "NatGatewayId": { "Ref": "NatAz1Gateway" },
-        "RouteTableId": { "Ref": "PrivateAz1RouteTable" }
-      }
-    },
-    "PrivateAz2InternetRoute": {
-      "Type": "AWS::EC2::Route",
-      "Condition": "MultiAz",
-      "Properties": {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "NatGatewayId": { "Ref": "NatAz2Gateway" },
-        "RouteTableId": { "Ref": "PrivateAz2RouteTable" }
-      }
-    },
-
     "InternetRouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
@@ -2237,6 +2211,32 @@
       }
     },
 
+    "InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": { "Ref": "InternetGateway" },
+        "RouteTableId": { "Ref": "InternetRouteTable" }
+      }
+    },
+    "PrivateAz1InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": { "Ref": "NatAz1Gateway" },
+        "RouteTableId": { "Ref": "PrivateAz1RouteTable" }
+      }
+    },
+    "PrivateAz2InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAz",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": { "Ref": "NatAz2Gateway" },
+        "RouteTableId": { "Ref": "PrivateAz2RouteTable" }
+      }
+    },
+
     "ElastiCacheSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "CreateElastiCacheNetworks",
@@ -2260,16 +2260,6 @@
         ]
       }
     },
-    "RdsSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployRdsInstance",
-      "Properties": {
-        "GroupDescription": "RDS Security Group",
-        "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsSecurityGroup" ] ] } } ]
-      }
-    },
-
     "PrivateSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -2282,7 +2272,6 @@
         "SecurityGroupIngress": [
           { "CidrIp": { "Ref": "VpcCidr" }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" } ] }
     },
-
     "RabbitmqServicesSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "CreateRabbitmqNetworks",
@@ -2290,6 +2279,15 @@
         "GroupDescription": "RabbitMQ Services In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RabbitmqServicesSecurityGroup" ] ] } } ]
+      }
+    },
+    "RdsSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployRdsInstance",
+      "Properties": {
+        "GroupDescription": "RDS Security Group",
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "RdsSecurityGroup" ] ] } } ]
       }
     },
 
@@ -2315,7 +2313,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "ElastiCacheNatAz1SecurityGroupIngress": {
+    "ElastiCachePrivateAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateElastiCacheNetworks",
       "Properties": {
@@ -2326,7 +2324,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "ElastiCacheNatAz2SecurityGroupIngress": {
+    "ElastiCachePrivateAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateElastiCacheNetworks",
       "Properties": {
@@ -2337,7 +2335,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "ExternalSecurityAz1GroupIngress": {
+    "ExternalSecurityNatAz1GroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "PermitFullAccess5Cidr",
       "Properties": {
@@ -2348,30 +2346,8 @@
         "IpProtocol": "-1"
       }
     },
-    "ExternalSecurityAz2GroupIngress": {
+    "ExternalSecurityNatAz2GroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "PermitFullAccess6Cidr",
-      "Properties": {
-        "GroupId": { "Ref": "ExternalSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz2Cidr" },
-        "FromPort": "65535",
-        "ToPort": "65545",
-        "IpProtocol": "-1"
-      }
-    },
-    "ExternalSecurityAz1GroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "PermitFullAccess5Cidr",
-      "Properties": {
-        "GroupId": { "Ref": "ExternalSecurityGroup" },
-        "CidrIp": { "Ref": "NatAz1Cidr" },
-        "FromPort": "65535",
-        "ToPort": "65545",
-        "IpProtocol": "-1"
-      }
-    },
-    "ExternalSecurityAz2GroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "PermitFullAccess6Cidr",
       "Properties": {
         "GroupId": { "Ref": "ExternalSecurityGroup" },
@@ -2425,190 +2401,12 @@
         "IpProtocol": "tcp"
       }
     },
-    
-    "PrivateNatAz1Director6868Ingress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "NatAz1Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "6868",
-        "ToPort": "6868",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateNatAz2Director6868Ingress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "NatAz2Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "6868",
-        "ToPort": "6868",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateExternalAz1IpIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "AllocateExternalIp",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "ExternalAz1Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "0",
-        "FromPort": "0",
-        "ToPort": "65535",
-        "IpProtocol": "-1"
-      }
-    },
-    "PrivateExternalAz2IpAz2Ingress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzAndAllocateExternalIp",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "ExternalAz2Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "0",
-        "ToPort": "65535",
-        "IpProtocol": "-1"
-      }
-    },
-    "PrivateNatAz1Director25555Ingress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "NatAz1Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "25555",
-        "ToPort": "25555",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateNatAz2Director25555Ingress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "NatAz2Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "25555",
-        "ToPort": "25555",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateNatAz1DirectorIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "NatAz1Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "6868",
-        "ToPort": "6868",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateNatAz2DirectorIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "NatAz2Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "6868",
-        "ToPort": "6868",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateNatAz1SshIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "NatAz1Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "22",
-        "ToPort": "22",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateNatAz2SshIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Ref": "NatAz2Ip" },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "22",
-        "ToPort": "22",
-        "IpProtocol": "tcp"
-      }
-    },
     "PrivateAz1RabbitmqSshIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
+        "CidrIp": { "Ref": "PrivateAz1Cidr" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2619,7 +2417,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
+        "CidrIp": { "Ref": "PrivateAz2Cidr" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2630,7 +2428,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
+        "CidrIp": { "Ref": "PrivateAz1Cidr" },
         "FromPort": "5671",
         "ToPort": "5672",
         "IpProtocol": "tcp"
@@ -2641,7 +2439,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
+        "CidrIp": { "Ref": "PrivateAz2Cidr" },
         "FromPort": "5671",
         "ToPort": "5672",
         "IpProtocol": "tcp"
