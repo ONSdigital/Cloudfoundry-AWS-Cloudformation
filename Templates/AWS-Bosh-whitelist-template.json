@@ -41,6 +41,7 @@
   "Outputs": {
     "DirectorSecurityGroup": {
       "Description": "Director Security Group",
+      "Condition": "AllowDirectorAccess",
       "Value": { "Ref": "DirectorSecurityGroup" }
     },
     "LbSecurityGroup": {
