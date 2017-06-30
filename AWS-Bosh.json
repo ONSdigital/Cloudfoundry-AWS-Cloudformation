@@ -2632,7 +2632,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAz",
       "Properties": {
-        "GroupId": { "Ref": "SecurityGroup" },
+        "GroupId": { "Ref": "LbSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz2Cidr" },
         "FromPort": "4567",
         "ToPort": "4567",
