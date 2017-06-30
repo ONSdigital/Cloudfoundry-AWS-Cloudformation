@@ -1121,7 +1121,7 @@
         }
       }
     },
-    "PermitFullAccessCidr2": {
+    "PermitDirectorAccessCidr2": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr2",
       "Properties": {
@@ -1159,7 +1159,7 @@
         }
       }
     },
-    "PermitFullAccessCidr3": {
+    "PermitDirectorAccessCidr3": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr3",
       "Properties": {
@@ -1197,7 +1197,7 @@
         }
       }
     },
-    "PermitFullAccessCidr4": {
+    "PermitDirectorAccessCidr4": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr4",
       "Properties": {
@@ -1235,7 +1235,7 @@
         }
       }
     },
-    "PermitFullAccessCidr5": {
+    "PermitDirectorAccessCidr5": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr5",
       "Properties": {
@@ -1273,7 +1273,7 @@
         }
       }
     },
-    "PermitFullAccessCidr6": {
+    "PermitDirectorAccessCidr6": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr6",
       "Properties": {
