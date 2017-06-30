@@ -623,16 +623,6 @@
         ]
       }
     },
-    "ElastiCacheServicesAz1Subnet": {
-      "Description": "ElastiCache AZ1 Subnet",
-      "Condition": "CreateElastiCacheNetworks",
-      "Value": { "Ref": "ElastiCacheServicesAz1Subnet" }
-    },
-    "ElastiCacheServicesAz2Subnet": {
-      "Description": "ElastiCache AZ2 Subnet",
-      "Condition": "CreateElastiCacheNetworks",
-      "Value": { "Ref": "ElastiCacheServicesAz2Subnet" }
-    },
     "RdsServicesAz1Subnet": {
       "Description": "RDS Services AZ1 Subnet",
       "Condition": "DeployRdsInstance",
@@ -642,21 +632,6 @@
       "Description": "RDS Services AZ2 Subnet",
       "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsServicesAz2Subnet" }
-    },
-    "RdsSubnetGroup": {
-      "Description": "RDS Subnet Group",
-      "Condition": "DeployRdsInstance",
-      "Value": { "Ref": "RdsSubnetGroup" }
-    },
-    "ElastiCacheSecurityGroup": {
-      "Description": "ElastiCache Security Group",
-      "Condition": "CreateElastiCacheNetworks",
-      "Value": { "Ref": "ElastiCacheSecurityGroup" }
-    },
-    "RdsSecurityGroup": {
-      "Description": "RDS Security Group",
-      "Condition": "DeployRdsInstance",
-      "Value": { "Ref": "RdsSecurityGroup" }
     },
     "LbSecurityGroups": {
       "Description": "HTTP(S) Access Security Groups",
