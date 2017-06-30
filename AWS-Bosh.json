@@ -186,10 +186,10 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "DmzAz1Cidr": {
+    "DmzAz2Cidr": {
       "Type": "String",
       "Default": "10.0.110.0/24",
-      "Description": "DMZ AZ1 Subnet",
+      "Description": "DMZ AZ2 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
