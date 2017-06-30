@@ -40,7 +40,7 @@
 
   "Outputs": {
     "DirectorSecurityGroup": {
-      "Description": "Private Security Group",
+      "Description": "Director Security Group",
       "Value": { "Ref": "DirectorSecurityGroup" }
     },
     "LbSecurityGroup": {
