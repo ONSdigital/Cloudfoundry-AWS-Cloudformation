@@ -1083,11 +1083,15 @@
   },
 
   "Resources": {
-    "DirectorWhitelist1Cidr": {
+    "DirectorWhitelistCidr1": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr1",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr1" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1095,9 +1099,7 @@
                 "FullAccessCidr1"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr1" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1124,6 +1126,10 @@
       "Condition": "PermitFullAccessCidr2",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr2" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1131,9 +1137,7 @@
                 "FullAccessCidr2"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr2" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1160,6 +1164,10 @@
       "Condition": "PermitFullAccessCidr3",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr3" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1167,9 +1175,7 @@
                 "FullAccessCidr3"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr3" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1196,6 +1202,10 @@
       "Condition": "PermitFullAccessCidr4",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr4" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1203,9 +1213,7 @@
                 "FullAccessCidr4"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr4" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1232,6 +1240,10 @@
       "Condition": "PermitFullAccessCidr5",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr5" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1239,9 +1251,7 @@
                 "FullAccessCidr5"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr5" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1268,6 +1278,10 @@
       "Condition": "PermitFullAccessCidr6",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr6" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1275,9 +1289,7 @@
                 "FullAccessCidr6"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr6" },
-          "VpcId": { "Ref": "CloudFoundryVpc" }
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1304,6 +1316,10 @@
       "Condition": "PermitFullAccessCidr1",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr1" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1311,11 +1327,7 @@
                 "FullAccessCidr1"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr1" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "true",
-          "AllowDirectorAccess": "true"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1342,6 +1354,10 @@
       "Condition": "PermitFullAccessCidr2",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr2" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1349,11 +1365,7 @@
                 "FullAccessCidr2"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr2" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "true",
-          "AllowDirectorAccess": "true"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1380,6 +1392,10 @@
       "Condition": "PermitFullAccessCidr3",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr3" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1387,11 +1403,7 @@
                 "FullAccessCidr3"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr3" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "true",
-          "AllowDirectorAccess": "true"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1418,6 +1430,10 @@
       "Condition": "PermitFullAccessCidr4",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr4" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1425,11 +1441,7 @@
                 "FullAccessCidr4"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr4" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "true",
-          "AllowDirectorAccess": "true"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1456,6 +1468,10 @@
       "Condition": "PermitFullAccessCidr5",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr5" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1463,11 +1479,7 @@
                 "FullAccessCidr5"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr5" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "true",
-          "AllowDirectorAccess": "true"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1494,6 +1506,10 @@
       "Condition": "PermitFullAccessCidr6",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr6" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1501,11 +1517,7 @@
                 "FullAccessCidr6"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr6" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "true",
-          "AllowDirectorAccess": "true"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1532,6 +1544,10 @@
       "Condition": "PermitHttpAccessCidr1",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr1" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1539,11 +1555,7 @@
                 "HttpAccessCidr1"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr1" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "false",
-          "AllowDirectorAccess": "false"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1570,6 +1582,10 @@
       "Condition": "PermitHttpAccessCidr2",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr2" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1577,11 +1593,7 @@
                 "HttpAccessCidr2"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr2" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "false",
-          "AllowDirectorAccess": "false"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1608,6 +1620,10 @@
       "Condition": "PermitHttpAccessCidr3",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr3" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1615,11 +1631,7 @@
                 "HttpAccessCidr3"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr3" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "false",
-          "AllowDirectorAccess": "false"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1646,6 +1658,10 @@
       "Condition": "PermitHttpAccessCidr4",
       "Properties": {
         "Parameters": {
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false",
+          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr4" },
           "WhitelistName": {
             "Fn::Join": [
               ":", [
@@ -1653,11 +1669,7 @@
                 "HttpAccessCidr4"
               ]
             ]
-          },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr4" },
-          "VpcId": { "Ref": "CloudFoundryVpc" },
-          "AllowCfSshAccess": "false",
-          "AllowDirectorAccess": "false"
+          }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -1901,42 +1913,42 @@
           {
             "Fn::If": [
               "PermitFullAccessCidr1",
-              { "Fn::GetAtt": [ "PermitFullAccessCidr1", "Outputs.LbSecurityGroup" ] },
+              { "Fn::GetAtt": [ "DirectorWhitelistCidr1", "Outputs.LbSecurityGroup" ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr2",
-              { "Fn::GetAtt": [ "PermitFullAccessCidr2", "Outputs.LbSecurityGroup" ] },
+              { "Fn::GetAtt": [ "DirectorWhitelistCidr2", "Outputs.LbSecurityGroup" ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr3",
-              { "Fn::GetAtt": [ "PermitFullAccessCidr3", "Outputs.LbSecurityGroup" ] },
+              { "Fn::GetAtt": [ "DirectorWhitelistCidr3", "Outputs.LbSecurityGroup" ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr4",
-              { "Fn::GetAtt": [ "PermitFullAccessCidr4", "Outputs.LbSecurityGroup" ] },
+              { "Fn::GetAtt": [ "DirectorWhitelistCidr4", "Outputs.LbSecurityGroup" ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr5",
-              { "Fn::GetAtt": [ "PermitFullAccessCidr5", "Outputs.LbSecurityGroup" ] },
+              { "Fn::GetAtt": [ "DirectorWhitelistCidr5", "Outputs.LbSecurityGroup" ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr6",
-              { "Fn::GetAtt": [ "PermitFullAccessCidr6", "Outputs.LbSecurityGroup" ] },
+              { "Fn::GetAtt": [ "DirectorWhitelistCidr6", "Outputs.LbSecurityGroup" ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
