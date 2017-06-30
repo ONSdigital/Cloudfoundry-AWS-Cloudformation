@@ -6,8 +6,8 @@
     "WhitelistName": {
       "Type": "String",
       "Description": "Whitelist name",
-      "AllowedPattern": "^[A-Za-z0-9:]+$",
-      "ConstraintDescription": "Alphanumeric string"
+      "AllowedPattern": "^[A-Za-z0-9:-]+$",
+      "ConstraintDescription": "Alphanumeric, colon and hypen"
     },
 
     "WhitelistedCidr": {
