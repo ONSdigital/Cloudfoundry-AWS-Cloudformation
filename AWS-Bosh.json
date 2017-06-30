@@ -1080,7 +1080,7 @@
                 }
               },
               "Templates",
-              "AWS-Bosh-director-whitelist-template.json"
+              "AWS-Bosh-whitelist-template.json"
             ]
           ]
         }
@@ -1118,7 +1118,7 @@
                 }
               },
               "Templates",
-              "AWS-Bosh-director-whitelist-template.json"
+              "AWS-Bosh-whitelist-template.json"
             ]
           ]
         }
@@ -1156,7 +1156,7 @@
                 }
               },
               "Templates",
-              "AWS-Bosh-director-whitelist-template.json"
+              "AWS-Bosh-whitelist-template.json"
             ]
           ]
         }
@@ -1194,7 +1194,7 @@
                 }
               },
               "Templates",
-              "AWS-Bosh-director-whitelist-template.json"
+              "AWS-Bosh-whitelist-template.json"
             ]
           ]
         }
@@ -1232,7 +1232,7 @@
                 }
               },
               "Templates",
-              "AWS-Bosh-director-whitelist-template.json"
+              "AWS-Bosh-whitelist-template.json"
             ]
           ]
         }
@@ -1270,7 +1270,7 @@
                 }
               },
               "Templates",
-              "AWS-Bosh-director-whitelist-template.json"
+              "AWS-Bosh-whitelist-template.json"
             ]
           ]
         }
