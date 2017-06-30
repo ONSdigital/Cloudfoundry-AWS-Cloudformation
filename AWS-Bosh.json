@@ -2492,45 +2492,24 @@
       }
     },
 
-    "Dmz22PrivateAz1SecurityGroupEgress": {
+    "Director22PrivateAz1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz1Cidr" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
       }
     },
-    "Dmz22PrivateAz2SecurityGroupEgress": {
+    "Director22PrivateAz2SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAz",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz2Cidr" },
         "FromPort": "22",
         "ToPort": "22",
-        "IpProtocol": "tcp"
-      }
-    },
-    "Dmz4567PrivateAz1SecurityGroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrIp": { "Ref": "PrivateAz1Cidr" },
-        "FromPort": "4567",
-        "ToPort": "4567",
-        "IpProtocol": "tcp"
-      }
-    },
-    "Dmz4567PrivateAz1SecurityGroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrIp": { "Ref": "PrivateAz2Cidr" },
-        "FromPort": "4567",
-        "ToPort": "4567",
         "IpProtocol": "tcp"
       }
     },
@@ -2618,75 +2597,106 @@
         "IpProtocol": "tcp"
       }
     },
-    "Dmz15672PrivateAz1SecurityGroupEgress": {
+    "Lb22PrivateAz1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrIp": { "Ref": "PrivateAz1Cidr" },
-        "FromPort": "15672",
-        "ToPort": "15672",
-        "IpProtocol": "tcp"
-      }
-    },
-    "Dmz15672PrivateAz1SecurityGroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrIp": { "Ref": "PrivateAz2Cidr" },
-        "FromPort": "15672",
-        "ToPort": "15672",
-        "IpProtocol": "tcp"
-      }
-    },
-    "LbSecurityGroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "AllocateLbIp",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrIp": "0.0.0.0/0",
-        "FromPort": "0",
-        "ToPort": "65535",
-        "IpProtocol": "-1"
+        "CidrIp": { "Ref": "PrivateAz1Cidr" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Lb22PrivateAz2SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Ref": "LbSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz2Cidr" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Lb4567PrivateAz1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Ref": "LbSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz1Cidr" },
+        "FromPort": "4567",
+        "ToPort": "4567",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Lb4567PrivateAz1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Ref": "SecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz2Cidr" },
+        "FromPort": "4567",
+        "ToPort": "4567",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Lb15672PrivateAz1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Ref": "LbSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz1Cidr" },
+        "FromPort": "15672",
+        "ToPort": "15672",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Lb15672PrivateAz1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Ref": "LbSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz2Cidr" },
+        "FromPort": "15672",
+        "ToPort": "15672",
+        "IpProtocol": "tcp"
       }
     },
 
-    "Dmz4222PrivateAz1SecurityGroupIngress": {
+    "Director4222PrivateAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz1Cidr" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
       }
     },
-    "Dmz4222PrivateAz2SecurityGroupIngress": {
+    "Director4222PrivateAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz2Cidr" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
       }
     },
-    "Dmz25777PrivateAz1SecurityGroupIngress": {
+    "Director25777PrivateAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz1Cidr" },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
       }
     },
-    "Dmz25777PrivateAz2SecurityGroupIngress": {
+    "Director25777PrivateAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz2Cidr" },
         "FromPort": "25777",
         "ToPort": "25777",
