@@ -41,7 +41,7 @@
       "MaxValue": "999"
     },
 
-    "AllocateExternalIp": {
+    "AllocateLbIp": {
       "Type": "String",
       "Default": "true",
       "Description": "Allocate External IP (eg for HA Proxy)",
@@ -711,64 +711,13 @@
         ]
       }
     },
-    "DirectorSecurityGroups": {
+    "DirectorSecurityGroup": {
       "Description": "Director Security Groups",
-      "Value": {
-        "Fn::Join": [
-          "", [
-            "[",
-            {
-              "Fn::Join": [
-                ",", [
-                  {
-                    "Fn::If": [
-                      "PermitFullAccessCidr1",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistCidr1", "Outputs.DirectorSecurityGroup" ] }, "\"" ] ] },
-                      { "Ref": "AWS::NoValue" }
-                    ]
-                  },
-                  {
-                    "Fn::If": [
-                      "PermitFullAccessCidr2",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistCidr2", "Outputs.DirectorSecurityGroup" ] }, "\"" ] ] },
-                      { "Ref": "AWS::NoValue" }
-                    ]
-                  },
-                  {
-                    "Fn::If": [
-                      "PermitFullAccessCidr3",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistCidr3", "Outputs.DirectorSecurityGroup" ] }, "\"" ] ] },
-                      { "Ref": "AWS::NoValue" }
-                    ]
-                  },
-                  {
-                    "Fn::If": [
-                      "PermitFullAccessCidr4",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistCidr4", "Outputs.DirectorSecurityGroup" ] }, "\"" ] ] },
-                      { "Ref": "AWS::NoValue" }
-                    ]
-                  },
-                  {
-                    "Fn::If": [
-                      "PermitFullAccessCidr5",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistCidr5", "Outputs.DirectorSecurityGroup" ] }, "\"" ] ] },
-                      { "Ref": "AWS::NoValue" }
-                    ]
-                  },
-                  {
-                    "Fn::If": [
-                      "PermitFullAccessCidr6",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistCidr6", "Outputs.DirectorSecurityGroup" ] }, "\"" ] ] },
-                      { "Ref": "AWS::NoValue" }
-                    ]
-                  }
-                ]
-              ]
-          },
-          "]"
-          ]
-        ]
-      }
+      "Value": { "Ref": "DirectorSecurityGroup" }
+    },
+    "LbSecurityGroup": {
+      "Description": "LB Security Groups",
+      "Value": { "Ref": "LbSecurityGroup" }
     },
     "RabbitmqServicesSecurityGroup": {
       "Description": "RabbitMQ Services Security Groups",
@@ -801,12 +750,12 @@
     },
     "ExternalIpAz1": {
       "Description": "Unallocated external IPs",
-      "Condition": "AllocateExternalIp",
+      "Condition": "AllocateLbIp",
       "Value": { "Ref": "ExternalAz1Ip" }
     },
     "ExternalIpAz2": {
       "Description": "Unallocated external IPs",
-      "Condition": "MultiAzAndAllocateExternalIp",
+      "Condition": "MultiAzAndAllocateLbIp",
       "Value": { "Ref": "ExternalAz1Ip" }
     },
     "MultiAz": {
@@ -993,9 +942,9 @@
         { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
     },
-    "AllocateExternalIp": {
+    "AllocateLbIp": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     },
@@ -1031,18 +980,18 @@
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
       ]
     },
-    "MultiAzAndAllocateExternalIp": {
+    "MultiAzAndAllocateLbIp": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     },
     "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
-    "SingleAzAndAllocateExternalIp": {
+    "SingleAzAndAllocateLbIp": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
-        { "Fn::Equals": [ { "Ref": "AllocateExternalIp" }, "true" ] }
+        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] }
       ]
     }
   },
@@ -1055,7 +1004,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr1" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1093,7 +1043,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr2" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1131,7 +1082,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr3" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1169,7 +1121,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr4" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1207,7 +1160,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr5" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1245,7 +1199,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr6" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1283,7 +1238,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr1" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1321,7 +1277,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr2" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1359,7 +1316,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr3" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1397,7 +1355,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr4" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1435,7 +1394,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr5" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1473,7 +1433,8 @@
         "Parameters": {
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "FullAccessCidr6" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1511,7 +1472,8 @@
         "Parameters": {
           "AllowCfSshAccess": "false",
           "AllowDirectorAccess": "false",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr1" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1549,7 +1511,8 @@
         "Parameters": {
           "AllowCfSshAccess": "false",
           "AllowDirectorAccess": "false",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr2" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1587,7 +1550,8 @@
         "Parameters": {
           "AllowCfSshAccess": "false",
           "AllowDirectorAccess": "false",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr3" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1625,7 +1589,8 @@
         "Parameters": {
           "AllowCfSshAccess": "false",
           "AllowDirectorAccess": "false",
-          "VpcId": { "Ref": "CloudFoundryVpc" },
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr4" },
           "WhitelistName": {
             "Fn::Join": [
@@ -1874,78 +1839,7 @@
           "Enabled" : "true",
           "Timeout" : { "Ref": "ElbTimeout" }
         },
-        "SecurityGroups": [ 
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr1",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr1", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr2",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr2", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr3",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr3", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr4",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr4", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr5",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr5", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr6",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr6", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr1",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr2",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr3",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr4",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          }
-        ],
+        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
@@ -1967,78 +1861,7 @@
           "Enabled" : "true",
           "Timeout" : { "Ref": "ElbTimeout" }
         },
-        "SecurityGroups": [
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr1",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr1", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr2",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr2", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr3",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr3", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr4",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr4", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr5",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr5", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr6",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr6", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr1",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr2",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr3",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr4",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          }
-        ],
+        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
@@ -2058,78 +1881,7 @@
           "Enabled" : "true",
           "Timeout" : { "Ref": "ElbTimeout" }
         },
-        "SecurityGroups": [
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr1",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr1", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr2",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr2", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr3",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr3", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr4",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr4", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr5",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr5", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitFullAccessCidr6",
-              { "Fn::GetAtt": [ "DirectorWhitelistCidr6", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr1",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr2",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr3",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          },
-          {
-            "Fn::If": [
-              "PermitHttpAccessCidr4",
-              { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.LbSecurityGroup" ] },
-              { "Ref": "AWS::NoValue" }
-            ]
-          }
-        ],
+        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ExternalElb" ] ] } } ]
       }
     },
@@ -2147,11 +1899,11 @@
     },
     "ExternalAz1Ip": {
       "Type": "AWS::EC2::EIP",
-      "Condition": "AllocateExternalIp"
+      "Condition": "AllocateLbIp"
     },
     "ExternalAz2Ip": {
       "Type": "AWS::EC2::EIP",
-      "Condition": "MultiAzAndAllocateExternalIp"
+      "Condition": "MultiAzAndAllocateLbIp"
     },
 
     "AppsExternalElbGeneratedSslDnsRR": {
@@ -2259,7 +2011,7 @@
 
     "AppsExternalSingleIpDnsRR": {
       "Type": "AWS::Route53::RecordSet",
-      "Condition": "SingleAzAndAllocateExternalIp",
+      "Condition": "SingleAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -2288,7 +2040,7 @@
     },
     "AppsExternalMultiIpDnsRR": {
       "Type": "AWS::Route53::RecordSet",
-      "Condition": "MultiAzAndAllocateExternalIp",
+      "Condition": "MultiAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -2559,7 +2311,7 @@
     },
     "SystemExternalSingleAzIpDnsRR": {
       "Type": "AWS::Route53::RecordSet",
-      "Condition": "SingleAzAndAllocateExternalIp",
+      "Condition": "SingleAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -2586,7 +2338,7 @@
     },
     "SystemExternalMultiAzIpDnsRR": {
       "Type": "AWS::Route53::RecordSet",
-      "Condition": "MultiAzAndAllocateExternalIp",
+      "Condition": "MultiAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": {
           "Fn::Join": [
@@ -2780,6 +2532,23 @@
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "DmzSecurityGroup" ] ] } } ]
       }
     },
+    "DirectorSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployDirector",
+      "Properties": {
+        "GroupDescription": "Director Security Group",
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "DirectorSecurityGroup" ] ] } } ],
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "IpProtocol": "-1"
+          }
+        ]
+      }
+    },
     "ElastiCacheSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "CreateElastiCacheNetworks",
@@ -2787,6 +2556,15 @@
         "GroupDescription": "ElastiCache Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "ElastiCacheSecurityGroup" ] ] } } ]
+      }
+    },
+    "LbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupDescription": "ELB Security Group",
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "LbSecurityGroup" ] ] } } ]
       }
     },
     "ExternalSecurityGroup": {
@@ -2979,6 +2757,17 @@
         "FromPort": "15672",
         "ToPort": "15672",
         "IpProtocol": "tcp"
+      }
+    },
+    "LbSecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "AllocateLbIp",
+      "Properties": {
+        "GroupId": { "Ref": "LbSecurityGroup" },
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "IpProtocol": "-1"
       }
     },
 

@@ -17,6 +17,18 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "DirectorSecurityGroup": {
+      "Type": "String",
+      "Description": "Director Security Group",
+      "AllowedPattern": "^sg-[0-9a-f]{8}$",
+      "ConstraintDescription": "Valid security group"
+    },
+    "LbSecurityGroup": {
+      "Type": "String",
+      "Description": "LB Security Group",
+      "AllowedPattern": "^sg-[0-9a-f]{8}$",
+      "ConstraintDescription": "Valid security group"
+    },
 
     "AllowCfSshAccess": {
       "Type": "String",
@@ -29,24 +41,6 @@
       "Default": "false",
       "Description": "Allow Director access (true/false)",
       "AllowedValues": [ "true", "false" ]
-    },
-
-    "VpcId": {
-      "Type": "AWS::EC2::VPC::Id",
-      "Description": "VPC ID",
-      "ConstraintDescription": "Valid VPC ID"
-    }
-  },
-
-  "Outputs": {
-    "DirectorSecurityGroup": {
-      "Description": "Director Security Group",
-      "Condition": "AllowDirectorAccess",
-      "Value": { "Ref": "DirectorSecurityGroup" }
-    },
-    "LbSecurityGroup": {
-      "Description": "Load Balancer Security Group",
-      "Value": { "Ref": "LbSecurityGroup" }
     }
   },
 
@@ -56,99 +50,41 @@
   },
 
   "Resources": {
-    "DirectorSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
+    "Director22AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "AllowDirectorAccess",
       "Properties": {
-        "GroupDescription": "Private In Out",
-        "VpcId": { "Ref": "VpcId" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "WhitelistName" },
-                  "DirectorSecurityGroup"
-                ]
-              ]
-            }
-          }
-        ],
-        "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          }
-        ],
-        "SecurityGroupIngress": [
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "22",
-            "ToPort": "22" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "6868",
-            "ToPort": "6868" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "25555",
-            "ToPort": "25555" ,
-            "IpProtocol": "tcp"
-          }
-        ]
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "WhitelistedCidr" },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
       }
     },
-    "LbSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
+    "Director6868AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "AllowDirectorAccess",
       "Properties": {
-        "GroupDescription": "Load Balancer Access In Out",
-        "VpcId": { "Ref": "VpcId" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "WhitelistName" },
-                  "LbSecurityGroup"
-                ]
-              ]
-            }
-          }
-        ],
-        "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          }
-        ],
-        "SecurityGroupIngress": [
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "80",
-            "ToPort": "80" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "443",
-            "ToPort": "443" ,
-            "IpProtocol": "tcp"
-          }
-        ]
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "WhitelistedCidr" },
+        "FromPort": "6868",
+        "ToPort": "6868" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "Director25555AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "AllowDirectorAccess",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "WhitelistedCidr" },
+        "FromPort": "25555",
+        "ToPort": "25555" ,
+        "IpProtocol": "tcp"
       }
     },
 
-    "CfSshAccessIngress": {
+    "Lb22AccessIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "AllowCfSshAccess",
       "Properties": {
@@ -156,6 +92,26 @@
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "2222",
         "ToPort": "2222" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "Lb80AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Ref": "LbSecurityGroup" },
+        "CidrIp": { "Ref": "WhitelistedCidr" },
+        "FromPort": "80",
+        "ToPort": "80" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "Lb443AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Ref": "LbSecurityGroup" },
+        "CidrIp": { "Ref": "WhitelistedCidr" },
+        "FromPort": "443",
+        "ToPort": "443" ,
         "IpProtocol": "tcp"
       }
     }
