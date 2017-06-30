@@ -720,7 +720,6 @@
             {
               "Fn::Join": [
                 ",", [
-                  { "Fn::Join": [ "", [ "\"", { "Ref": "DirectorSecurityGroup" }, "\"" ] ] },
                   {
                     "Fn::If": [
                       "PermitFullAccessCidr1",
