@@ -20,15 +20,13 @@
       "Type": "String",
       "Default": "false",
       "Description": "Allow CF SSH access (true/false)",
-      "AllowedPattern": "^(true|false)",
-      "ConstraintDescription": "true or false"
+      "AllowedValues": [ "true", "false" ]
     },
     "AllowDirectorAccess": {
       "Type": "String",
       "Default": "false",
       "Description": "Allow Director access (true/false)",
-      "AllowedPattern": "^(true|false)",
-      "ConstraintDescription": "true or false"
+      "AllowedValues": [ "true", "false" ]
     },
     "VpcId": {
       "Type": "AWS::EC2::VPC::Id",
@@ -38,14 +36,13 @@
   },
 
   "Outputs": {
+    "DirectorSecurityGroup": {
+      "Description": "Private Security Group",
+      "Value": { "Ref": "DirectorSecurityGroup" }
+    },
     "HttpSecurityGroup": {
       "Description": "HTTP(S) Security Group",
       "Value": { "Ref": "HttpSecurityGroup" }
-    },
-    "PrivateSecurityGroup": {
-      "Description": "Private Security Group",
-      "Condition": "AllowDirectorAccess",
-      "Value": { "Ref": "PrivateSecurityGroup" }
     }
   },
 
@@ -55,6 +52,55 @@
   },
 
   "Resources": {
+    "DirectorSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "AllowDirectorAccess",
+      "Properties": {
+        "GroupDescription": "Private In Out",
+        "VpcId": { "Ref": "VpcId" },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                ":", [
+                  { "Ref": "WhitelistName" },
+                  "DirectorSecurityGroup"
+                ]
+              ]
+            }
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "IpProtocol": "-1"
+          }
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": { "Ref": "WhitelistedCidr" },
+            "FromPort": "22",
+            "ToPort": "22" ,
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "WhitelistedCidr" },
+            "FromPort": "6868",
+            "ToPort": "6868" ,
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "WhitelistedCidr" },
+            "FromPort": "25555",
+            "ToPort": "25555" ,
+            "IpProtocol": "tcp"
+          }
+        ]
+      }
+    },
     "HttpSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -98,56 +144,6 @@
       }
     },
 
-    "PrivateSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "AllowDirectorAccess",
-      "Properties": {
-        "GroupDescription": "Private In Out",
-        "VpcId": { "Ref": "VpcId" },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                ":", [
-                  { "Ref": "WhitelistName" },
-                  "PrivateSecurityGroup"
-                ]
-              ]
-            }
-          }
-        ],
-        "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          }
-        ],
-        "SecurityGroupIngress": [
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "22",
-            "ToPort": "22" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "6868",
-            "ToPort": "6868" ,
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "WhitelistedCidr" },
-            "FromPort": "25555",
-            "ToPort": "25555" ,
-            "IpProtocol": "tcp"
-          }
-        ]
-      }
-    },
-
     "CfSshAccessIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "AllowCfSshAccess",
@@ -161,3 +157,4 @@
     }
   }
 }
+
