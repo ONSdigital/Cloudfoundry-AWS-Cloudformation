@@ -578,29 +578,6 @@
         ]
       }
     },
-    "NatAz1Dns": {
-      "Description": "NAT AZ1 DNS name",
-      "Value": { "Fn::Join": [
-          ".", [
-            "nat-z1",
-            { "Ref": "DeploymentName" },
-            { "Ref": "HostedZone" }
-          ]
-        ]
-      }
-    },
-    "NatAz2Dns": {
-      "Description": "NAT AZ2 DNS name",
-      "Condition": "MultiAz",
-      "Value": { "Fn::Join": [
-          ".", [
-            "nat-z2",
-            { "Ref": "DeploymentName" },
-            { "Ref": "HostedZone" }
-          ]
-        ]
-      }
-    },
     "UaaDns": {
       "Description": "API DNS name",
       "Value": {
