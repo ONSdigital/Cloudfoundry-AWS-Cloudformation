@@ -629,15 +629,6 @@
       "Description": "Elastic IP 1 - Bosh Lite (Bootstrap)",
       "Value": { "Ref": "BoshLitePublicIp" }
     },
-    "NatAz1Ip": {
-      "Description": "Elastic IP 2 - NAT AZ1 IP",
-      "Value": { "Ref": "NatAz1Ip" }
-    },
-    "NatAz2Ip": {
-      "Description": "Elastic IP 3 - NAT AZ2 IP",
-      "Condition": "MultiAz",
-      "Value": { "Ref": "NatAz2Ip" }
-    },
     "ExternalIpAz1": {
       "Description": "Unallocated external IPs",
       "Condition": "AllocateLbIp",
