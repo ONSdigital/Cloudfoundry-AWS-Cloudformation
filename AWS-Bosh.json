@@ -179,14 +179,14 @@
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "DmzServicesAz1Cidr": {
+    "DmzAz1Cidr": {
       "Type": "String",
       "Default": "10.0.10.0/24",
       "Description": "DMZ AZ1 Subnet",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "DmzServicesAz1Cidr": {
+    "DmzAz1Cidr": {
       "Type": "String",
       "Default": "10.0.110.0/24",
       "Description": "DMZ AZ1 Subnet",
