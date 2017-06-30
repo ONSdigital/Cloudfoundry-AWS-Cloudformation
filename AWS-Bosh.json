@@ -1302,7 +1302,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "preamble-TemplatesBucketCfUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
@@ -1340,7 +1340,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "preamble-TemplatesBucketCfUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
@@ -1378,7 +1378,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "preamble-TemplatesBucketCfUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
@@ -1416,7 +1416,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "preamble-TemplatesBucketCfUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
@@ -1454,7 +1454,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "preamble-TemplatesBucketCfUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
@@ -1492,7 +1492,7 @@
                   "Fn::Join": [
                     "-", [
                       { "Ref": "AWS::StackName" },
-                      "preamble-TemplatesBucketCfUrl"
+                      "preamble-TemplatesBucketHttpUrl"
                     ]
                   ]
                 }
