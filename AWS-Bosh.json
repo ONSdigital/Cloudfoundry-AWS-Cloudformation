@@ -377,15 +377,6 @@
       "Condition": "MultiAzOrElb",
       "Value": { "Ref": "DmzAz2Subnet" }
     },
-    "NatAz1Subnet": {
-      "Description": "NAT AZ1 Subnet",
-      "Value": { "Ref": "NatAz1Subnet" }
-    },
-    "NatAz2Subnet": {
-      "Description": "NAT AZ2 Subnet",
-      "Condition": "MultiAz",
-      "Value": { "Ref": "NatAz2Subnet" }
-    },
     "PrivateAz1Subnet": {
       "Description": "Private AZ1 Subnet",
       "Value": { "Ref": "PrivateAz1Subnet" }
