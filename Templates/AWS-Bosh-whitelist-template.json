@@ -40,9 +40,9 @@
       "Description": "Private Security Group",
       "Value": { "Ref": "DirectorSecurityGroup" }
     },
-    "HttpSecurityGroup": {
-      "Description": "HTTP(S) Security Group",
-      "Value": { "Ref": "HttpSecurityGroup" }
+    "LbSecurityGroup": {
+      "Description": "Load Balancer Security Group",
+      "Value": { "Ref": "LbSecurityGroup" }
     }
   },
 
@@ -101,10 +101,10 @@
         ]
       }
     },
-    "HttpSecurityGroup": {
+    "LbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "HTTP(S) Access In Out",
+        "GroupDescription": "Load Balancer Access In Out",
         "VpcId": { "Ref": "VpcId" },
         "Tags": [
           {
@@ -113,7 +113,7 @@
               "Fn::Join": [
                 ":", [
                   { "Ref": "WhitelistName" },
-                  "HttpSecurityGroup"
+                  "LbSecurityGroup"
                 ]
               ]
             }
@@ -148,7 +148,7 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "AllowCfSshAccess",
       "Properties": {
-        "GroupId": { "Ref": "HttpSecurityGroup" },
+        "GroupId": { "Ref": "LbSecurityGroup" },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "2222",
         "ToPort": "2222" ,

@@ -658,7 +658,7 @@
       "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsSecurityGroup" }
     },
-    "HttpSecurityGroups": {
+    "LbSecurityGroups": {
       "Description": "HTTP(S) Access Security Groups",
       "Value": {
         "Fn::Join": [
@@ -670,70 +670,70 @@
                   {
                     "Fn::If": [
                       "PermitFullAccessCidr1",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr1", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr1", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
                       "PermitFullAccessCidr2",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr2", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr2", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
                       "PermitFullAccessCidr3",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr3", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr3", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
                       "PermitFullAccessCidr4",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr4", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr4", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
                       "PermitFullAccessCidr5",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr5", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr5", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
                       "PermitFullAccessCidr6",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr6", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr6", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
-                      "PermitHttpAccessCidr1",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      "PermitLbAccessCidr1",
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
-                      "PermitHttpAccessCidr2",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      "PermitLbAccessCidr2",
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
-                      "PermitHttpAccessCidr3",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      "PermitLbAccessCidr3",
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   },
                   {
                     "Fn::If": [
-                      "PermitHttpAccessCidr4",
-                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+                      "PermitLbAccessCidr4",
+                      { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
                       { "Ref": "AWS::NoValue" }
                     ]
                   }
@@ -987,22 +987,22 @@
         { "Fn::Equals": [ { "Ref": "FullAccessCidr6" }, "127.0.0.0/8" ] }
       ]
     },
-    "PermitHttpAccessCidr1": {
+    "PermitLbAccessCidr1": {
       "Fn::Not": [
         { "Fn::Equals": [ { "Ref": "HttpAccessCidr1" }, "127.0.0.0/8" ] }
       ]
     },
-    "PermitHttpAccessCidr2": {
+    "PermitLbAccessCidr2": {
       "Fn::Not": [
         { "Fn::Equals": [ { "Ref": "HttpAccessCidr2" }, "127.0.0.0/8" ] }
       ]
     },
-    "PermitHttpAccessCidr3": {
+    "PermitLbAccessCidr3": {
       "Fn::Not": [
         { "Fn::Equals": [ { "Ref": "HttpAccessCidr3" }, "127.0.0.0/8" ] }
       ]
     },
-    "PermitHttpAccessCidr4": {
+    "PermitLbAccessCidr4": {
       "Fn::Not": [
         { "Fn::Equals": [ { "Ref": "HttpAccessCidr4" }, "127.0.0.0/8" ] }
       ]
@@ -1529,7 +1529,7 @@
     },
     "WhitelistHttpAccessCidr1": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitHttpAccessCidr1",
+      "Condition": "PermitLbAccessCidr1",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1567,7 +1567,7 @@
     },
     "WhitelistHttpAccessCidr2": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitHttpAccessCidr2",
+      "Condition": "PermitLbAccessCidr2",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1605,7 +1605,7 @@
     },
     "WhitelistHttpAccessCidr3": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitHttpAccessCidr3",
+      "Condition": "PermitLbAccessCidr3",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1643,7 +1643,7 @@
     },
     "WhitelistHttpAccessCidr4": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitHttpAccessCidr4",
+      "Condition": "PermitLbAccessCidr4",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1901,70 +1901,70 @@
           {
             "Fn::If": [
               "PermitFullAccessCidr1",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr1", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr1", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr2",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr2", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr2", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr3",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr3", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr3", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr4",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr4", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr4", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr5",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr5", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr5", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr6",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr6", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr6", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr1",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr1",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr2",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr2",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr3",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr3",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr4",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr4",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           }
@@ -1994,70 +1994,70 @@
           {
             "Fn::If": [
               "PermitFullAccessCidr1",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr1", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr1", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr2",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr2", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr2", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr3",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr3", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr3", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr4",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr4", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr4", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr5",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr5", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr5", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr6",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr6", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr6", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr1",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr1",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr2",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr2",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr3",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr3",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr4",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr4",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           }
@@ -2085,70 +2085,70 @@
           {
             "Fn::If": [
               "PermitFullAccessCidr1",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr1", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr1", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr2",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr2", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr2", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr3",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr3", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr3", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr4",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr4", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr4", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr5",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr5", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr5", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
               "PermitFullAccessCidr6",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr6", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "DirectorWhitelistAccessCidr6", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr1",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr1",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr1", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr2",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr2",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr2", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr3",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr3",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr3", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           },
           {
             "Fn::If": [
-              "PermitHttpAccessCidr4",
-              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.HttpSecurityGroup" ] }, "\"" ] ] },
+              "PermitLbAccessCidr4",
+              { "Fn::Join": [ "", [ "\"", { "Fn::GetAtt": [ "WhitelistHttpAccessCidr4", "Outputs.LbSecurityGroup" ] }, "\"" ] ] },
               { "Ref": "AWS::NoValue" }
             ]
           }
