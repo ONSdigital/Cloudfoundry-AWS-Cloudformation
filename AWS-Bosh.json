@@ -1301,7 +1301,7 @@
     },
     "WhitelistLbAccessCidr1": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitLbAccessCidr1",
+      "Condition": "PermitFullAccessCidr1",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1339,7 +1339,7 @@
     },
     "WhitelistLbAccessCidr2": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitLbAccessCidr2",
+      "Condition": "PermitFullAccessCidr2",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1377,7 +1377,7 @@
     },
     "WhitelistLbAccessCidr3": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitLbAccessCidr3",
+      "Condition": "PermitFullAccessCidr3",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1415,7 +1415,7 @@
     },
     "WhitelistLbAccessCidr4": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitLbAccessCidr4",
+      "Condition": "PermitFullAccessCidr4",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1453,7 +1453,7 @@
     },
     "WhitelistLbAccessCidr5": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitLbAccessCidr5",
+      "Condition": "PermitFullAccessCidr5",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
@@ -1491,7 +1491,7 @@
     },
     "WhitelistLbAccessCidr6": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitLbAccessCidr6",
+      "Condition": "PermitFullAccessCidr6",
       "Properties": {
         "Parameters": {
           "WhitelistName": {
