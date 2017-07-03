@@ -1631,7 +1631,6 @@
     "NatAz1DnsRr": {
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
-        "HostedZoneName": {
         "HostedZoneName": { "Fn::Sub": "${HostedZone}." },
         "Name": { "Fn::Sub": "nat-z1.${DeploymentName}.${HostedZone}" },
         "TTL": "3600",
