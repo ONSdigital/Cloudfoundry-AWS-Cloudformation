@@ -266,8 +266,8 @@
 
     "RdsInstanceSize": {
       "Type": "String",
-      "Default": "db.t2.micro",
-      "Description": "RDS Instance Size",
+      "Default": "db.t2.medium",
+      "Description": "RDS Size (instance size affects max_connections)",
       "AllowedValues": [
         "db.t2.micro",
         "db.t2.small",
