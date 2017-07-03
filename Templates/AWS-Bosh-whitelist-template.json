@@ -3,13 +3,6 @@
   "Description": "AWS CloudFormation Bosh - Firewall whitelist template",
 
   "Parameters": {
-    "WhitelistName": {
-      "Type": "String",
-      "Description": "Whitelist name",
-      "AllowedPattern": "^[A-Za-z0-9:-]+$",
-      "ConstraintDescription": "Alphanumeric, colon and hypen"
-    },
-
     "WhitelistedCidr": {
       "Type": "String",
       "Default": "127.0.0.1/32",
