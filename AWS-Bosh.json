@@ -605,6 +605,10 @@
       "Description": "Director Security Groups",
       "Value": { "Ref": "DirectorSecurityGroup" }
     },
+    "DmzSecurityGroup": {
+      "Description": "DMZ Security Groups",
+      "Value": { "Ref": "DmzSecurityGroup" }
+    },
     "LbSecurityGroup": {
       "Description": "LB Security Groups",
       "Value": { "Ref": "LbSecurityGroup" }
