@@ -2420,12 +2420,8 @@
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [ { "Key": "Name", "Value": { "Fn::Join": [ ":", [ { "Ref": "DeploymentName" }, "DirectorSecurityGroup" ] ] } } ],
         "SecurityGroupEgress": [
-          {
-            "CidrIp": "0.0.0.0/0",
-            "FromPort": "0",
-            "ToPort": "65535",
-            "IpProtocol": "-1"
-          }
+          { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
+          { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
         ]
       }
     },
