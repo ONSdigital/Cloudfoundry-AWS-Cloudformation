@@ -156,6 +156,12 @@
         "cache.t2.large"
       ]
     },
+    "DatabaseMaxConnections": {
+      "Type": "Number",
+      "Default": "150",
+      "MinValue": "5",
+      "MaxValue": "1000"
+    },
     "DatabaseStorageSize": {
       "Type": "Number",
       "Default": "5",
@@ -1715,6 +1721,17 @@
         ]
       }
     },
+    "DatabaseParamterGroup": {
+      "Type" : "AWS::RDS::DBParameterGroup",
+      "Condition": "DeployRdsInstance",
+      "Properties": {
+        "Description": "RDS Default Parameters Group",
+        "Family": "postgres",
+        "Parameters": {
+          "max_connections": { "Ref": "RdsMaxConnections" }
+        }
+      }
+    },
     "Database": {
       "Type" : "AWS::RDS::DBInstance",
       "Properties": {
@@ -1727,6 +1744,7 @@
           ]
 	},
         "DBInstanceClass": { "Ref": "DatabaseInstanceSize" },
+        "DBParameterGroupName": "DatabaseParamterGroup",
         "AllocatedStorage": { "Ref": "DatabaseStorageSize" },
         "AvailabilityZone": { "Fn::Select" : [ "0", { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "Engine": "postgres",
