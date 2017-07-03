@@ -132,8 +132,8 @@
     },
     "DatabaseInstanceSize": {
       "Type": "String",
-      "Default": "db.t2.small",
-      "Description": "Database Size",
+      "Default": "db.t2.medium",
+      "Description": "Database Size (instance size affects max_connections)",
       "AllowedValues": [
         "db.m4.large",
         "db.m4.xlarge",
