@@ -613,6 +613,10 @@
       "Description": "LB Security Groups",
       "Value": { "Ref": "LbSecurityGroup" }
     },
+    "PrivateSecurityGroup": {
+      "Description": "Private Security Groups",
+      "Value": { "Ref": "PrivateSecurityGroup" }
+    },
     "RabbitmqServicesSecurityGroup": {
       "Description": "RabbitMQ Services Security Groups",
       "Condition": "CreateRabbitmqNetworks",
