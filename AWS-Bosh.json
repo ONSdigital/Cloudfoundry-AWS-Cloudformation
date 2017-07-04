@@ -1971,6 +1971,27 @@
         "IpProtocol": "tcp"
       }
     },
+    "Director22RabbitmqAz1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "RabbitmqAz1Cidr" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Director22RabbitmqAz2SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "RabbitmqAz2Cidr" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
     "Dmz8080PrivateAz1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
@@ -2140,6 +2161,28 @@
         "IpProtocol": "tcp"
       }
     },
+    "Director4222RabbitmqAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "RabbitmqAz1Cidr" },
+        "FromPort": "4222",
+        "ToPort": "4222",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Director4222RabbitmqAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "RabbitmqAz2Cidr" },
+        "FromPort": "4222",
+        "ToPort": "4222",
+        "IpProtocol": "tcp"
+      }
+    },
     "Director25250PrivateAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -2155,6 +2198,28 @@
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
         "CidrIp": { "Ref": "PrivateAz2Cidr" },
+        "FromPort": "25250",
+        "ToPort": "25250",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Director25250RabbitmqAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "RabbitmqAz1Cidr" },
+        "FromPort": "25250",
+        "ToPort": "25250",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Director25250RabbitmqAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "RabbitmqAz2Cidr" },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2181,24 +2246,25 @@
         "IpProtocol": "tcp"
       }
     },
-    "Dmz22PrivateAz1SecurityGroupIngress": {
+    "Director25777RabbitmqAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "DmzAz1Cidr" },
-        "FromPort": "22",
-        "ToPort": "22",
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "RabbitmqAz1Cidr" },
+        "FromPort": "25777",
+        "ToPort": "25777",
         "IpProtocol": "tcp"
       }
     },
-    "Dmz22PrivateAz2SecurityGroupIngress": {
+    "Director25777RabbitmqAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Ref": "DmzAz2Cidr" },
-        "FromPort": "22",
-        "ToPort": "22",
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "RabbitmqAz2Cidr" },
+        "FromPort": "25777",
+        "ToPort": "25777",
         "IpProtocol": "tcp"
       }
     },
