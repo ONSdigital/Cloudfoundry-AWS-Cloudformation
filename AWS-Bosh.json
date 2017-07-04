@@ -1975,7 +1975,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqAz1Cidr" },
+        "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -1986,7 +1986,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqAz2Cidr" },
+        "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2166,7 +2166,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqAz1Cidr" },
+        "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2177,7 +2177,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqAz2Cidr" },
+        "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2208,7 +2208,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqAz1Cidr" },
+        "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2219,7 +2219,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqAz2Cidr" },
+        "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2251,7 +2251,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqAz1Cidr" },
+        "CidrIp": { "Ref": "RabbitmqServicesAz1Cidr" },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
@@ -2262,7 +2262,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrIp": { "Ref": "RabbitmqAz2Cidr" },
+        "CidrIp": { "Ref": "RabbitmqServicesAz2Cidr" },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
