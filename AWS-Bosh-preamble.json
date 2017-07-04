@@ -22,7 +22,7 @@
       "Value": {
         "Fn::Join": [
           "", [
-            "https://s3.", 
+            "https://s3-", 
             { "Ref": "AWS::Region" },
             ".amazonaws.com/",
             { "Ref": "S3Bucket" }
