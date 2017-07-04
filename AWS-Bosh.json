@@ -1251,7 +1251,10 @@
         "EnableDnsSupport": true,
         "EnableDnsHostnames": false,
         "InstanceTenancy": "default",
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CloudFoundryVpc" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CloudFoundryVpc" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -1263,7 +1266,10 @@
         "CidrBlock": { "Ref": "ElastiCacheServicesAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheServicesAz1Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheServicesAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "ElastiCacheServicesAz2Subnet": {
@@ -1274,7 +1280,10 @@
         "CidrBlock": { "Ref": "ElastiCacheServicesAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheServicesAz2Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheServicesAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -1285,7 +1294,10 @@
         "CidrBlock": { "Ref": "NatAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz1Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "NatAz2Subnet": {
@@ -1296,7 +1308,10 @@
         "CidrBlock": { "Ref": "NatAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz2Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "DmzAz1Subnet": {
@@ -1306,7 +1321,10 @@
         "CidrBlock": { "Ref": "DmzAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "DmzAz2Subnet": {
@@ -1317,7 +1335,10 @@
         "CidrBlock": { "Ref": "DmzAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "PrivateAz1Subnet": {
@@ -1327,7 +1348,10 @@
         "CidrBlock": { "Ref": "PrivateAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateAz1Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "PrivateAz2Subnet": {
@@ -1338,7 +1362,10 @@
         "CidrBlock": { "Ref": "PrivateAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateAz2Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "RabbitmqServicesAz1Subnet": {
@@ -1349,7 +1376,10 @@
         "CidrBlock": { "Ref": "RabbitmqServicesAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesAz1Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "RabbitmqServicesAz2Subnet": {
@@ -1360,7 +1390,10 @@
         "CidrBlock": { "Ref": "RabbitmqServicesAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesAz2Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "RdsServicesAz1Subnet": {
@@ -1371,7 +1404,10 @@
         "CidrBlock": { "Ref": "RdsServicesAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsServicesAz1Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsServicesAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "RdsServicesAz2Subnet": {
@@ -1382,7 +1418,10 @@
         "CidrBlock": { "Ref": "RdsServicesAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsServicesAz2Subnet" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsServicesAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -1404,7 +1443,10 @@
             "ValidationDomain" : { "Ref": "HostedZone" }
           }
         ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElbSslCertificate" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElbSslCertificate" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -1426,7 +1468,10 @@
           "Timeout" : { "Ref": "ElbTimeout" }
         },
         "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -1448,7 +1493,10 @@
           "Timeout" : { "Ref": "ElbTimeout" }
         },
         "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "ExternalPlainTextElb": {
@@ -1468,7 +1516,10 @@
           "Timeout" : { "Ref": "ElbTimeout" }
         },
         "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -1727,7 +1778,10 @@
     "InternetGateway": {
       "Type": "AWS::EC2::InternetGateway",
       "Properties": {
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:InternetGateway" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:InternetGateway" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -1743,14 +1797,20 @@
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:InternetRouteTable" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:InternetRouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "DmzAz1RouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1RouteTable" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1RouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "DmzAz2RouteTable": {
@@ -1758,14 +1818,20 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2RouteTable" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2RouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "NatAz1RouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz1RouteTable" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz1RouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "NatAz2RouteTable": {
@@ -1773,7 +1839,10 @@
       "Condition": "MultiAz",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz2RouteTable" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz2RouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -1870,7 +1939,10 @@
       "Properties": {
         "GroupDescription": "DMZ In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "DirectorSecurityGroup": {
@@ -1882,7 +1954,10 @@
           { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
           { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
         ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorSecurityGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "ElastiCacheSecurityGroup": {
@@ -1891,7 +1966,10 @@
       "Properties": {
         "GroupDescription": "ElastiCache Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheSecurityGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "LbSecurityGroup": {
@@ -1900,7 +1978,10 @@
       "Properties": {
         "GroupDescription": "ELB Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "ExternalSecurityGroup": {
@@ -1914,7 +1995,10 @@
         "SecurityGroupIngress": [
           { "CidrIp": { "Ref": "VpcCidr" }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
         ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalSecurityGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "PrivateSecurityGroup": {
@@ -1928,7 +2012,10 @@
         "SecurityGroupIngress": [
           { "CidrIp": { "Ref": "VpcCidr" }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
         ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateSecurityGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "RabbitmqServicesSecurityGroup": {
@@ -1937,7 +2024,10 @@
       "Properties": {
         "GroupDescription": "RabbitMQ Services In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesSecurityGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "RdsSecurityGroup": {
@@ -1946,7 +2036,10 @@
       "Properties": {
         "GroupDescription": "RDS Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
@@ -2498,7 +2591,10 @@
           { "Ref": "RdsServicesAz1Subnet" },
           { "Ref": "RdsServicesAz2Subnet" }
         ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSubnetGroup" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSubnetGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
     "ElastiCacheSubnetGroup": {
@@ -2526,7 +2622,10 @@
         "MasterUsername": { "Ref": "RdsUsername" },
         "MasterUserPassword": { "Ref": "RdsPassword" },
         "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
-        "Tags": [ { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsInstance" } } ]
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsInstance" } },
+          { "Key": "Deployment", "Value": { "Ref": "${DeploymentName}" } }
+        ]
       }
     },
 
