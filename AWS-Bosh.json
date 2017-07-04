@@ -271,15 +271,6 @@
         "PostgreSQL"
       ]
     },
-    "RdsEngineVersion": {
-      "Type": "String",
-      "Default": "9.6",
-      "Description": "RDS Engine Version",
-      "AllowedValues": [
-        "9.6",
-        "9.5"
-      ]
-    },
     "RdsInstanceSize": {
       "Type": "String",
       "Default": "db.t2.medium",
@@ -2444,7 +2435,6 @@
         "AllocatedStorage": { "Ref": "RdsStorageSize" },
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "Engine": { "Ref": "RdsEngine" },
-        "EngineVersion": { "Ref": "RdsEngineVersion" },
         "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
         "MasterUsername": { "Ref": "RdsUsername" },
         "MasterUserPassword": { "Ref": "RdsPassword" },
