@@ -293,15 +293,9 @@
         "db.m4.xlarge"
       ]
     },
-    "RdsMaxConnections": {
-      "Type": "Number",
-      "Default": "150",
-      "MinValue": "5",
-      "MaxValue": "1000"
-    },
     "RdsStorageSize": {
       "Type": "Number",
-      "Default": "5",
+      "Default": "25",
       "MinValue": "5",
       "MaxValue": "6144"
     },
@@ -2441,25 +2435,12 @@
       }
     },
 
-    "RdsParamterGroup": {
-      "Type" : "AWS::RDS::DBParameterGroup",
-      "Condition": "DeployRdsInstance",
-      "Properties": {
-        "Description": "RDS Default Parameters Group",
-        "Family": { "Fn::Sub": "${RdsEngine}${RdsEngineVersion}" },
-        "Parameters": {
-          "max_connections": { "Ref": "RdsMaxConnections" }
-        }
-      }
-    },
-
     "RdsInstance": {
       "Type" : "AWS::RDS::DBInstance",
       "Condition": "DeployRdsInstance",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
         "DBInstanceClass": { "Ref": "RdsInstanceSize" },
-        "DBParameterGroupName": "RdsParamterGroup",
         "AllocatedStorage": { "Ref": "RdsStorageSize" },
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
         "Engine": { "Ref": "RdsEngine" },
