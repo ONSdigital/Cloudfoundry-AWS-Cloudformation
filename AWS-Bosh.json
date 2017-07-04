@@ -265,10 +265,10 @@
     },
     "RdsEngine": {
       "Type": "String",
-      "Default": "PostgreSQL",
+      "Default": "postgres",
       "Description": "RDS Engine",
       "AllowedValues": [
-        "PostgreSQL"
+        "postgres"
       ]
     },
     "RdsInstanceSize": {
@@ -2571,6 +2571,7 @@
                   "Action": [
                     "elasticache:CreateCacheCluster",
                     "elasticache:CreateReplicationGroup",
+                    "elasticache:DeleteCacheCluster",
                     "elasticache:DescribeCacheClusters",
                     "elasticache:ModifyCacheCluster",
                     "elasticache:RebootCacheCluster"
