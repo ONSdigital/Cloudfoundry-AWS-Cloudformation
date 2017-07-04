@@ -1971,6 +1971,27 @@
         "IpProtocol": "tcp"
       }
     },
+    "Dmz22PrivateAz1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Ref": "PrivateSecurityGroup" },
+        "CidrIp": { "Ref": "DmzAz1Cidr" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Dmz22PrivateAz2SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Ref": "PrivateSecurityGroup" },
+        "CidrIp": { "Ref": "DmzAz2Cidr" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
     "Dmz8080PrivateAz1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
@@ -2044,7 +2065,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "Dmz9022PrivateAz1SecurityGroupEgress": {
+    "Dmz9022PrivateAz2SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAz",
       "Properties": {
