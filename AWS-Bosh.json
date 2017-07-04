@@ -2155,6 +2155,26 @@
         "IpProtocol": "tcp"
       }
     },
+    "Director25250PrivateAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz1Cidr" },
+        "FromPort": "25250",
+        "ToPort": "25250",
+        "IpProtocol": "tcp"
+      }
+    },
+    "Director25250PrivateAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "PrivateAz2Cidr" },
+        "FromPort": "25250",
+        "ToPort": "25250",
+        "IpProtocol": "tcp"
+      }
+    },
     "Director25777PrivateAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
