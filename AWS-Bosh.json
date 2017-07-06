@@ -33,6 +33,13 @@
       "MinValue": "0",
       "MaxValue": "9"
     },
+    "AwsAvailabilityZone3": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "Availability Zone 3 Number",
+      "MinValue": "0",
+      "MaxValue": "9"
+    },
     "ElbTimeout": {
       "Type": "Number",
       "Default": "60",
