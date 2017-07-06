@@ -383,6 +383,10 @@
       "Description": "AWS Availability Zone 2",
       "Value": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] }
     },
+    "AwsAvailabilityZone3": {
+      "Description": "AWS Availability Zone 3",
+      "Value": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] }
+    },
     "StackName": {
       "Description": "Stack name",
       "Value": { "Ref": "AWS::StackName" }
@@ -2081,6 +2085,9 @@
       "Properties": {
         "GroupDescription": "DMZ In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -2152,6 +2159,7 @@
           { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
         ],
         "SecurityGroupIngress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" },
           { "CidrIp": { "Ref": "VpcCidr" }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
         ],
         "Tags": [
