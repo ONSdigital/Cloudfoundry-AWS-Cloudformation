@@ -2127,6 +2127,9 @@
       "Properties": {
         "GroupDescription": "ELB Security Group",
         "VpcId": { "Ref": "CloudFoundryVpc" },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
