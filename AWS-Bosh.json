@@ -605,22 +605,22 @@
     },
     "RdsAddress": {
       "Description": "RDS Access Address",
-      "Condition": "SingleAzAndDeployRdsInstance",
+      "Condition": "DeployRdsInstance",
       "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Address" ] }
     },
     "RdsPort": {
       "Description": "RDS Port",
-      "Condition": "SingleAzAndDeployRdsInstance",
+      "Condition": "DeployRdsInstance",
       "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Port" ] }
     },
     "RdsAddress": {
       "Description": "RDS Access Address",
-      "Condition": "MultiAzAndDeployRdsInstance",
+      "Condition": "DeployRdsInstance",
       "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Address" ] }
     },
     "RdsPort": {
       "Description": "RDS Port",
-      "Condition": "MultiAzAndDeployRdsInstance",
+      "Condition": "DeployRdsInstance",
       "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Port" ] }
     },
     "ElastiCacheBrokerAccessKeyId": {
@@ -2909,7 +2909,7 @@
 
     "RdsInstance": {
       "Type" : "AWS::RDS::DBInstance",
-      "Condition": "SingleAzAndDeployRdsInstance",
+      "Condition": "DeployRdsInstance",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
         "DBInstanceClass": { "Ref": "RdsInstanceSize" },
@@ -2919,7 +2919,7 @@
         "CopyTagsToSnapshot": "true",
         "Engine": { "Ref": "RdsInstanceEngine" },
         "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
-        "DBSnapshotIdentifier": { "Ref": "RdsSnapshotIdentifier" },
+        "DBSnapshotIdentifier": { "Ref": "RdsInstanceSnapshotIdentifier" },
         "MasterUsername": { "Ref": "RdsInstanceUsername" },
         "MasterUserPassword": { "Ref": "RdsInstancePassword" },
         "PreferredBackupWindow": { "Ref": "RdsInstancePreferredBackupWindow" },
@@ -2931,9 +2931,9 @@
         ]
       }
     },
-    "RdsInstance": {
+    "sRdsInstance": {
       "Type" : "AWS::RDS::DBInstance",
-      "Condition": "MultiAzAndDeployRdsInstance",
+      "Condition": "SingleAzAndDeployRdsInstance",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
         "DBInstanceClass": { "Ref": "RdsInstanceSize" },
