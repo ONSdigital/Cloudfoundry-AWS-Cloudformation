@@ -292,6 +292,33 @@
         "postgres"
       ]
     },
+    "RdsBackupRetentionPeriod": {
+      "Type": "Number",
+      "Default": "90",
+      "MinValue": "5",
+      "MaxValue": "3650"
+    },
+    "RdsPreferredBackupWindow": {
+      "Type": "String",
+      "Default": "01:00-04:00",
+      "Description": "Preferred RDS backup window",
+      "AllowedPattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]-([0-1][0-9]|2[0-3]):[0-5][0-9]$",
+      "ConstraintDescription": "hh24:mi-hh24:mi, eg 23:59-01:24"
+    },
+    "RdsPreferredMaintenanceWindow": {
+      "Type": "String",
+      "Default": "Mon:04:00-Mon:06:00",
+      "Description": "Preferred RDS maintenance window",
+      "AllowedPattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([0-1][0-9]|2[0-3]):[0-5][0-9]-([0-1][0-9]|2[0-3]):[0-5][0-9]$",
+      "ConstraintDescription": "ddd:hh24:mi-hh24:mi, eg Mon:23:59-Tue:01:24"
+    },
+    "RdsSnapshotIdentifier": {
+      "Type": "String",
+      "Default": "",
+      "Description": "RDS snapshot identifier - for restores",
+      "AllowedPattern": "^([a-z0-9:.-]+$",
+      "ConstraintDescription": "AWS RDS snapshot identifier, or empty to create a new database"
+    },
     "RdsInstanceSize": {
       "Type": "String",
       "Default": "db.t2.medium",
@@ -391,10 +418,6 @@
       "Description": "Stack name",
       "Value": { "Ref": "AWS::StackName" }
     },
-    "StackArn": {
-      "Description": "Stack ARN",
-      "Value": { "Ref": "AWS::StackId" }
-    },
     "DeploymentName": {
       "Description": "Deployment name",
       "Value": { "Ref": "DeploymentName" }
@@ -493,74 +516,6 @@
         ]
       }
     },
-    "DmzAz1DefaultRoute": {
-      "Description": "DMZ AZ1 Default Route",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
-    "DmzAz2DefaultRoute": {
-      "Description": "DMZ AZ2 Default Route",
-      "Condition": "MultiAzOrElb",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
-    "PrivateAz1DefaultRoute": {
-      "Description": "Private AZ1 Default Route",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
-    "PrivateAz2DefaultRoute": {
-      "Description": "Private AZ2 Default Route",
-      "Condition": "MultiAz",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
-    "PrivateAz3DefaultRoute": {
-      "Description": "Private AZ3 Default Route",
-      "Condition": "MultiAz",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
     "RabbitmqServicesAz1CidrPrefix": {
       "Description": "RabbitMQ Services AZ1 CIDR Prefix",
       "Condition": "CreateRabbitmqNetworks",
@@ -587,34 +542,6 @@
         ]
       }
     },
-    "RabbitmqServicesAz1DefaultRoute": {
-      "Description": "RabbitMQ Services AZ1 Default Route",
-      "Condition": "CreateRabbitmqNetworks",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz1Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
-    "RabbitmqServicesAz2DefaultRoute": {
-      "Description": "RabbitMQ Services AZ2 Default Route",
-      "Condition": "MultiAzAndCreateRabbitmqNetworks",
-      "Value": {
-	"Fn::Join": [
-          ".", [
-            { "Fn::Select": [ 0, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 1, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] },
-            { "Fn::Select": [ 2, { "Fn::Split": [ ".", { "Ref": "RabbitmqServicesAz2Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      }
-    },
     "ApiDns": {
       "Description": "API DNS name",
       "Value": { "Fn::Sub": "api.system.${DeploymentName}.${HostedZone}" }
@@ -626,16 +553,6 @@
     "UaaDns": {
       "Description": "API DNS name",
       "Value": { "Fn::Sub": "uaa.system.${DeploymentName}.${HostedZone}" }
-    },
-    "RdsServicesAz1Subnet": {
-      "Description": "RDS Services AZ1 Subnet",
-      "Condition": "DeployRdsInstance",
-      "Value": { "Ref": "RdsServicesAz1Subnet" }
-    },
-    "RdsServicesAz2Subnet": {
-      "Description": "RDS Services AZ2 Subnet",
-      "Condition": "DeployRdsInstance",
-      "Value": { "Ref": "RdsServicesAz2Subnet" }
     },
     "DirectorSecurityGroup": {
       "Description": "Director Security Groups",
@@ -688,13 +605,23 @@
     },
     "RdsAddress": {
       "Description": "RDS Access Address",
-      "Condition": "DeployRdsInstance",
-      "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Address" ] }
+      "Condition": "SingleAzAndDeployRdsInstance",
+      "Value": { "Fn::GetAtt": [ "RdsInstanceSingleAz", "Endpoint.Address" ] }
     },
     "RdsPort": {
       "Description": "RDS Port",
-      "Condition": "DeployRdsInstance",
-      "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Port" ] }
+      "Condition": "SingleAzAndDeployRdsInstance",
+      "Value": { "Fn::GetAtt": [ "RdsInstanceSingleAz", "Endpoint.Port" ] }
+    },
+    "RdsAddress": {
+      "Description": "RDS Access Address",
+      "Condition": "MultiAzAndDeployRdsInstance",
+      "Value": { "Fn::GetAtt": [ "RdsInstanceMultiAz", "Endpoint.Address" ] }
+    },
+    "RdsPort": {
+      "Description": "RDS Port",
+      "Condition": "MultiAzAndDeployRdsInstance",
+      "Value": { "Fn::GetAtt": [ "RdsInstanceMultiAz", "Endpoint.Port" ] }
     },
     "ElastiCacheBrokerAccessKeyId": {
       "Description": "ElastiCache Broker Access Key Id",
@@ -910,6 +837,12 @@
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] }
+      ]
+    },
+    "SingleAzAndDeployRdsInstance": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] }, 
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsInstanceSize" }, "NONE" ] } ] }
       ]
     }
   },
@@ -2992,18 +2925,23 @@
       }
     },
 
-    "RdsInstance": {
+    "RdsInstanceSingleAz": {
       "Type" : "AWS::RDS::DBInstance",
-      "Condition": "DeployRdsInstance",
+      "Condition": "SingleAzAndDeployRdsInstance",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
         "DBInstanceClass": { "Ref": "RdsInstanceSize" },
         "AllocatedStorage": { "Ref": "RdsStorageSize" },
         "AvailabilityZone": { "Fn::Select" : [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "BackupRetentionPeriod": { "Ref": "RdsBackupRetentionPeriod" },
+        "CopyTagsToSnapshot": "true",
         "Engine": { "Ref": "RdsEngine" },
         "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
+        "DBSnapshotIdentifier": { "Ref": "RdsSnapshotIdentifier" },
         "MasterUsername": { "Ref": "RdsUsername" },
         "MasterUserPassword": { "Ref": "RdsPassword" },
+        "PreferredBackupWindow": { "Ref": "RdsPreferredBackupWindow" },
+        "PreferredMaintenanceWindow": { "Ref": "RdsPreferredMaintenanceWindow" },
         "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsInstance" } },
@@ -3011,6 +2949,31 @@
         ]
       }
     },
+    "RdsInstanceMultiAz": {
+      "Type" : "AWS::RDS::DBInstance",
+      "Condition": "MultiAzAndDeployRdsInstance",
+      "Properties": {
+        "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
+        "DBInstanceClass": { "Ref": "RdsInstanceSize" },
+        "AllocatedStorage": { "Ref": "RdsStorageSize" },
+        "BackupRetentionPeriod": { "Ref": "RdsBackupRetentionPeriod" },
+        "CopyTagsToSnapshot": "true",
+        "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
+        "DBSnapshotIdentifier": { "Ref": "RdsSnapshotIdentifier" },
+        "Engine": { "Ref": "RdsEngine" },
+        "MasterUsername": { "Ref": "RdsUsername" },
+        "MasterUserPassword": { "Ref": "RdsPassword" },
+        "MultiAZ": "true",
+        "PreferredBackupWindow": { "Ref": "RdsPreferredBackupWindow" },
+        "PreferredMaintenanceWindow": { "Ref": "RdsPreferredMaintenanceWindow" },
+        "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsInstance" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
 
     "BlobstoreBucket": {
       "Type": "AWS::S3::Bucket"
