@@ -648,6 +648,14 @@
         ]
       }
     },
+    "RdsSubnetGroup": {
+      "Description": "RDS Database Subnet Group",
+      "Value": { "Ref": "RdsSubnetGroup" }
+    },
+    "RdsSecurityGroup": {
+      "Description": "RDS Database Security Group",
+      "Value": { "Ref": "RdsSecurityGroup" }
+    },
     "RdsAppsInstanceAddress": {
       "Description": "Applications  RDS Access Address",
       "Condition": "DeployRdsInstance",
