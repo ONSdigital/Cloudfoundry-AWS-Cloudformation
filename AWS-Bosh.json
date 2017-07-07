@@ -2140,7 +2140,7 @@
           { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
         ],
         "SecurityGroupIngress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" },
+          { "CidrIp": "10.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" },
           { "CidrIp": { "Ref": "VpcCidr" }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
         ],
         "Tags": [
