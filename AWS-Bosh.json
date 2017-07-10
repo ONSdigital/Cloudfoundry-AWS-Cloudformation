@@ -403,15 +403,15 @@
     },
     "AwsAvailabilityZone1": {
       "Description": "AWS Availability Zone 1",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] }
+      "Value": "FAIL"
     },
     "AwsAvailabilityZone2": {
       "Description": "AWS Availability Zone 2",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] }
+      "Value": "FAIL"
     },
     "AwsAvailabilityZone3": {
       "Description": "AWS Availability Zone 3",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] }
+      "Value": "FAIL"
     },
     "StackName": {
       "Description": "Stack name",
@@ -459,7 +459,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            "TEST"
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] }
           ]
         ]
       }
@@ -470,7 +472,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            "TEST"
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] }
           ]
         ]
       }
@@ -480,7 +484,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            "TEST"
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] }
           ]
         ]
       }
@@ -490,7 +496,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            "TEST"
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] }
           ]
         ]
       }
@@ -500,7 +508,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            "TEST"
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] }
           ]
         ]
       }
@@ -511,7 +521,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            "TEST"
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] }
           ]
         ]
       }
@@ -522,7 +534,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            "TEST"
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] }
           ]
         ]
       }
