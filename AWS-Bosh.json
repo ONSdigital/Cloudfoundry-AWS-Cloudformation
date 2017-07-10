@@ -2459,7 +2459,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqCidrs" } ] },
+        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2470,7 +2470,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqCidrs" } ] },
+        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2511,7 +2511,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqCidrs" } ] },
+        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2522,7 +2522,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqCidrs" } ] },
+        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2565,7 +2565,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqCidrs" } ] },
+        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
@@ -2576,7 +2576,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqCidrs" } ] },
+        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
