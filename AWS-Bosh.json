@@ -459,9 +459,7 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] }
+            "TEST"
           ]
         ]
       }
@@ -472,9 +470,7 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] }
+            "TEST"
           ]
         ]
       }
@@ -484,9 +480,7 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] }
+            "TEST"
           ]
         ]
       }
@@ -496,9 +490,7 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] }
+            "TEST"
           ]
         ]
       }
@@ -508,9 +500,7 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] }
+            "TEST"
           ]
         ]
       }
@@ -521,9 +511,7 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] }
+            "TEST"
           ]
         ]
       }
@@ -534,9 +522,7 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] }
+            "TEST"
           ]
         ]
       }
