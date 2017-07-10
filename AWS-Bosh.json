@@ -380,6 +380,16 @@
     }
   },
 
+  "Mappings": {
+    "Region": {
+      "AvailabilityZone": {
+        "1": { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] },
+        "2": { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] },
+        "3": { "Fn::Select": [ "2", { "Ref": "AwsAvailabilityZones" } ] }
+      }
+    }
+  },
+
   "Outputs": {
     "AwsRegion": {
       "Description": "AWS Region",
@@ -387,15 +397,15 @@
     },
     "AwsAvailabilityZone1": {
       "Description": "AWS Availability Zone 1",
-      "Value": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] }
+      "Value": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] }
     },
     "AwsAvailabilityZone2": {
       "Description": "AWS Availability Zone 2",
-      "Value": { "Fn::Select" : [ { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] }
+      "Value": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "2" ] }
     },
     "AwsAvailabilityZone3": {
       "Description": "AWS Availability Zone 3",
-      "Value": { "Fn::Select" : [ { "Fn::Select": [ "2", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] }
+      "Value": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "3" ] }
     },
     "StackName": {
       "Description": "Stack name",
@@ -1242,7 +1252,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "CreateElastiCacheNetworks",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] },
         "CidrBlock": { "Fn::Select": [ "0", { "Ref": "ElastiCacheCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1256,7 +1266,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "CreateElastiCacheNetworks",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "2" ] },
         "CidrBlock": { "Fn::Select": [ "1", { "Ref": "ElastiCacheCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1270,7 +1280,7 @@
     "NatAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] },
         "CidrBlock": { "Fn::Select": [ "0", { "Ref": "NatCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1284,7 +1294,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAz",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "2" ] },
         "CidrBlock": { "Fn::Select": [ "1", { "Ref": "NatCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1298,7 +1308,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAz",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "2", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "3" ] },
         "CidrBlock": { "Fn::Select": [ "2", { "Ref": "NatCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1311,7 +1321,7 @@
     "DmzAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] },
         "CidrBlock": { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1325,7 +1335,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAzOrElb",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "2" ] },
         "CidrBlock": { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1338,7 +1348,7 @@
     "PrivateAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] },
         "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1352,7 +1362,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAz",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "2" ] },
         "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1366,7 +1376,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAz",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "2", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "3" ] },
         "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1380,7 +1390,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] },
         "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1394,7 +1404,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "2" ] },
         "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1408,7 +1418,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "DeployRdsInstance",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] },
         "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RdsServicesCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -1422,7 +1432,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "DeployRdsInstance",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "2" ] },
         "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RdsServicesCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
@@ -2964,7 +2974,7 @@
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
         "DBInstanceClass": { "Ref": "RdsAppsInstanceSize" },
         "AllocatedStorage": { "Ref": "RdsAppsInstanceStorageSize" },
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] },
         "BackupRetentionPeriod": { "Ref": "RdsAppsInstanceBackupRetentionPeriod" },
         "CopyTagsToSnapshot": "true",
         "Engine": { "Ref": "RdsAppsInstanceEngine" },
@@ -3012,7 +3022,7 @@
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-CloudfoundryDB" },
         "DBInstanceClass": { "Ref": "RdsCfInstanceSize" },
         "AllocatedStorage": { "Ref": "RdsCfInstanceStorageSize" },
-        "AvailabilityZone": { "Fn::Select" : [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "AvailabilityZone": { "Fn::FindInMap": [ "Region", "AvailabilityZone", "1" ] },
         "BackupRetentionPeriod": { "Ref": "RdsCfInstanceBackupRetentionPeriod" },
         "CopyTagsToSnapshot": "true",
         "Engine": { "Ref": "RdsCfInstanceEngine" },
