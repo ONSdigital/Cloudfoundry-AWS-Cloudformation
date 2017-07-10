@@ -581,8 +581,8 @@
       "Value": {
         "Fn::If": [
           "MultiAz",
-          "1",
-          "0"
+          "true",
+          "false"
         ]
       }
     },
