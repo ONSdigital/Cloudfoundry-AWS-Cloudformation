@@ -383,9 +383,9 @@
   "Mappings": {
     "Region": {
       "AvailabilityZone": {
-        "1": { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] },
-        "2": { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] },
-        "3": { "Fn::Select": [ "2", { "Ref": "AwsAvailabilityZones" } ] }
+        "1": { "Fn::Select": [ { "Fn::Select": [ "0", { "Ref": "AwsAvailabilityZones" } ] },{ "Fn::GetAZs": "AWS::Region" } ] },
+        "2": { "Fn::Select": [ { "Fn::Select": [ "1", { "Ref": "AwsAvailabilityZones" } ] },{ "Fn::GetAZs": "AWS::Region" } ] },
+        "3": { "Fn::Select": [ { "Fn::Select": [ "2", { "Ref": "AwsAvailabilityZones" } ] },{ "Fn::GetAZs": "AWS::Region" } ] }
       }
     }
   },
