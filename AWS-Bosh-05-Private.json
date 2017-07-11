@@ -33,44 +33,10 @@
       "Description": "Private AZ3 CIDR",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
-    },
-
-    "StackProtectionGroup": {
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "128",
-      "Description": "Stack protection group",
-      "Default": "NONE",
-      "AllowedPattern": "^[A-Za-z0-9-]+$",
-      "ConstraintDescription": "Can valid group name"
-    },
-    "StackDeleteAllowDeny": {
-      "Type": "String",
-      "Default": "Deny",
-      "Description": "Deletion Policy Allow/Deny",
-      "AllowedValues": [ "Allow", "Deny" ]
-    },
-    "StackUpdateAllowDeny": {
-      "Type": "String",
-      "Default": "Deny",
-      "Description": "Update Policy Allow/Deny",
-      "AllowedValues": [ "Allow", "Deny" ]
     }
   },
 
   "Outputs": {
-    "AwsAvailabilityZone1": {
-      "Description": "AWS Availability Zone 1",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] }
-    },
-    "AwsAvailabilityZone2": {
-      "Description": "AWS Availability Zone 2",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] }
-    },
-    "AwsAvailabilityZone3": {
-      "Description": "AWS Availability Zone 3",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] }
-    },
     "PrivateAz1Subnet": {
       "Description": "Private AZ1 Subnet",
       "Value": { "Ref": "PrivateAz1Subnet" },
@@ -149,12 +115,33 @@
   },
 
   "Conditions": {
-    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] },
     "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
     "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "false" ] }
   },
 
   "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    },  
     "PrivateAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {

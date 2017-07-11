@@ -1,0 +1,181 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "CreateElastiCacheNetworks": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Create ElastiCache Networks",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "ElastiCacheAz1Cidr": {
+      "Type": "String",
+      "Default": "10.0.10.0/24",
+      "Description": "ElastiCache AZ1 CIDR",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "ElastiCacheAz2Cidr": {
+      "Type": "String",
+      "Default": "10.0.11.0/24",
+      "Description": "ElastiCache AZ2 CIDR",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    }
+  },
+
+  "Outputs": {
+    "ElastiCacheBrokerAccessKeyId": {
+      "Description": "ElastiCache Broker Access Key Id",
+      "Condition": "CreateElastiCacheNetworks",
+      "Value": { "Ref": "ElastiCacheBrokerAccessKey" }
+    },
+    "ElastiCacheBrokerAccessKey": {
+      "Description": "ElastiCache Broker Access Key",
+      "Condition": "CreateElastiCacheNetworks",
+      "Value": { "Fn::GetAtt": [ "ElastiCacheBrokerAccessKey", "SecretAccessKey" ] }
+    },
+    "ElastiCacheSubnetGroup": {
+      "Description": "ElastiCache Subnet Group",
+      "Condition": "CreateElastiCacheNetworks",
+      "Value": { "Ref": "ElastiCacheSubnetGroup" }
+    },
+    "ElastiCacheBrokerUserName": {
+      "Description": "ElastiCache Broker User Name",
+      "Condition": "CreateElastiCacheNetworks",
+      "Value": { "Ref": "ElastiCacheBrokerUser" }
+    }
+  },
+
+    "CreateElastiCacheNetworks": { "Fn::Equals": [ { "Ref": "CreateElastiCacheNetworks" }, "true" ] },
+
+    "MultiAzAndCreateElastiCacheNetworks": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
+        { "Fn::Equals": [ { "Ref": "CreateElastiCacheNetworks" }, "true" ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "StackProtection",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    },
+
+    "ElastiCacheAz1Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition": "CreateElastiCacheNetworks",
+      "Properties": {
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone1" } },
+        "CidrBlock": { "Ref": "ElastiCacheAz1Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "ElastiCacheAz2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition": "CreateElastiCacheNetworks",
+      "Properties": {
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone2" } },
+        "CidrBlock": { "Ref": "ElastiCacheAz2Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "ElastiCacheSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "CreateElastiCacheNetworks",
+      "Properties": {
+        "GroupDescription": "ElastiCache Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "ElastiCacheBrokerUser": {
+      "Type": "AWS::IAM::User",
+      "Condition": "CreateElastiCacheNetworks",
+      "Properties": {
+        "Policies": [
+          {
+            "PolicyName": { "Fn::Sub": "${DeploymentName}-CfElastiCachePolicy" },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "elasticache:CreateCacheCluster",
+                    "elasticache:CreateReplicationGroup",
+                    "elasticache:DeleteCacheCluster",
+                    "elasticache:DescribeCacheClusters",
+                    "elasticache:ModifyCacheCluster",
+                    "elasticache:RebootCacheCluster"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                },
+                {
+                  "Action": [
+                    "iam:GetUser"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "ElastiCacheBrokerAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Condition": "CreateElastiCacheNetworks",
+      "Properties": {
+        "UserName": { "Ref": "ElastiCacheBrokerUser" }
+      }
+    }
+  }
+}

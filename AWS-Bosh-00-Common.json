@@ -1,0 +1,138 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "VPC",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "AwsAvailabilityZone1": {
+      "Type": "Number",
+      "Default": "0",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+    "AwsAvailabilityZone2": {
+      "Type": "Number",
+      "Default": "1",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+    "AwsAvailabilityZone3": {
+      "Type": "Number",
+      "Default": "2",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+    "StackProtectionGroup": {
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "128",
+      "Description": "Stack protection group",
+      "Default": "NONE",
+      "AllowedPattern": "^[A-Za-z0-9-]+$",
+      "ConstraintDescription": "Can valid group name"
+    },
+    "StackDeleteAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Deletion Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    },
+    "StackUpdateAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Update Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    }
+  },
+
+  "Outputs": {
+    "AwsAvailabilityZone1": {
+      "Description": "AWS Availability Zone 1",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AwsAvailabilityZone1" } }
+    },
+    "AwsAvailabilityZone2": {
+      "Description": "AWS Availability Zone 2",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AwsAvailabilityZone2" } }
+    },
+    "AwsAvailabilityZone3": {
+      "Description": "AWS Availability Zone 3",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AwsAvailabilityZone3" } }
+    },
+    "MultiAz": {
+      "Description": "Multi AZ?",
+      "Value": {
+        "Fn::If": [
+          "MultiAz",
+          "true",
+          "false"
+        ]
+      },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-MultiAz" } }
+    },
+    "StackProtectionGroup": {
+      "Description": "Stack Protection Group",
+      "Value": { "Ref": "StackProtectionGroup" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-StackProtectionGroup" } }
+    },
+    "StackDeleteAllowDeny": {
+      "Description": "Stack Delete Allow/Deny",
+      "Value": { "Ref": "StackDeleteAllowDeny" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-StackDeleteAllowDeny" } }
+    },
+    "StackUpdateAllowDeny": {
+      "Description": "Stack Update Allow/Deny",
+      "Value": { "Ref": "StackUpdateAllowDeny" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+    }
+  },
+
+  "Conditions": {
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "StackProtection",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Ref": "StackProtectionGroup" },
+          "StackDeleteAllowDeny": { "Ref": "StackDeleteAllowDeny" },
+          "StackUpdateAllowDeny": { "Ref": "StackUpdateAllowDeny" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    }
+  }
+}

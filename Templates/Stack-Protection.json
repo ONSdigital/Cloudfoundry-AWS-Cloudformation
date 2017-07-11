@@ -32,9 +32,14 @@
     }
   },
 
+  "Conditions": {
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] }
+  },
+
   "Resources": {
     "PreventStackDeletion": {
       "Type": "AWS::IAM::Policy",
+      "Condition": "StackProtection",
       "Properties": {
         "PolicyName": "PreventStackDeletion",
         "Groups": [ { "Ref": "StackProtectionGroup" } ],

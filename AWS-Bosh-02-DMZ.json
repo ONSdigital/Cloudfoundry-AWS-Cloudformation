@@ -25,35 +25,10 @@
       "Description": "DMZ AZ2 CIDR",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
-    },
-    "StackProtectionGroup": {
-      "Type": "String",
-      "MinLength": "1",
-      "MaxLength": "128",
-      "Description": "Stack protection group",
-      "Default": "NONE",
-      "AllowedPattern": "^[A-Za-z0-9-]+$",
-      "ConstraintDescription": "Can valid group name"
-    },
-    "StackDeleteAllowDeny": {
-      "Type": "String",
-      "Default": "Deny",
-      "Description": "Deletion Policy Allow/Deny",
-      "AllowedValues": [ "Allow", "Deny" ]
-    },
-    "StackUpdateAllowDeny": {
-      "Type": "String",
-      "Default": "Deny",
-      "Description": "Update Policy Allow/Deny",
-      "AllowedValues": [ "Allow", "Deny" ]
     }
   },
 
   "Outputs": {
-    "StackName": {
-      "Description": "Stack name",
-      "Value": { "Ref": "AWS::StackName" }
-    },
     "DmzAz1Subnet": {
       "Description": "DMZ AZ1 Subnet",
       "Value": { "Ref": "DmzAz1Subnet" },
@@ -125,7 +100,7 @@
   },
 
   "Conditions": {
-    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] },
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } }, "NONE" ] } ] },
     "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
     "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "false" ] }
   },
@@ -137,9 +112,9 @@
       "Properties": {
         "Parameters": {
           "StackArn": { "Ref": "AWS::StackId" },
-          "StackProtectionGroup": { "Ref": "StackProtectionGroup" },
-          "StackDeleteAllowDeny": { "Ref": "StackDeleteAllowDeny" },
-          "StackUpdateAllowDeny": { "Ref": "StackUpdateAllowDeny" }
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
         },
         "TemplateURL": {
           "Fn::Join": [
