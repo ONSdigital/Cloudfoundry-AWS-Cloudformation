@@ -19,10 +19,19 @@
       "Description": "Create RabbitMQ network(s)",
       "AllowedValues": [ "true", "false" ]
     },
-    "RabbitmqCidrs": {
-      "Type": "CommaDelimitedList",
-      "Default": "10.0.50.0/24,10.0.51.0/24",
-      "Description": "RabbitMQ CIDRs (x2)"
+    "RabbitmqAz1Cidr": {
+      "Type": "String",
+      "Default": "10.0.50.0/24",
+      "Description": "RabbitMQ AZ1 CIDR",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "RabbitmqAz2Cidr": {
+      "Type": "String",
+      "Default": "10.0.51.0/24",
+      "Description": "RabbitMQ AZ2 CIDR",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
     }
   },
 
@@ -51,7 +60,7 @@
     },
     "RabbitmqAz2Cidr": {
       "Description": "RabbitMQ AZ2 CIDR",
-      "Condition": "CreateRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqAz2Cidr" },
       "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz2Cidr" } }
     },
@@ -154,22 +163,6 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqAz2Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
-      }
-    },
-    "RabbitmqAz1SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "SubnetId": { "Ref": "RabbitmqAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
-      }
-    },
-    "RabbitmqAz2SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "MultiAzAndCreateRabbitmqNetworks",
-      "Properties": {
-        "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
 
