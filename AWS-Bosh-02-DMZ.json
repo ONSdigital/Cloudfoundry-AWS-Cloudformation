@@ -12,7 +12,6 @@
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
-
     "MultiAz": {
       "Type": "String",
       "Default": "true",
@@ -40,7 +39,6 @@
       "MaxValue": "9",
       "Description": "AWS Availability Zone [0-9]"
     },
-
     "DmzAz1Cidr": {
       "Type": "String",
       "Default": "10.0.10.0/24",
@@ -51,7 +49,6 @@
       "Default": "10.0.11.0/24",
       "Description": "DMZ AZ2 CIDR"
     },
-
     "StackProtectionGroup": {
       "Type": "String",
       "MinLength": "1",
@@ -102,12 +99,14 @@
     },
     "DmzAz1Subnet": {
       "Description": "DMZ AZ1 Subnet",
-      "Value": { "Ref": "DmzAz1Subnet" }
+      "Value": { "Ref": "DmzAz1Subnet" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzAz1Subnet"
     },
     "DmzAz2Subnet": {
       "Description": "DMZ AZ2 Subnet",
       "Condition": "MultiAzOrElb",
-      "Value": { "Ref": "DmzAz2Subnet" }
+      "Value": { "Ref": "DmzAz2Subnet" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzAz2Subnet"
     },
     "DmzAz1CidrPrefix": {
       "Description": "DMZ AZ1 CIDR",
@@ -161,10 +160,10 @@
         ]
       }
     },
-
     "DmzSecurityGroup": {
       "Description": "DMZ Security Groups",
-      "Value": { "Ref": "DmzSecurityGroup" }
+      "Value": { "Ref": "DmzSecurityGroup" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzSecurityGroup"
     },
     "MultiAz": {
       "Description": "Multi AZ?",
@@ -262,7 +261,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz1Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" }
       }
     },
     "DmzAz2SubnetRouteTableAssociation": {
@@ -270,7 +269,7 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz2Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" }
       }
     },
 
@@ -283,49 +282,6 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
-      }
-    },
-
-    "PreventStackDeletion": {
-      "Type": "AWS::IAM::Policy",
-      "Condition": "StackProtection",
-      "Properties": {
-        "PolicyName": "PreventStackDeletion",
-        "Groups": [ { "Ref": "StackProtectionGroup" } ],
-        "PolicyDocument": {
-          "Version":"2012-10-17",
-          "Statement": [
-            {
-              "Effect": { "Ref": "StackDeleteAllowDeny" },
-              "Action": [
-		"Delete:*",
-		"cloudformation:DeleteStack"
-              ],
-              "Resource": "*"
-            }
-          ]
-        }
-      }
-    },
-    "PreventStackUpdate": {
-      "Type": "AWS::IAM::Policy",
-      "Condition": "StackProtection",
-      "Properties": {
-        "PolicyName": "PreventStackDeletion",
-        "Groups": [ { "Ref": "StackProtectionGroup" } ],
-        "PolicyDocument": {
-          "Version":"2012-10-17",
-          "Statement": [
-            {
-              "Effect": { "Ref": "StackUpdateAllowDeny" },
-              "Action": [
-		"Update:*",
-		"cloudformation:UpdateStack"
-              ],
-              "Resource": "*"
-            }
-          ]
-        }
       }
     }
   }
