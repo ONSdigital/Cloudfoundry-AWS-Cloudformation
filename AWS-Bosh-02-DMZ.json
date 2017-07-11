@@ -1,0 +1,332 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "AwsAvailabilityZone1": {
+      "Type": "Number",
+      "Default": "0",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+    "AwsAvailabilityZone2": {
+      "Type": "Number",
+      "Default": "1",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+    "AwsAvailabilityZone3": {
+      "Type": "Number",
+      "Default": "2",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+
+    "DmzAz1Cidr": {
+      "Type": "String",
+      "Default": "10.0.10.0/24",
+      "Description": "DMZ AZ1 CIDR"
+    },
+    "DmzAz2Cidr": {
+      "Type": "String",
+      "Default": "10.0.11.0/24",
+      "Description": "DMZ AZ2 CIDR"
+    },
+
+    "StackProtectionGroup": {
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "128",
+      "Description": "Stack protection group",
+      "Default": "NONE",
+      "AllowedPattern": "^[A-Za-z0-9-]+$",
+      "ConstraintDescription": "Can valid group name"
+    },
+    "StackDeleteAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Deletion Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    },
+    "StackUpdateAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Update Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    }
+  },
+
+  "Outputs": {
+    "AwsRegion": {
+      "Description": "AWS Region",
+      "Value": { "Ref": "AWS::Region" }
+    },
+    "AwsAvailabilityZone1": {
+      "Description": "AWS Availability Zone 1",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] }
+    },
+    "AwsAvailabilityZone2": {
+      "Description": "AWS Availability Zone 2",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] }
+    },
+    "AwsAvailabilityZone3": {
+      "Description": "AWS Availability Zone 3",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] }
+    },
+    "StackName": {
+      "Description": "Stack name",
+      "Value": { "Ref": "AWS::StackName" }
+    },
+    "DeploymentName": {
+      "Description": "Deployment name",
+      "Value": { "Ref": "DeploymentName" }
+    },
+    "DmzAz1Subnet": {
+      "Description": "DMZ AZ1 Subnet",
+      "Value": { "Ref": "DmzAz1Subnet" }
+    },
+    "DmzAz2Subnet": {
+      "Description": "DMZ AZ2 Subnet",
+      "Condition": "MultiAzOrElb",
+      "Value": { "Ref": "DmzAz2Subnet" }
+    },
+    "DmzAz1CidrPrefix": {
+      "Description": "DMZ AZ1 CIDR",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] }
+          ]
+        ]
+      }
+    },
+    "DmzAz2CidrPrefix": {
+      "Description": "DMZ AZ2 CIDR",
+      "Condition": "MultiAzOrElb",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] }
+          ]
+        ]
+      }
+    },
+    "DmzAz1DefaultRoute": {
+      "Description": "DMZ AZ1 Default Route",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] },
+            "1"
+          ]
+        ]
+      }
+    },
+    "DmzAz2DefaultRoute": {
+      "Description": "DMZ AZ2 Default Route",
+      "Condition": "MultiAzOrElb",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] },
+            "1"
+          ]
+        ]
+      }
+    },
+
+    "DmzSecurityGroup": {
+      "Description": "DMZ Security Groups",
+      "Value": { "Ref": "DmzSecurityGroup" }
+    },
+    "MultiAz": {
+      "Description": "Multi AZ?",
+      "Value": {
+        "Fn::If": [
+          "MultiAz",
+          "true",
+          "false"
+        ]
+      }
+    }
+  },
+
+  "Conditions": {
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "StackProtection",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Ref": "StackProtectionGroup" },
+          "StackDeleteAllowDeny": { "Ref": "StackDeleteAllowDeny" },
+          "StackUpdateAllowDeny": { "Ref": "StackUpdateAllowDeny" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "DmzAz1Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
+        "CidrBlock": { "Ref": "DmzAz1Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "DmzAz2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition": "MultiAzOrElb",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
+        "CidrBlock": { "Ref": "DmzAz2Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "DmzAz1RouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1RouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "DmzAz2RouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Condition": "MultiAzOrElb",
+      "Properties": {
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2RouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "DmzAz1SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "DmzAz1Subnet" },
+        "RouteTableId": { "Ref": "InternetRouteTable" }
+      }
+    },
+    "DmzAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "MultiAzOrElb",
+      "Properties": {
+        "SubnetId": { "Ref": "DmzAz2Subnet" },
+        "RouteTableId": { "Ref": "InternetRouteTable" }
+      }
+    },
+
+    "DmzSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "DMZ In Out",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "PreventStackDeletion": {
+      "Type": "AWS::IAM::Policy",
+      "Condition": "StackProtection",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Groups": [ { "Ref": "StackProtectionGroup" } ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "StackDeleteAllowDeny" },
+              "Action": [
+		"Delete:*",
+		"cloudformation:DeleteStack"
+              ],
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    },
+    "PreventStackUpdate": {
+      "Type": "AWS::IAM::Policy",
+      "Condition": "StackProtection",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Groups": [ { "Ref": "StackProtectionGroup" } ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "StackUpdateAllowDeny" },
+              "Action": [
+		"Update:*",
+		"cloudformation:UpdateStack"
+              ],
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

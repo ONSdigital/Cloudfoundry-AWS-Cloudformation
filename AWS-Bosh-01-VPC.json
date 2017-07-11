@@ -1,0 +1,150 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "VpcCidr": {
+      "Type": "String",
+      "Default": "10.0.0.0/16",
+      "Description": "VPC CIDR",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+
+    "StackProtectionGroup": {
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "128",
+      "Description": "Stack protection group",
+      "Default": "NONE",
+      "AllowedPattern": "^[A-Za-z0-9-]+$",
+      "ConstraintDescription": "Can valid group name"
+    },
+    "StackDeleteAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Deletion Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    },
+    "StackUpdateAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Update Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    }
+  },
+
+  "Outputs": {
+    "CloudFoundryVpc": {
+      "Description": "VPC ID",
+      "Value": { "Ref": "CloudFoundryVpc" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-CloudFoundryVpc"
+    },
+    "InternetGateway": {
+      "Description": "InternetGateway ID",
+      "Value": { "Ref": "InternetGateway" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-InternetGateway"
+    },
+    "InternetRoute": {
+      "Description": "InternetRoute ID",
+      "Value": { "Ref": "InternetRoute" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-InternetRoute"
+    },
+    "InternetRouteTable": {
+      "Description": "InternetRouteTable ID",
+      "Value": { "Ref": "InternetRouteTable" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-InternetRouteTable"
+    }
+  },
+
+  "Conditions": {
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "StackProtection",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Ref": "StackProtectionGroup" },
+          "StackDeleteAllowDeny": { "Ref": "StackDeleteAllowDeny" },
+          "StackUpdateAllowDeny": { "Ref": "StackUpdateAllowDeny" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "CloudFoundryVpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": { "Ref": "VpcCidr" },
+        "EnableDnsSupport": true,
+        "EnableDnsHostnames": false,
+        "InstanceTenancy": "default",
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CloudFoundryVpc" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:InternetGateway" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "InternetGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "InternetGatewayId": { "Ref": "InternetGateway" }
+      }
+    },
+
+    "InternetRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:InternetRouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": { "Ref": "InternetGateway" },
+        "RouteTableId": { "Ref": "InternetRouteTable" }
+      }
+    }
+  }
+}
