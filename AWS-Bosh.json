@@ -459,9 +459,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az1" ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az1" ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az1" ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Dmz", "az1" ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Dmz", "az1" ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Dmz", "az1" ] } ] } ] }
           ]
         ]
       }
@@ -472,9 +472,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az2" ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az2" ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az2" ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Dmz", "az2" ] } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Dmz", "az2" ] } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Dmz", "az2" ] } ] } ] }
           ]
         ]
       }
@@ -725,30 +725,30 @@
   "Mappings": {
     "Cidrs": {
       "Dmz": {
-        "az1": { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az1" ] },
-        "az2": { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az2" ] }
+        "az1": { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] },
+        "az2": { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] }
       },
       "ElastiCache": {
-        "az1": { "Fn::FindInMap": [ "Cidrs", "ElasticCache", "az1" ] },
-        "az2": { "Fn::FindInMap": [ "Cidrs", "ElasticCache", "az2" ] }
+        "az1": { "Fn::Select": [ "0", { "Ref": "ElastiCacheCidrs" } ] },
+        "az2": { "Fn::Select": [ "1", { "Ref": "ElastiCacheCidrs" } ] }
       },
       "Nat": {
-        "az1": { "Fn::FindInMap": [ "Cidrs", "Nat", "az1" ] },
-        "az2": { "Fn::FindInMap": [ "Cidrs", "Nat", "az2" ] },
-        "az3": { "Fn::FindInMap": [ "Cidrs", "Nat", "az3" ] }
+        "az1": { "Fn::Select": [ "0", { "Ref": "NatCidrs" } ] },
+        "az2": { "Fn::Select": [ "1", { "Ref": "NatCidrs" } ] },
+        "az3": { "Fn::Select": [ "2", { "Ref": "NatCidrs" } ] }
       },
       "Private": {
-        "az1": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" ] },
-        "az2": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" ] },
-        "az3": { "Fn::FindInMap": [ "Cidrs", "Nat", "az3" ] }
+        "az1": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "az2": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "az3": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] }
       },
       "Rabbitmq": {
-        "az1": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" ] },
-        "az2": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" ] }
+        "az1": { "Fn::Select": [ "0", { "Ref": "RabbitmqCidrs" } ] },
+        "az2": { "Fn::Select": [ "1", { "Ref": "RabbitmqCidrs" } ] }
       },
       "Rds": {
-        "az1": { "Fn::FindInMap": [ "Cidrs", "Rds", "az1" ] },
-        "az2": { "Fn::FindInMap": [ "Cidrs", "Rds", "az2" ] }
+        "az1": { "Fn::Select": [ "0", { "Ref": "RdsCidrs" } ] },
+        "az2": { "Fn::Select": [ "1", { "Ref": "RdsCidrs" } ] }
       }
     }
   },
