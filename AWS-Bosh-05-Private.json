@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Private Subnets",
+  "Description": "Private Subnet(s)",
 
   "Parameters": {
     "DeploymentName": {

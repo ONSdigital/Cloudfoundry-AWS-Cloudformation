@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "VPC",
+  "Description": "Common Values",
 
   "Parameters": {
     "DeploymentName": {
@@ -11,6 +11,14 @@
       "MaxLength": "16",
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+    "Organisation": {
+      "Type": "String",
+      "Description": "Organisation Name",
+      "MinLength": "1",
+      "MaxLength": "63",
+      "AllowedPattern": "^[A-Za-z0-9 -]+$",
+      "ConstraintDescription": "Can be any printable alphanumeric character, spaces or hypens"
     },
     "MultiAz": {
       "Type": "String",
@@ -69,6 +77,10 @@
   },
 
   "Outputs": {
+    "Organisation": {
+      "Description": "Organisation",
+      "Value": { "Ref": "Organisation" }
+    },
     "AwsAvailabilityZone1": {
       "Description": "AWS Availability Zone 1",
       "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
@@ -119,6 +131,28 @@
       "Description": "Director DNS Name",
       "Value": { "Fn::Sub": "director.${DeploymentName}.${HostedZone}" },
       "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DirectorDnsName" } }
+    },
+    "NatDnsName": {
+      "Description": "NAT DNS Name",
+      "Value": { "Fn::Sub": "nat.${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatDnsName" } }
+    },
+    "NatAz1DnsName": {
+      "Description": "NAT AZ1 DNS Name",
+      "Value": { "Fn::Sub": "nat-z1.${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz1DnsName" } }
+    },
+    "NatAz2DnsName": {
+      "Description": "NAT AZ2 DNS Name",
+      "Condition": "MultiAz",
+      "Value": { "Fn::Sub": "nat-z2.${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz2DnsName" } }
+    },
+    "NatAz3DnsName": {
+      "Description": "NAT AZ3 DNS Name",
+      "Condition": "MultiAz",
+      "Value": { "Fn::Sub": "nat-z3.${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz3DnsName" } }
     },
     "SystemDnsName": {
       "Description": "System DNS Name",

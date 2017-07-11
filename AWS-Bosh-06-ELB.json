@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "AWS CloudFormation Bosh",
+  "Description": "Elastic Load Balancer",
 
   "Parameters": {
     "DeploymentName": {
@@ -50,6 +50,21 @@
   },
 
   "Outputs": {
+    "DeployElb": {
+      "Description": "Deploy ELB",
+      "Value": { "Ref": "DeployElb" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DeployElb" } }
+    },
+    "GenerateElbSslCertificate": {
+      "Description": "Generate ELB SSL Certificate",
+      "Value": { "Ref": "DeployElb" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-GenerateElbSslCertificate" } }
+    },
+    "ElbSslCertificateArn": {
+      "Description": "Use Existing SSL Cerficate for ELB",
+      "Value": { "Ref": "DeployElb" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ElbSslCertificateArn" } }
+    },
     "LbSecurityGroup": {
       "Description": "LB Security Groups",
       "Value": { "Ref": "LbSecurityGroup" },
@@ -72,6 +87,24 @@
         ]
       },
       "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ExternalElb" } }
+    },
+    "ElbDnsName": {
+      "Description": "ELB DNS Name",
+      "Condition": "DeployElb",
+      "Value": {
+        "Fn::If": [
+          "GenerateElbSslCertificate",
+          { "Fn::GetAtt": [ "ExternalAcmSslElb","DNSName" ] },
+          {
+            "Fn::If": [
+              "UseElbSslCertificateArn",
+              { "Fn::GetAtt": [ "ExternalExistingSslElb","DNSName" ] },
+              { "Fn::GetAtt": [ "ExternalPlainTextElb","DNSName" ] }
+            ]
+          }
+        ]
+      },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ElbDnsName" } }
     }
   },
 

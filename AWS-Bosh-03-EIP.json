@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "AWS CloudFormation Bosh",
+  "Description": "Elastic IPs",
 
   "Parameters": {
     "DeploymentName": {
@@ -28,19 +28,28 @@
   },
 
   "Outputs": {
-    "BoshLitePublicIp": {
-      "Description": "Elastic IP 1 - Bosh Lite (Bootstrap)",
-      "Value": { "Ref": "BoshLitePublicIp" }
+    "AllocateLbIp": {
+      "Description": "Allocate LB IP",
+      "Condition": "AllocateLbIp",
+      "Value": { "Ref": "AllocateLbIp" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AllocateLbIp" } }
+    },
+    "BoshIpAz1": {
+      "Description": "Bosh Lite (Bootstrap) IP",
+      "Value": { "Ref": "BoshLiteIp" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-BoshLiteIp" } }
     },
     "ExternalIpAz1": {
       "Description": "LB external IP 1",
       "Condition": "AllocateLbIp",
-      "Value": { "Ref": "ExternalAz1Ip" }
+      "Value": { "Ref": "ExternalAz1Ip" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ExternalIpAz1" } }
     },
     "ExternalIpAz2": {
       "Description": "LB external IP 2",
       "Condition": "MultiAzAndAllocateLbIp",
-      "Value": { "Ref": "ExternalAz2Ip" }
+      "Value": { "Ref": "ExternalAz2Ip" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ExternalIpAz2" } }
     },
     "NatIpAz1": {
       "Description": "NAT IP 1",
