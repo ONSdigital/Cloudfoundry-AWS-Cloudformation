@@ -80,13 +80,7 @@
     },
     "MultiAz": {
       "Description": "Multi AZ?",
-      "Value": {
-        "Fn::If": [
-          "MultiAz",
-          "true",
-          "false"
-        ]
-      },
+      "Value": { "Ref": "MultiAz" },
       "Export": { "Name": { "Fn:Sub": "${DeploymentName}-MultiAz" } }
     },
     "StackProtectionGroup": {
@@ -125,7 +119,7 @@
           "Fn::Join": [
             "/", [
 	      {
-                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
               "Stack-Protection-template.json"

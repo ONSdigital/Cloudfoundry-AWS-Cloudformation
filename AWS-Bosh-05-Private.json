@@ -85,6 +85,7 @@
     },
     "PrivateAz2CidrPrefix": {
       "Description": "Private AZ2 CIDR Prefix",
+      "Condition": "MultiAz",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -97,6 +98,7 @@
     },
     "PrivateAz3CidrPrefix": {
       "Description": "Private AZ3 CIDR",
+      "Condition": "MultiAz",
       "Value": {
 	"Fn::Join": [
           ".", [
@@ -115,8 +117,7 @@
   },
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
-    "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "false" ] }
+    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] }
   },
 
   "Resources": {
@@ -133,7 +134,7 @@
           "Fn::Join": [
             "/", [
               {
-                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
               "Stack-Protection-template.json"

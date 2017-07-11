@@ -1,0 +1,189 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "CreateRabbitmqNetworks": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Create RabbitMQ network(s)",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "RabbitmqCidrs": {
+      "Type": "CommaDelimitedList",
+      "Default": "10.0.50.0/24,10.0.51.0/24",
+      "Description": "RabbitMQ CIDRs (x2)"
+    }
+  },
+
+  "Outputs": {
+    "DeploymentName": {
+      "Description": "Deployment name",
+      "Value": { "Ref": "DeploymentName" }
+    },
+    "RabbitmqAz1Subnet": {
+      "Description": "RabbitMQ AZ1 Subnet",
+      "Condition": "CreateRabbitmqNetworks",
+      "Value": { "Ref": "RabbitmqAz1Subnet" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz1Subnet" } }
+    },
+    "RabbitmqAz2Subnet": {
+      "Description": "RabbitMQ AZ2 Subnet",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Value": { "Ref": "RabbitmqAz2Subnet" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz2Subnet" } }
+    },
+    "RabbitmqAz1Cidr": {
+      "Description": "RabbitMQ AZ1 CIDR",
+      "Condition": "CreateRabbitmqNetworks",
+      "Value": { "Ref": "RabbitmqAz1Cidr" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz1Cidr" } }
+    },
+    "RabbitmqAz2Cidr": {
+      "Description": "RabbitMQ AZ2 CIDR",
+      "Condition": "CreateRabbitmqNetworks",
+      "Value": { "Ref": "RabbitmqAz2Cidr" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz2Cidr" } }
+    },
+    "RabbitmqAz1CidrPrefix": {
+      "Description": "RabbitMQ AZ1 CIDR Prefix",
+      "Condition": "CreateRabbitmqNetworks",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } } ] }
+          ]
+        ]
+      },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz1CidrPrefix" } }
+    },
+    "RabbitmqAz2CidrPrefix": {
+      "Description": "RabbitMQ AZ2 CIDR Prefix",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } } ] }
+          ]
+        ]
+      },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz2CidrPrefix" } }
+    },
+
+    "RabbitmqSecurityGroup": {
+      "Description": "RabbitMQ Security Groups",
+      "Condition": "CreateRabbitmqNetworks",
+      "Value": { "Ref": "RabbitmqSecurityGroup" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }
+    }
+  },
+
+  "Conditions": {
+    "CreateRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] },
+    "MultiAzAndCreateRabbitmqNetworks": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }, 
+        { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] } 
+      ]
+    },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "StackProtection",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    },
+
+    "RabbitmqAz1Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone1" } },
+        "CidrBlock": { "Ref": "RabbitmqAz1Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqAz1Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "RabbitmqAz2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Properties": {
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone2" } },
+        "CidrBlock": { "Ref": "RabbitmqAz2Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqAz2Subnet" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "RabbitmqAz1SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "SubnetId": { "Ref": "RabbitmqAz1Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
+      }
+    },
+    "RabbitmqAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Properties": {
+        "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
+      }
+    },
+
+    "RabbitmqSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupDescription": "RabbitMQ In Out",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    }
+  }
+}

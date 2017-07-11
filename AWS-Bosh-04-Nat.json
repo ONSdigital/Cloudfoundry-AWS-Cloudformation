@@ -56,8 +56,7 @@
   },
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
-    "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "false" ] }
+    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] }
   },
 
   "Resources": {
@@ -74,7 +73,7 @@
           "Fn::Join": [
             "/", [
               {
-                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
               "Stack-Protection-template.json"
@@ -89,7 +88,7 @@
         "AvailabilityZone": { "Fn::Select": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone1" } }, { "Fn::GetAZs": "AWS::Region" } ] },
         "CidrBlock": { "Ref": "NatAz1Cidr" },
         "MapPublicIpOnLaunch": false,
-        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz1Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -103,7 +102,7 @@
         "AvailabilityZone": { "Fn::Select": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone2" } }, { "Fn::GetAZs": "AWS::Region" } ] },
         "CidrBlock": { "Ref": "NatAz2Cidr" },
         "MapPublicIpOnLaunch": false,
-        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz2Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -117,7 +116,7 @@
         "AvailabilityZone": { "Fn::Select": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone3" } }, { "Fn::GetAZs": "AWS::Region" } ] },
         "CidrBlock": { "Ref": "NatAz3Cidr" },
         "MapPublicIpOnLaunch": false,
-        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz3Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -152,7 +151,7 @@
     "NatAz1RouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
-        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz1RouteTable" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -163,7 +162,7 @@
       "Type": "AWS::EC2::RouteTable",
       "Condition": "MultiAz",
       "Properties": {
-        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz2RouteTable" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -174,7 +173,7 @@
       "Type": "AWS::EC2::RouteTable",
       "Condition": "MultiAz",
       "Properties": {
-        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:NatAz3RouteTable" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }

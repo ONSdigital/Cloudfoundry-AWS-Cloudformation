@@ -83,7 +83,7 @@
           "Fn::Join": [
             "/", [
               {
-                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
               "Stack-Protection-template.json"
@@ -120,6 +120,18 @@
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
+    },
+
+    "ElastiCacheSubnetGroup": {
+      "Type" : "AWS::ElastiCache::SubnetGroup",
+      "Condition": "CreateElastiCacheNetworks",
+      "Properties" : {
+        "Description": "ElastiCache Subnet Group",
+        "SubnetIds" : [
+          { "Ref": "ElastiCacheAz1Subnet" },
+          { "Ref": "ElastiCacheAz2Subnet" }
+        ] 
+      } 
     },
 
     "ElastiCacheSecurityGroup": {
