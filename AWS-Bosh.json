@@ -725,7 +725,7 @@
   "Mappings": {
     "Cidrs": {
       "Dmz": {
-        "az1": { "Ref": "DmzCidrs" },
+        "az1": "127.0.0.1/32",
         "az2": "127.0.0.1/32"
       },
       "ElastiCache": {
