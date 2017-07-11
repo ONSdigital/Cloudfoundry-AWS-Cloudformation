@@ -1,0 +1,141 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "AllocateLbIp": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Allocate External IP (eg for HA Proxy)",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
+    },
+
+    "StackProtectionGroup": {
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "128",
+      "Description": "Stack protection group",
+      "Default": "NONE",
+      "AllowedPattern": "^[A-Za-z0-9-]+$",
+      "ConstraintDescription": "Can valid group name"
+    },
+    "StackDeleteAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Deletion Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    },
+    "StackUpdateAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Update Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    }
+  },
+
+  "Outputs": {
+    "BoshLitePublicIp": {
+      "Description": "Elastic IP 1 - Bosh Lite (Bootstrap)",
+      "Value": { "Ref": "BoshLitePublicIp" }
+    },
+    "ExternalIpAz1": {
+      "Description": "LB external IP 1",
+      "Condition": "AllocateLbIp",
+      "Value": { "Ref": "ExternalAz1Ip" }
+    },
+    "ExternalIpAz2": {
+      "Description": "LB external IP 2",
+      "Condition": "MultiAzAndAllocateLbIp",
+      "Value": { "Ref": "ExternalAz2Ip" }
+    },
+    "NatIpAz1": {
+      "Description": "NAT IP 1",
+      "Value": { "Ref": "NatAz1Ip" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatIpAz1" } }
+    },
+    "NatIpAz2": {
+      "Description": "NAT IP 2",
+      "Value": { "Ref": "NatAz2Ip" },
+      "Condition": "MultiAz",
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatIpAz2" } }
+    },
+    "NatIpAz3": {
+      "Description": "NAT IP 3",
+      "Condition": "MultiAz",
+      "Value": { "Ref": "NatAz3Ip" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatIpAz3" } }
+    },
+    "MultiAz": {
+      "Description": "Multi AZ?",
+      "Value": {
+        "Fn::If": [
+          "MultiAz",
+          "true",
+          "false"
+        ]
+      }
+    }
+  },
+
+  "Conditions": {
+    "AllocateLbIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
+      ]
+    },
+
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] },
+
+    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+    "MultiAzAndAllocateLbIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "BoshLitePublicIp": {
+      "Type": "AWS::EC2::EIP"
+    },
+    "NatAz1Ip": {
+      "Type": "AWS::EC2::EIP"
+    },
+    "NatAz2Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "MultiAz"
+    },
+    "NatAz3Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "MultiAz"
+    },
+    "ExternalAz1Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "AllocateLbIp"
+    },
+    "ExternalAz2Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "MultiAzAndAllocateLbIp"
+    }
+  }
+}

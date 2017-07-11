@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "AWS CloudFormation Bosh - Firewall whitelist template",
+  "Description": "Security Group Whitelists",
 
   "Parameters": {
     "WhitelistedCidr": {

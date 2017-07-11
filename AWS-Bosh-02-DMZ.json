@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "AWS CloudFormation Bosh",
+  "Description": "DMZ Subnets",
 
   "Parameters": {
     "DeploymentName": {
@@ -12,42 +12,19 @@
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
-    "MultiAz": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "AwsAvailabilityZone1": {
-      "Type": "Number",
-      "Default": "0",
-      "MinValue": "0",
-      "MaxValue": "9",
-      "Description": "AWS Availability Zone [0-9]"
-    },
-    "AwsAvailabilityZone2": {
-      "Type": "Number",
-      "Default": "1",
-      "MinValue": "0",
-      "MaxValue": "9",
-      "Description": "AWS Availability Zone [0-9]"
-    },
-    "AwsAvailabilityZone3": {
-      "Type": "Number",
-      "Default": "2",
-      "MinValue": "0",
-      "MaxValue": "9",
-      "Description": "AWS Availability Zone [0-9]"
-    },
     "DmzAz1Cidr": {
       "Type": "String",
       "Default": "10.0.10.0/24",
-      "Description": "DMZ AZ1 CIDR"
+      "Description": "DMZ AZ1 CIDR",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
     },
     "DmzAz2Cidr": {
       "Type": "String",
       "Default": "10.0.11.0/24",
-      "Description": "DMZ AZ2 CIDR"
+      "Description": "DMZ AZ2 CIDR",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
     },
     "StackProtectionGroup": {
       "Type": "String",
@@ -73,40 +50,20 @@
   },
 
   "Outputs": {
-    "AwsRegion": {
-      "Description": "AWS Region",
-      "Value": { "Ref": "AWS::Region" }
-    },
-    "AwsAvailabilityZone1": {
-      "Description": "AWS Availability Zone 1",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] }
-    },
-    "AwsAvailabilityZone2": {
-      "Description": "AWS Availability Zone 2",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] }
-    },
-    "AwsAvailabilityZone3": {
-      "Description": "AWS Availability Zone 3",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] }
-    },
     "StackName": {
       "Description": "Stack name",
       "Value": { "Ref": "AWS::StackName" }
     },
-    "DeploymentName": {
-      "Description": "Deployment name",
-      "Value": { "Ref": "DeploymentName" }
-    },
     "DmzAz1Subnet": {
       "Description": "DMZ AZ1 Subnet",
       "Value": { "Ref": "DmzAz1Subnet" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzAz1Subnet"
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzAz1Subnet" } }
     },
     "DmzAz2Subnet": {
       "Description": "DMZ AZ2 Subnet",
       "Condition": "MultiAzOrElb",
       "Value": { "Ref": "DmzAz2Subnet" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzAz2Subnet"
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzAz2Subnet" } }
     },
     "DmzAz1CidrPrefix": {
       "Description": "DMZ AZ1 CIDR",
@@ -163,24 +120,14 @@
     "DmzSecurityGroup": {
       "Description": "DMZ Security Groups",
       "Value": { "Ref": "DmzSecurityGroup" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzSecurityGroup"
-    },
-    "MultiAz": {
-      "Description": "Multi AZ?",
-      "Value": {
-        "Fn::If": [
-          "MultiAz",
-          "true",
-          "false"
-        ]
-      }
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzSecurityGroup" } }
     }
   },
 
   "Conditions": {
     "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] }
+    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+    "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "false" ] }
   },
 
   "Resources": {
@@ -210,10 +157,10 @@
     "DmzAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone1" } },
         "CidrBlock": { "Ref": "DmzAz1Cidr" },
         "MapPublicIpOnLaunch": false,
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -224,10 +171,10 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAzOrElb",
       "Properties": {
-        "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone1" } },
         "CidrBlock": { "Ref": "DmzAz2Cidr" },
         "MapPublicIpOnLaunch": false,
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -238,7 +185,7 @@
     "DmzAz1RouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1RouteTable" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -249,7 +196,7 @@
       "Type": "AWS::EC2::RouteTable",
       "Condition": "MultiAzOrElb",
       "Properties": {
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2RouteTable" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -261,7 +208,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
     "DmzAz2SubnetRouteTableAssociation": {
@@ -269,7 +216,7 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
 
@@ -277,7 +224,7 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "DMZ In Out",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" },
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
