@@ -191,7 +191,7 @@
       "Default": "10.0.10.0/24,10.0.11.0/24",
       "Description": "DMZ CIDRs (x2)"
     },
-    "ElastiCacheServicesCidrs": {
+    "ElastiCacheCidrs": {
       "Type": "CommaDelimitedList",
       "Default": "10.0.20.0/24,10.0.21.0/24",
       "Description": "ElastiCache CIDRs (x2)"
@@ -206,15 +206,15 @@
       "Default": "10.0.40.0/24,10.0.41.0/24,10.0.42.0/24",
       "Description": "Private CIDRs (x3)"
     },
-    "RabbitmqServicesCidrs": {
+    "RabbitmqCidrs": {
       "Type": "CommaDelimitedList",
       "Default": "10.0.50.0/24,10.0.51.0/24",
-      "Description": "RabbitMQ Services AZ1 Subnet"
+      "Description": "RabbitMQ AZ1 Subnet"
     },
-    "RdsServicesCidrs": {
+    "RdsCidrs": {
       "Type": "CommaDelimitedList",
       "Default": "10.0.60.0/24,10.0.61.0/24",
-      "Description": "RDS Services AZ1 Subnet"
+      "Description": "RDS AZ1 Subnet"
     },
     "RdsInstancePreferredBackupWindow": {
       "Type": "String",
@@ -444,24 +444,24 @@
       "Condition": "MultiAz",
       "Value": { "Ref": "PrivateAz3Subnet" }
     },
-    "RabbitmqServicesAz1Subnet": {
-      "Description": "RabbitMQ Services AZ1 Subnet",
+    "RabbitmqAz1Subnet": {
+      "Description": "RabbitMQ AZ1 Subnet",
       "Condition": "CreateRabbitmqNetworks",
-      "Value": { "Ref": "RabbitmqServicesAz1Subnet" }
+      "Value": { "Ref": "RabbitmqAz1Subnet" }
     },
-    "RabbitmqServicesAz2Subnet": {
-      "Description": "RabbitMQ Services AZ2 Subnet",
+    "RabbitmqAz2Subnet": {
+      "Description": "RabbitMQ AZ2 Subnet",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
-      "Value": { "Ref": "RabbitmqServicesAz2Subnet" }
+      "Value": { "Ref": "RabbitmqAz2Subnet" }
     },
     "DmzAz1CidrPrefix": {
       "Description": "DMZ AZ1 CIDR",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az1" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az1" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az1" } ] } ] }
           ]
         ]
       }
@@ -472,9 +472,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az2" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az2" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az2" } ] } ] }
           ]
         ]
       }
@@ -484,9 +484,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az1" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az1" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az1" } ] } ] }
           ]
         ]
       }
@@ -496,9 +496,9 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az2" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az2" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az2" } ] } ] }
           ]
         ]
       }
@@ -508,35 +508,35 @@
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az3" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az3" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Private", "az3" } ] } ] }
           ]
         ]
       }
     },
-    "RabbitmqServicesAz1CidrPrefix": {
-      "Description": "RabbitMQ Services AZ1 CIDR Prefix",
+    "RabbitmqAz1CidrPrefix": {
+      "Description": "RabbitMQ AZ1 CIDR Prefix",
       "Condition": "CreateRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" } ] } ] }
           ]
         ]
       }
     },
-    "RabbitmqServicesAz2CidrPrefix": {
-      "Description": "RabbitMQ Services AZ2 CIDR Prefix",
+    "RabbitmqAz2CidrPrefix": {
+      "Description": "RabbitMQ AZ2 CIDR Prefix",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": {
 	"Fn::Join": [
           ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] } ] } ] }
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" } ] } ] }
           ]
         ]
       }
@@ -569,10 +569,10 @@
       "Description": "Private Security Groups",
       "Value": { "Ref": "PrivateSecurityGroup" }
     },
-    "RabbitmqServicesSecurityGroup": {
-      "Description": "RabbitMQ Services Security Groups",
+    "RabbitmqSecurityGroup": {
+      "Description": "RabbitMQ Security Groups",
       "Condition": "CreateRabbitmqNetworks",
-      "Value": { "Ref": "RabbitmqServicesSecurityGroup" }
+      "Value": { "Ref": "RabbitmqSecurityGroup" }
     },
     "DomainName": {
       "Description": "Main DNS name",
@@ -718,6 +718,37 @@
             ]
           }
         ]
+      }
+    }
+  },
+
+  "Mappings": {
+    "Cidrs": {
+      "Dmz": {
+        "az1": { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az1" },
+        "az2": { "Fn::FindInMap": [ "Cidrs", "DmzCache", "az2" }
+      },
+      "ElastiCache": {
+        "az1": { "Fn::FindInMap": [ "Cidrs", "ElasticCache", "az1" },
+        "az2": { "Fn::FindInMap": [ "Cidrs", "ElasticCache", "az2" }
+      },
+      "Nat": {
+        "az1": { "Fn::FindInMap": [ "Cidrs", "Nat", "az1" },
+        "az2": { "Fn::FindInMap": [ "Cidrs", "Nat", "az2" },
+        "az3": { "Fn::FindInMap": [ "Cidrs", "Nat", "az3" }
+      },
+      "Private": {
+        "az1": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
+        "az2": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
+        "az3": { "Fn::FindInMap": [ "Cidrs", "Nat", "az3" }
+      },
+      "Rabbitmq": {
+        "az1": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" },
+        "az2": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" }
+      },
+      "Rds": {
+        "az1": { "Fn::FindInMap": [ "Cidrs", "Rds", "az1" },
+        "az2": { "Fn::FindInMap": [ "Cidrs", "Rds", "az2" }
       }
     }
   },
@@ -1254,30 +1285,30 @@
       }
     },
 
-    "ElastiCacheServicesAz1Subnet": {
+    "ElastiCacheAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "ElastiCacheCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "ElastiCache", "az1" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheServicesAz1Subnet" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheAz1Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
-    "ElastiCacheServicesAz2Subnet": {
+    "ElastiCacheAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "ElastiCacheCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "ElastiCache", "az2" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheServicesAz2Subnet" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheAz2Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -1287,7 +1318,7 @@
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "NatCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Nat", "az1" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -1301,7 +1332,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "NatCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Nat", "az2" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -1315,7 +1346,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "NatCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Nat", "az3" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -1328,7 +1359,7 @@
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Dmz", "az1" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -1342,7 +1373,7 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Dmz", "az2" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -1355,7 +1386,7 @@
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -1369,7 +1400,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -1383,7 +1414,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
@@ -1392,58 +1423,58 @@
         ]
       }
     },
-    "RabbitmqServicesAz1Subnet": {
+    "RabbitmqAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesAz1Subnet" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqAz1Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
-    "RabbitmqServicesAz2Subnet": {
+    "RabbitmqAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesAz2Subnet" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqAz2Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
-    "RdsServicesAz1Subnet": {
+    "RdsAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "DeployRdsInstance",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RdsServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rds", "az1" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsServicesAz1Subnet" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsAz1Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
-    "RdsServicesAz2Subnet": {
+    "RdsAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "DeployRdsInstance",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RdsServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rds", "az2" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsServicesAz2Subnet" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsAz2Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -1968,19 +1999,19 @@
         "RouteTableId": { "Ref": "NatAz2RouteTable" }
       }
     },
-    "RabbitmqServicesAz1SubnetRouteTableAssociation": {
+    "RabbitmqAz1SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "SubnetId": { "Ref": "RabbitmqServicesAz1Subnet" },
+        "SubnetId": { "Ref": "RabbitmqAz1Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
-    "RabbitmqServicesAz2SubnetRouteTableAssociation": {
+    "RabbitmqAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "SubnetId": { "Ref": "RabbitmqServicesAz2Subnet" },
+        "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
         "RouteTableId": { "Ref": "InternetRouteTable" }
       }
     },
@@ -2119,14 +2150,14 @@
         ]
       }
     },
-    "RabbitmqServicesSecurityGroup": {
+    "RabbitmqSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupDescription": "RabbitMQ Services In Out",
+        "GroupDescription": "RabbitMQ In Out",
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqServicesSecurityGroup" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -2148,7 +2179,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2159,7 +2190,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2170,7 +2201,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2180,7 +2211,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2191,7 +2222,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2201,7 +2232,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "8080",
         "ToPort": "8080",
         "IpProtocol": "tcp"
@@ -2212,7 +2243,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "8080",
         "ToPort": "8080",
         "IpProtocol": "tcp"
@@ -2223,7 +2254,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "8080",
         "ToPort": "8080",
         "IpProtocol": "tcp"
@@ -2233,7 +2264,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "8081",
         "ToPort": "8081",
         "IpProtocol": "tcp"
@@ -2244,7 +2275,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "8081",
         "ToPort": "8081",
         "IpProtocol": "tcp"
@@ -2255,7 +2286,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "8081",
         "ToPort": "8081",
         "IpProtocol": "tcp"
@@ -2265,7 +2296,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "8443",
         "ToPort": "8443",
         "IpProtocol": "tcp"
@@ -2276,7 +2307,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "8443",
         "ToPort": "8443",
         "IpProtocol": "tcp"
@@ -2287,7 +2318,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "8443",
         "ToPort": "8443",
         "IpProtocol": "tcp"
@@ -2297,7 +2328,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "9022",
         "ToPort": "9022",
         "IpProtocol": "tcp"
@@ -2308,7 +2339,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "9022",
         "ToPort": "9022",
         "IpProtocol": "tcp"
@@ -2319,7 +2350,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "9022",
         "ToPort": "9022",
         "IpProtocol": "tcp"
@@ -2329,7 +2360,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2340,7 +2371,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2351,7 +2382,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2361,7 +2392,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "4567",
         "ToPort": "4567",
         "IpProtocol": "tcp"
@@ -2372,7 +2403,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "4567",
         "ToPort": "4567",
         "IpProtocol": "tcp"
@@ -2383,7 +2414,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "4567",
         "ToPort": "4567",
         "IpProtocol": "tcp"
@@ -2393,7 +2424,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "15672",
         "ToPort": "15672",
         "IpProtocol": "tcp"
@@ -2404,7 +2435,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "15672",
         "ToPort": "15672",
         "IpProtocol": "tcp"
@@ -2415,7 +2446,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "15672",
         "ToPort": "15672",
         "IpProtocol": "tcp"
@@ -2426,7 +2457,7 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2437,7 +2468,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2448,7 +2479,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2459,7 +2490,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2470,7 +2501,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" },
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
@@ -2480,7 +2511,7 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2490,7 +2521,7 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2500,7 +2531,7 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2511,7 +2542,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2522,7 +2553,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" },
         "FromPort": "25250",
         "ToPort": "25250",
         "IpProtocol": "tcp"
@@ -2532,7 +2563,7 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
@@ -2543,7 +2574,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
@@ -2554,7 +2585,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
@@ -2565,7 +2596,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az1" },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
@@ -2576,7 +2607,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "RabbitmqServicesCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Rabbitmq", "az2" },
         "FromPort": "25777",
         "ToPort": "25777",
         "IpProtocol": "tcp"
@@ -2587,7 +2618,7 @@
       "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "6379",
         "ToPort": "6379",
         "IpProtocol": "tcp"
@@ -2598,7 +2629,7 @@
       "Condition": "MultiAzAndCreateElastiCacheNetworks",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "6379",
         "ToPort": "6379",
         "IpProtocol": "tcp"
@@ -2609,7 +2640,7 @@
       "Condition": "MultiAzAndCreateElastiCacheNetworks",
       "Properties": {
         "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "6379",
         "ToPort": "6379",
         "IpProtocol": "tcp"
@@ -2620,7 +2651,7 @@
       "Condition": "DeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
@@ -2631,7 +2662,7 @@
       "Condition": "MultiAzAndDeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
@@ -2642,7 +2673,7 @@
       "Condition": "MultiAzAndDeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
@@ -2653,7 +2684,7 @@
       "Condition": "DeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
@@ -2664,7 +2695,7 @@
       "Condition": "MultiAzAndDeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
@@ -2675,7 +2706,7 @@
       "Condition": "MultiAzAndDeployRdsInstance",
       "Properties": {
         "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
@@ -2685,8 +2716,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2696,8 +2727,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2707,8 +2738,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "22",
         "ToPort": "22",
         "IpProtocol": "tcp"
@@ -2718,8 +2749,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "1883",
         "ToPort": "1883",
         "IpProtocol": "tcp"
@@ -2729,8 +2760,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "1883",
         "ToPort": "1883",
         "IpProtocol": "tcp"
@@ -2740,8 +2771,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "1883",
         "ToPort": "1883",
         "IpProtocol": "tcp"
@@ -2751,8 +2782,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "5671",
         "ToPort": "5672",
         "IpProtocol": "tcp"
@@ -2762,8 +2793,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "5671",
         "ToPort": "5672",
         "IpProtocol": "tcp"
@@ -2773,8 +2804,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "5671",
         "ToPort": "5672",
         "IpProtocol": "tcp"
@@ -2784,8 +2815,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "8883",
         "ToPort": "8883",
         "IpProtocol": "tcp"
@@ -2795,8 +2826,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "8883",
         "ToPort": "8883",
         "IpProtocol": "tcp"
@@ -2806,8 +2837,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "8883",
         "ToPort": "8883",
         "IpProtocol": "tcp"
@@ -2817,8 +2848,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "61613",
         "ToPort": "61613",
         "IpProtocol": "tcp"
@@ -2828,8 +2859,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "61613",
         "ToPort": "61613",
         "IpProtocol": "tcp"
@@ -2839,8 +2870,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "61613",
         "ToPort": "61613",
         "IpProtocol": "tcp"
@@ -2850,8 +2881,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "61614",
         "ToPort": "61614",
         "IpProtocol": "tcp"
@@ -2861,8 +2892,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "61614",
         "ToPort": "61614",
         "IpProtocol": "tcp"
@@ -2872,8 +2903,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "61614",
         "ToPort": "61614",
         "IpProtocol": "tcp"
@@ -2883,8 +2914,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "15672",
         "ToPort": "15672",
         "IpProtocol": "tcp"
@@ -2894,8 +2925,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "15672",
         "ToPort": "15672",
         "IpProtocol": "tcp"
@@ -2905,8 +2936,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "15672",
         "ToPort": "15672",
         "IpProtocol": "tcp"
@@ -2916,8 +2947,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az1" },
         "FromPort": "15674",
         "ToPort": "15674",
         "IpProtocol": "tcp"
@@ -2927,8 +2958,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az2" },
         "FromPort": "15674",
         "ToPort": "15674",
         "IpProtocol": "tcp"
@@ -2938,8 +2969,8 @@
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqServicesSecurityGroup" },
-        "CidrBlock": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] },
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "Private", "az3" },
         "FromPort": "15674",
         "ToPort": "15674",
         "IpProtocol": "tcp"
@@ -2952,8 +2983,8 @@
       "Properties" : {
         "DBSubnetGroupDescription" : "RDS Subnet Group",
         "SubnetIds" : [
-          { "Ref": "RdsServicesAz1Subnet" },
-          { "Ref": "RdsServicesAz2Subnet" }
+          { "Ref": "RdsAz1Subnet" },
+          { "Ref": "RdsAz2Subnet" }
         ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSubnetGroup" } },
@@ -2967,8 +2998,8 @@
       "Properties" : {
         "Description": "ElastiCache Subnet Group",
         "SubnetIds" : [
-          { "Ref": "ElastiCacheServicesAz1Subnet" },
-          { "Ref": "ElastiCacheServicesAz2Subnet" }
+          { "Ref": "ElastiCacheAz1Subnet" },
+          { "Ref": "ElastiCacheAz2Subnet" }
         ]
       }
     },
