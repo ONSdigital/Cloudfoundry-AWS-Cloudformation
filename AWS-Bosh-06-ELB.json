@@ -1,0 +1,248 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "ElbTimeout": {
+      "Type": "Number",
+      "Default": "60",
+      "Description": "ELB Timeout",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "ElbScheme": {
+      "Type": "String",
+      "Default": "internet-facing",
+      "Description": "Internet facing or internal load balancer?",
+      "AllowedValues": [ "internet-facing", "internal" ]
+    },
+
+    "GenerateElbSslCertificate": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "ElbSslCertificateArn": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": "Use pre-loaded SSL certificate",
+      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+|NONE)$",
+      "ConstraintDescription": "AWS ACM SSL certificate ARN or NONE"
+    }
+  },
+
+  "Outputs": {
+    "LbSecurityGroup": {
+      "Description": "LB Security Groups",
+      "Value": { "Ref": "LbSecurityGroup" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-LbSecurityGroup" } }
+    },
+    "ExternalElb": {
+      "Description": "External ELB",
+      "Condition": "DeployElb",
+      "Value": {
+        "Fn::If": [
+          "GenerateElbSslCertificate",
+          { "Ref": "ExternalAcmSslElb" },
+          {
+            "Fn::If": [
+              "UseElbSslCertificateArn",
+              { "Ref": "ExternalExistingSslElb" },
+              { "Ref": "ExternalPlainTextElb" }
+            ]
+          }
+        ]
+      },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ExternalElb" } }
+    }
+  },
+
+  "Conditions": {
+    "GenerateElbSslCertificate": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] },
+	{ "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
+      ]
+    },
+    "UseElbSslCertificateArn": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } ] }
+      ]
+    },
+    "PlainTextElb": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
+        { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
+      ]
+    },
+
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAzOrElb": {
+      "Fn::Or": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "StackProtection",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    },
+
+    "ElbSslCertificate": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Condition": "GenerateElbSslCertificate",
+      "Properties": {
+        "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
+        "SubjectAlternativeNames": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } }
+        ],
+        "DomainValidationOptions" : [
+          {
+            "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
+            "ValidationDomain" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Hostzone" } }
+          },
+          {
+            "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
+            "ValidationDomain" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Hostzone" } }
+          }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElbSslCertificate" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "ExternalAcmSslElb": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "GenerateElbSslCertificate",
+      "Properties": {
+        "Scheme": { "Ref": "ElbScheme" },
+        "Subnets": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+        ],
+        "Listeners": [
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  } }
+	],
+        "ConnectionDrainingPolicy": {
+          "Enabled" : "true",
+          "Timeout" : { "Ref": "ElbTimeout" }
+        },
+        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "ExternalExistingSslElb": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "UseElbSslCertificateArn",
+      "Properties": {
+        "Scheme": { "Ref": "ElbScheme" },
+        "Subnets": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+        ],
+        "Listeners": [
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  } }
+	],
+        "ConnectionDrainingPolicy": {
+          "Enabled" : "true",
+          "Timeout" : { "Ref": "ElbTimeout" }
+        },
+        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "ExternalPlainTextElb": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "PlainTextElb",
+      "Properties": {
+        "Scheme": { "Ref": "ElbScheme" },
+        "Subnets": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+        ],
+        "Listeners": [
+          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" }
+	],
+        "ConnectionDrainingPolicy": {
+          "Enabled" : "true",
+          "Timeout" : { "Ref": "ElbTimeout" }
+        },
+        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "LbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupDescription": "ELB Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    }
+  }
+}
