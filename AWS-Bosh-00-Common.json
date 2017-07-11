@@ -18,6 +18,12 @@
       "Description": "Deploy multiple AZs",
       "AllowedValues": [ "true", "false" ]
     },
+    "HostedZone": {
+      "Type": "String",
+      "Description": "DNS Zone",
+      "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,}$",
+      "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
+    },
     "AwsAvailabilityZone1": {
       "Type": "Number",
       "Default": "0",
@@ -97,6 +103,27 @@
       "Description": "Stack Update Allow/Deny",
       "Value": { "Ref": "StackUpdateAllowDeny" },
       "Export": { "Name": { "Fn:Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+    },
+
+    "HostedZone": {
+      "Description": "Hosted Zone",
+      "Value": { "Ref": "HostedZone" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-HostedZone" } }
+    },
+    "AppsDnsName": {
+      "Description": "Apps DNS Name",
+      "Value": { "Fn::Sub": "*.apps.${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AppsDnsName" } }
+    },
+    "DirectorDnsName": {
+      "Description": "Director DNS Name",
+      "Value": { "Fn::Sub": "director.${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DirectorDnsName" } }
+    },
+    "SystemDnsName": {
+      "Description": "System DNS Name",
+      "Value": { "Fn::Sub": "*.system.${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-SystemDnsName" } }
     }
   },
 
