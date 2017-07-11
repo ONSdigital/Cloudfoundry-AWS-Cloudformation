@@ -201,7 +201,7 @@
       "Default": "10.0.30.0/24,10.0.31.0/24,10.0.32.0/24",
       "Description": "NAT CIDRs (x3)"
     },
-    "PrivateCidr": {
+    "PrivateCidrs": {
       "Type": "CommaDelimitedList",
       "Default": "10.0.40.0/24,10.0.41.0/24,10.0.42.0/24",
       "Description": "Private CIDRs (x3)"
