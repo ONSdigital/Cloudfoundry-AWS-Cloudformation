@@ -725,7 +725,7 @@
   "Mappings": {
     "Cidrs": {
       "Dmz": {
-        "az1": "127.0.0.1/32",
+        "az1": { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] },
         "az2": "127.0.0.1/32"
       },
       "ElastiCache": {
