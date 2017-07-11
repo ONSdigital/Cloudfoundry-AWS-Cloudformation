@@ -209,12 +209,12 @@
     "RabbitmqCidrs": {
       "Type": "CommaDelimitedList",
       "Default": "10.0.50.0/24,10.0.51.0/24",
-      "Description": "RabbitMQ AZ1 Subnet"
+      "Description": "RabbitMQ CIDRs (x2)"
     },
     "RdsCidrs": {
       "Type": "CommaDelimitedList",
       "Default": "10.0.60.0/24,10.0.61.0/24",
-      "Description": "RDS AZ1 Subnet"
+      "Description": "RDS CIDRs (x2)"
     },
     "RdsInstancePreferredBackupWindow": {
       "Type": "String",
