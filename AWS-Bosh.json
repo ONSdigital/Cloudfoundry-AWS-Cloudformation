@@ -725,30 +725,30 @@
   "Mappings": {
     "Cidrs": {
       "Dmz": {
-        "az1": { "Fn::Select": [ "0", { "Ref": "DmzCidrs" } ] },
-        "az2": { "Fn::Select": [ "1", { "Ref": "DmzCidrs" } ] }
+        "az1": "127.0.0.1/32",
+        "az2": "127.0.0.1/32"
       },
       "ElastiCache": {
-        "az1": { "Fn::Select": [ "0", { "Ref": "ElastiCacheCidrs" } ] },
-        "az2": { "Fn::Select": [ "1", { "Ref": "ElastiCacheCidrs" } ] }
+        "az1": "127.0.0.1/32",
+        "az2": "127.0.0.1/32"
       },
       "Nat": {
-        "az1": { "Fn::Select": [ "0", { "Ref": "NatCidrs" } ] },
-        "az2": { "Fn::Select": [ "1", { "Ref": "NatCidrs" } ] },
-        "az3": { "Fn::Select": [ "2", { "Ref": "NatCidrs" } ] }
+        "az1": "127.0.0.1/32",
+        "az2": "127.0.0.1/32",
+        "az3": "127.0.0.1/32"
       },
       "Private": {
-        "az1": { "Fn::Select": [ "0", { "Ref": "PrivateCidrs" } ] },
-        "az2": { "Fn::Select": [ "1", { "Ref": "PrivateCidrs" } ] },
-        "az3": { "Fn::Select": [ "2", { "Ref": "PrivateCidrs" } ] }
+        "az1": "127.0.0.1/32",
+        "az2": "127.0.0.1/32",
+        "az3": "127.0.0.1/32"
       },
       "Rabbitmq": {
-        "az1": { "Fn::Select": [ "0", { "Ref": "RabbitmqCidrs" } ] },
-        "az2": { "Fn::Select": [ "1", { "Ref": "RabbitmqCidrs" } ] }
+        "az1": "127.0.0.1/32",
+        "az2": "127.0.0.1/32"
       },
       "Rds": {
-        "az1": { "Fn::Select": [ "0", { "Ref": "RdsCidrs" } ] },
-        "az2": { "Fn::Select": [ "1", { "Ref": "RdsCidrs" } ] }
+        "az1": "127.0.0.1/32",
+        "az2": "127.0.0.1/32"
       }
     }
   },
