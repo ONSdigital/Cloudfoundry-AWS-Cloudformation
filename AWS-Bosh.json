@@ -1290,7 +1290,7 @@
       "Condition": "CreateElastiCacheNetworks",
       "Properties": {
         "AvailabilityZone": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
-        "CidrBlock": { "Fn::FindInMap": [ "Cidrs", "ElastiCache", "az1" ] },
+        "CidrBlock": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Ref": "ElastiCacheCidrs" } ] },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
