@@ -188,7 +188,7 @@
     },
     "DmzCidrs": {
       "Type": "CommaDelimitedList",
-      "Default": "10.0.10.0/24,10.0.11.0/24",
+      "Default": "10.0.10.0/24, 10.0.11.0/24",
       "Description": "DMZ CIDRs (x2)"
     },
     "ElastiCacheCidrs": {
