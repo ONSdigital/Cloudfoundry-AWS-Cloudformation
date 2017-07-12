@@ -32,13 +32,13 @@
     "DmzAz1Subnet": {
       "Description": "DMZ AZ1 Subnet",
       "Value": { "Ref": "DmzAz1Subnet" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzAz1Subnet" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } }
     },
     "DmzAz2Subnet": {
       "Description": "DMZ AZ2 Subnet",
       "Condition": "MultiAzOrElb",
       "Value": { "Ref": "DmzAz2Subnet" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzAz2Subnet" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
     },
     "DmzAz1CidrPrefix": {
       "Description": "DMZ AZ1 CIDR",
@@ -95,7 +95,7 @@
     "DmzSecurityGroup": {
       "Description": "DMZ Security Groups",
       "Value": { "Ref": "DmzSecurityGroup" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DmzSecurityGroup" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } }
     }
   },
 

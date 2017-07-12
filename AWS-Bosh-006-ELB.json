@@ -53,22 +53,22 @@
     "DeployElb": {
       "Description": "Deploy ELB",
       "Value": { "Ref": "DeployElb" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DeployElb" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeployElb" } }
     },
     "GenerateElbSslCertificate": {
       "Description": "Generate ELB SSL Certificate",
       "Value": { "Ref": "DeployElb" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-GenerateElbSslCertificate" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-GenerateElbSslCertificate" } }
     },
     "ElbSslCertificateArn": {
       "Description": "Use Existing SSL Cerficate for ELB",
       "Value": { "Ref": "DeployElb" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ElbSslCertificateArn" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbSslCertificateArn" } }
     },
     "LbSecurityGroup": {
       "Description": "LB Security Groups",
       "Value": { "Ref": "LbSecurityGroup" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-LbSecurityGroup" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } }
     },
     "ExternalElb": {
       "Description": "External ELB",
@@ -86,7 +86,7 @@
           }
         ]
       },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ExternalElb" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalElb" } }
     },
     "ElbDnsName": {
       "Description": "ELB DNS Name",
@@ -104,7 +104,7 @@
           }
         ]
       },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-ElbDnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbDnsName" } }
     }
   },
 

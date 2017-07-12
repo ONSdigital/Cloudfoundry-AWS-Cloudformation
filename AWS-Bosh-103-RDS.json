@@ -182,13 +182,13 @@
       "Description": "RDS AZ1 CIDR",
       "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsAz1Cidr" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RdsAz1Cidr" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz1Cidr" } }
     },
     "RdsAz2Cidr": {
       "Description": "RDS AZ2 CIDR",
       "Condition": "DeployRdsInstance",
       "Value": { "Ref": "RdsAz2Cidr" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RdsAz2Cidr" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } }
     },
     "RdsAz1CidrPrefix": {
       "Description": "RDS AZ1 CIDR Prefix",
@@ -202,7 +202,7 @@
           ]
         ]
       },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RdsAz1CidrPrefix" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz1CidrPrefix" } }
     },
     "RdsAz2CidrPrefix": {
       "Description": "RDS AZ2 CIDR Prefix",
@@ -216,7 +216,7 @@
           ]
         ]
       },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RdsAz2CidrPrefix" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2CidrPrefix" } }
     },
     "RdsAz1DefaultRoute": {
       "Description": "RDS AZ1 Default Route",
@@ -231,7 +231,7 @@
           ]
         ]
       },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RdsAz1DefaultRoute" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz1DefaultRoute" } }
     },
     "RdsAz2DefaultRoute": {
       "Description": "RDS AZ1 Default Route",
@@ -246,7 +246,7 @@
           ]
         ]
       },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RdsAz2DefaultRoute" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2DefaultRoute" } }
     },
 
     "RdsSubnetGroup": {

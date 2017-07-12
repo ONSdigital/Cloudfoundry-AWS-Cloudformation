@@ -44,25 +44,25 @@
       "Description": "RabbitMQ AZ1 Subnet",
       "Condition": "CreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqAz1Subnet" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz1Subnet" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1Subnet" } }
     },
     "RabbitmqAz2Subnet": {
       "Description": "RabbitMQ AZ2 Subnet",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqAz2Subnet" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz2Subnet" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Subnet" } }
     },
     "RabbitmqAz1Cidr": {
       "Description": "RabbitMQ AZ1 CIDR",
       "Condition": "CreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqAz1Cidr" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz1Cidr" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1Cidr" } }
     },
     "RabbitmqAz2Cidr": {
       "Description": "RabbitMQ AZ2 CIDR",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqAz2Cidr" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz2Cidr" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } }
     },
     "RabbitmqAz1CidrPrefix": {
       "Description": "RabbitMQ AZ1 CIDR Prefix",
@@ -76,7 +76,7 @@
           ]
         ]
       },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz1CidrPrefix" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1CidrPrefix" } }
     },
     "RabbitmqAz2CidrPrefix": {
       "Description": "RabbitMQ AZ2 CIDR Prefix",
@@ -90,14 +90,14 @@
           ]
         ]
       },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqAz2CidrPrefix" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2CidrPrefix" } }
     },
 
     "RabbitmqSecurityGroup": {
       "Description": "RabbitMQ Security Groups",
       "Condition": "CreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqSecurityGroup" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }
     }
   },
 

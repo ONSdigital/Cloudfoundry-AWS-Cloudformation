@@ -39,19 +39,19 @@
     "NatAz1RouteTable": {
       "Description": "NAT AZ1 RouteTable",
       "Value": { "Ref": "NatAz1RouteTable" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz1RouteTable" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } }
     },
     "NatAz2RouteTable": {
       "Description": "NAT AZ2 RouteTable",
       "Condition": "MultiAz",
       "Value": { "Ref": "NatAz2RouteTable" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz2RouteTable" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } }
     },
     "NatAz3RouteTable": {
       "Description": "NAT AZ3 RouteTable",
       "Condition": "MultiAz",
       "Value": { "Ref": "NatAz3RouteTable" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz3RouteTable" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } }
     }
   },
 

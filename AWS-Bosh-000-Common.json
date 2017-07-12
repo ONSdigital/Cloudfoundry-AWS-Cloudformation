@@ -84,80 +84,80 @@
     "AwsAvailabilityZone1": {
       "Description": "AWS Availability Zone 1",
       "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AwsAvailabilityZone1" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } }
     },
     "AwsAvailabilityZone2": {
       "Description": "AWS Availability Zone 2",
       "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AwsAvailabilityZone2" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } }
     },
     "AwsAvailabilityZone3": {
       "Description": "AWS Availability Zone 3",
       "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AwsAvailabilityZone3" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone3" } }
     },
     "MultiAz": {
       "Description": "Multi AZ?",
       "Value": { "Ref": "MultiAz" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-MultiAz" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-MultiAz" } }
     },
     "StackProtectionGroup": {
       "Description": "Stack Protection Group",
       "Value": { "Ref": "StackProtectionGroup" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-StackProtectionGroup" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } }
     },
     "StackDeleteAllowDeny": {
       "Description": "Stack Delete Allow/Deny",
       "Value": { "Ref": "StackDeleteAllowDeny" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-StackDeleteAllowDeny" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } }
     },
     "StackUpdateAllowDeny": {
       "Description": "Stack Update Allow/Deny",
       "Value": { "Ref": "StackUpdateAllowDeny" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
     },
 
     "HostedZone": {
       "Description": "Hosted Zone",
       "Value": { "Ref": "HostedZone" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-HostedZone" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
     },
     "AppsDnsName": {
       "Description": "Apps DNS Name",
       "Value": { "Fn::Sub": "*.apps.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-AppsDnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } }
     },
     "DirectorDnsName": {
       "Description": "Director DNS Name",
       "Value": { "Fn::Sub": "director.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-DirectorDnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorDnsName" } }
     },
     "NatDnsName": {
       "Description": "NAT DNS Name",
       "Value": { "Fn::Sub": "nat.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatDnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatDnsName" } }
     },
     "NatAz1DnsName": {
       "Description": "NAT AZ1 DNS Name",
       "Value": { "Fn::Sub": "nat-z1.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz1DnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz1DnsName" } }
     },
     "NatAz2DnsName": {
       "Description": "NAT AZ2 DNS Name",
       "Condition": "MultiAz",
       "Value": { "Fn::Sub": "nat-z2.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz2DnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2DnsName" } }
     },
     "NatAz3DnsName": {
       "Description": "NAT AZ3 DNS Name",
       "Condition": "MultiAz",
       "Value": { "Fn::Sub": "nat-z3.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-NatAz3DnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3DnsName" } }
     },
     "SystemDnsName": {
       "Description": "System DNS Name",
       "Value": { "Fn::Sub": "*.system.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn:Sub": "${DeploymentName}-SystemDnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } }
     }
   },
 
