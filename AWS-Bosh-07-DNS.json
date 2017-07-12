@@ -1,0 +1,242 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Route53 DNS Names",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    }
+  },
+
+  "Outputs": {
+    "ApiDns": {
+      "Description": "API DNS name",
+      "Value": { "Fn::Sub": "api.system.${DeploymentName}.${HostedZone}" }
+    },
+    "DirectorDns": {
+      "Description": "Director DNS name",
+      "Value": { "Fn::Sub": "director.${DeploymentName}.${HostedZone}" }
+    },
+    "UaaDns": {
+      "Description": "API DNS name",
+      "Value": { "Fn::Sub": "uaa.system.${DeploymentName}.${HostedZone}" }
+    },
+    "DomainName": {
+      "Description": "Main DNS name",
+      "Value": { "Fn::Sub": "${DeploymentName}.${HostedZone}" }
+    }
+  }
+  },
+
+  "Conditions": {
+    "DeployElb": { "Fn::Equals": [ "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" }, "true" ] },
+
+    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" }, "true" ] },
+    "MultiAzAndAllocateLbIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" }, "true" ] },
+        { "Fn::Equals": [ "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" }, "true" ] }
+      ]
+    },
+    "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" }, "false" ] },
+    "SingleAzAndAllocateLbIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" }, "true" ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "StackProtection",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    },
+
+    "AppsExternalElbDnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "DeployElb",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbDnsName" }
+        ]
+      }
+    },
+
+    "AppsExternalSingleIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "SingleAzAndAllocateLbIp",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Ref": "ExternalAz1Ip" }
+        ]
+      }
+    },
+    "AppsExternalMultiIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAzAndAllocateLbIp",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsNames" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Ref": "ExternalAz1Ip" },
+          { "Ref": "ExternalAz2Ip" }
+        ]
+      }
+    },
+    "DirectorDnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorDnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshLiteIp" } }
+        ]
+      }
+    },
+    "NatSingleAzDnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "SingleAz",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatDnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz1" } }
+        ]
+      }
+    },
+    "NatMultiAzDnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAz",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatDnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz1" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz2" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz3" } }
+        ]
+      }
+    },
+    "NatAz1DnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1DnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz1" } }
+        ]
+      }
+    },
+    "NatAz2DnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAz",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2DnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz2" } }
+        ]
+      }
+    },
+    "NatAz3DnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAz",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3DnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz3" } }
+        ]
+      }
+    },
+    "SystemExternalDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "DeployElb",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbDnsName" } }
+        ]
+      }
+    },
+    "SystemExternalSingleAzIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "SingleAzAndAllocateLbIp",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } }
+        ]
+      }
+    },
+    "SystemExternalMultiAzIpDnsRR": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "MultiAzAndAllocateLbIp",
+      "Properties": {
+        "HostedZoneName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
+        "TTL": "3600",
+        "Type": "A",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz2Ip" } }
+        ]
+      }
+    }
+  }
+}
