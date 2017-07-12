@@ -46,7 +46,7 @@
   },
 
   "Conditions": {
-    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] }
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } }, "NONE" ] } ] }
   },
 
   "Resources": {
@@ -56,9 +56,9 @@
       "Properties": {
         "Parameters": {
           "StackArn": { "Ref": "AWS::StackId" },
-          "StackProtectionGroup": { "Ref": "StackProtectionGroup" },
-          "StackDeleteAllowDeny": { "Ref": "StackDeleteAllowDeny" },
-          "StackUpdateAllowDeny": { "Ref": "StackUpdateAllowDeny" }
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
         },
         "TemplateURL": {
           "Fn::Join": [
