@@ -1,0 +1,554 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Default": "v2",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "FullAccessCidr1": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Full Whitelisted Access CIDR 1",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccessCidr2": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Full Whitelisted Access CIDR 2",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccessCidr3": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Full Whitelisted Access CIDR 3",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccessCidr4": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Full Whitelisted Access CIDR 4",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccessCidr5": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Full Whitelisted Access CIDR 5",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccessCidr6": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Full Whitelisted Access CIDR 6",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+
+    "HttpAccessCidr1": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted HTTP(S) Access CIDR 1",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "HttpAccessCidr2": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted HTTP(S) Access CIDR 2",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "HttpAccessCidr3": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted HTTP(S) Access CIDR 3",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "HttpAccessCidr4": {
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "Whitelisted HTTP(S) Access CIDR 4",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    }
+  },
+
+  "Outputs": {},
+
+  "Conditions": {
+    "PermitFullAccessCidr1": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "FullAccessCidr1" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitFullAccessCidr2": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "FullAccessCidr2" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitFullAccessCidr3": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "FullAccessCidr3" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitFullAccessCidr4": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "FullAccessCidr4" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitFullAccessCidr5": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "FullAccessCidr5" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitFullAccessCidr6": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "FullAccessCidr6" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitHttpAccessCidr1": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "HttpAccessCidr1" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitHttpAccessCidr2": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "HttpAccessCidr2" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitHttpAccessCidr3": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "HttpAccessCidr3" }, "127.0.0.0/8" ] }
+      ]
+    },
+    "PermitHttpAccessCidr4": {
+      "Fn::Not": [
+        { "Fn::Equals": [ { "Ref": "HttpAccessCidr4" }, "127.0.0.0/8" ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "StackProtection",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "Stack-Protection-template.json"
+            ]
+          ]
+        }
+      }
+    },
+
+    "DirectorWhitelistCidr1": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr1",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "DirectorWhitelistCidr2": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr2",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "DirectorWhitelistCidr3": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr3",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "DirectorWhitelistCidr4": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr4",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "DirectorWhitelistCidr5": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr5",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "DirectorWhitelistCidr6": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr6",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistLbAccessCidr1": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr1",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistLbAccessCidr2": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr2",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistLbAccessCidr3": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr3",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistLbAccessCidr4": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr4",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistLbAccessCidr5": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr5",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistLbAccessCidr6": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitFullAccessCidr6",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "true",
+          "AllowDirectorAccess": "true",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistHttpAccessCidr1": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitHttpAccessCidr1",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr1" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistHttpAccessCidr2": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitHttpAccessCidr2",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr2" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistHttpAccessCidr3": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitHttpAccessCidr3",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr3" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    },
+    "WhitelistHttpAccessCidr4": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "PermitHttpAccessCidr4",
+      "Properties": {
+        "Parameters": {
+          "AllowCfSshAccess": "false",
+          "AllowDirectorAccess": "false",
+          "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
+          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr4" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      {
+                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+              },
+              "Templates",
+              "AWS-Bosh-whitelist-template.json"
+            ]
+          ]
+        }
+      }
+    }
+  }
+}
