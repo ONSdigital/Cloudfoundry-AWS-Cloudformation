@@ -31,25 +31,24 @@
       "Description": "Main DNS name",
       "Value": { "Fn::Sub": "${DeploymentName}.${HostedZone}" }
     }
-  }
   },
 
   "Conditions": {
-    "DeployElb": { "Fn::Equals": [ "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" }, "true" ] },
+    "DeployElb": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
 
-    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
     "MultiAzAndAllocateLbIp": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" }, "true" ] },
-        { "Fn::Equals": [ "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" }, "true" ] },
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" }, "true" ] }
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AllocateLbIp" } }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "false" ] }
       ]
     },
-    "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" }, "false" ] },
+    "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "false" ] },
     "SingleAzAndAllocateLbIp": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" }, "true" ] }
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] }
       ]
     }
   },
@@ -88,7 +87,7 @@
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbDnsName" }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbDnsName" } }
         ]
       }
     },

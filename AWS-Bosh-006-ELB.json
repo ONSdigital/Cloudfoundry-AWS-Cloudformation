@@ -21,12 +21,6 @@
       "MaxValue": "999"
     },
 
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
-    },
     "ElbScheme": {
       "Type": "String",
       "Default": "internet-facing",
@@ -50,23 +44,21 @@
   },
 
   "Outputs": {
-    "DeployElb": {
-      "Description": "Deploy ELB",
-      "Value": { "Ref": "DeployElb" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeployElb" } }
-    },
     "GenerateElbSslCertificate": {
       "Description": "Generate ELB SSL Certificate",
-      "Value": { "Ref": "DeployElb" },
+      "Condition": "DeployElb",
+      "Value": { "Ref": "GenerateElbSslCertificate" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-GenerateElbSslCertificate" } }
     },
     "ElbSslCertificateArn": {
       "Description": "Use Existing SSL Cerficate for ELB",
-      "Value": { "Ref": "DeployElb" },
+      "Condition": "DeployElb",
+      "Value": { "Ref": "ElbSslCertificateArn" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbSslCertificateArn" } }
     },
     "LbSecurityGroup": {
       "Description": "LB Security Groups",
+      "Condition": "DeployElb",
       "Value": { "Ref": "LbSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } }
     },
@@ -111,33 +103,33 @@
   "Conditions": {
     "GenerateElbSslCertificate": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] },
 	{ "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
     },
     "UseElbSslCertificateArn": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } ] }
       ]
     },
     "PlainTextElb": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
         { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
     },
 
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+    "DeployElb": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] }
       ]
     }
   },

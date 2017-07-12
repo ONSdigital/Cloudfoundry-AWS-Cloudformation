@@ -26,6 +26,12 @@
       "Description": "Deploy multiple AZs",
       "AllowedValues": [ "true", "false" ]
     },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
+    },
     "HostedZone": {
       "Type": "String",
       "Description": "DNS Zone",
@@ -101,6 +107,11 @@
       "Value": { "Ref": "MultiAz" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-MultiAz" } }
     },
+    "DeployElb": {
+      "Description": "Deploy ELB",
+      "Value": { "Ref": "DeployElb" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeployElb" } }
+    },
     "StackProtectionGroup": {
       "Description": "Stack Protection Group",
       "Value": { "Ref": "StackProtectionGroup" },
@@ -163,6 +174,12 @@
 
   "Conditions": {
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAzOrElb": {
+      "Fn::Or": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
+      ]
+    },
     "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } }, "NONE" ] } ] }
   },
 

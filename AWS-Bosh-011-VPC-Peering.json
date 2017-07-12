@@ -61,41 +61,41 @@
   "Conditions": {
     "Peer1Vpc": {
       "Fn::And": [
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer1Id" }, "NONE" ] ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer1" }, "127.0.0.1" ] ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcPeer1Id" }, "NONE" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcCidrPeer1" }, "127.0.0.1" ] } ] }
       ]
     },
     "Peer2Vpc": {
       "Fn::And": [
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer2Id" }, "NONE" ] ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer2" }, "127.0.0.1" ] ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcPeer2Id" }, "NONE" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcCidrPeer2" }, "127.0.0.1" ] } ] }
       ]
     },
     "Peer3Vpc": {
       "Fn::And": [
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer3Id" }, "NONE" ] ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer3" }, "127.0.0.1" ] ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcPeer3Id" }, "NONE" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcCidrPeer3" }, "127.0.0.1" ] } ] }
       ]
     },
     "MultiAzAndPeer1Vpc": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer1Id" }, "NONE" ] ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer1" }, "127.0.0.1" ] ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcPeer1Id" }, "NONE" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcCidrPeer1" }, "127.0.0.1" ] } ] }
       ]
     },
     "MultiAzAndPeer2Vpc": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer2Id" }, "NONE" ] ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer2" }, "127.0.0.1" ] ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcPeer2Id" }, "NONE" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcCidrPeer2" }, "127.0.0.1" ] } ] }
       ]
     },
     "MultiAzAndPeer3Vpc": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer3Id" }, "NONE" ] ] },
-        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer3" }, "127.0.0.1" ] ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcPeer3Id" }, "NONE" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "VpcCidrPeer3" }, "127.0.0.1" ] } ] }
       ]
     }
   },
@@ -129,40 +129,38 @@
       "Type" : "AWS::EC2::VPCPeeringConnection",
       "Condition": "Peer1Vpc",
       "Properties" : {
-          "PeerVpcId" : { "Ref": "VpcPeer1Id" },
-          "VpcId" : { "Ref": "CloudFoundryVpc" },
-          "Tags": [
-            { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer1" } },
-            { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-          ]
-        }
+        "PeerVpcId" : { "Ref": "VpcPeer1Id" },
+        "VpcId" : { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer1" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
       }
     },
     "VpcPeer2": {
       "Type" : "AWS::EC2::VPCPeeringConnection",
       "Condition": "Peer2Vpc",
       "Properties" : {
-          "PeerVpcId" : { "Ref": "VpcPeer1Id" },
-          "VpcId" : { "Ref": "CloudFoundryVpc" },
-          "Tags": [
-            { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer2" } },
-            { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-          ]
-        }
+        "PeerVpcId" : { "Ref": "VpcPeer1Id" },
+        "VpcId" : { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer2" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
       }
     },
     "VpcPeer3": {
       "Type" : "AWS::EC2::VPCPeeringConnection",
       "Condition": "Peer3Vpc",
       "Properties" : {
-          "PeerVpcId" : { "Ref": "VpcPeer3Id" },
-          "VpcId" : { "Ref": "CloudFoundryVpc" },
-          "Tags": [
-            { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer3" } },
-            { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-          ]
-        }
-      },
+        "PeerVpcId" : { "Ref": "VpcPeer3Id" },
+        "VpcId" : { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer3" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
 
     "DmzAz1InternetRoute": {
       "Type": "AWS::EC2::Route",
@@ -224,13 +222,13 @@
     "DmzPort3VpcCidrPeer1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistVpcCidrPeer1Port3",
-       "Properties": {
+      "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
         "CidrIp": { "Ref": "VpcCidrPeer1" },
         "FromPort": "",
         "ToPort": "",
         "IpProtocol": ""
-       }
-     }
+      }
+    }
   }
 }

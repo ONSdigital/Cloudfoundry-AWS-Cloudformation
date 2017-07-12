@@ -18,12 +18,6 @@
       "Default": "true",
       "Description": "Allocate External IP (eg for HA Proxy)",
       "AllowedValues": [ "true", "false" ]
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -84,18 +78,18 @@
     "AllocateLbIp": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] }
       ]
     },
 
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+    "DeployElb": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
     "MultiAzAndAllocateLbIp": {
       "Fn::And": [
         { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
+        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] }
       ]
     }
   },
