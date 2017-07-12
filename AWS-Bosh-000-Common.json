@@ -162,6 +162,7 @@
   },
 
   "Conditions": {
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] }
   },
 
