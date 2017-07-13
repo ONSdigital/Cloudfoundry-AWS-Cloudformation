@@ -103,6 +103,16 @@
         ]
       }
     },
+    "DmzAz1RouteTable": {
+      "Description": "DMZ AZ1 Route Table",
+      "Value": { "Ref": "DmzAz1RouteTable" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } }
+    },
+    "DmzAz2RouteTable": {
+      "Description": "DMZ AZ2 Route Table",
+      "Value": { "Ref": "DmzAz2RouteTable" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } }
+    },
     "DmzSecurityGroup": {
       "Description": "DMZ Security Groups",
       "Value": { "Ref": "DmzSecurityGroup" },
