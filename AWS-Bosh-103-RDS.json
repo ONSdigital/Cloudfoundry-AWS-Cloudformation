@@ -329,6 +329,17 @@
       "Description": "RDS Broker User Name",
       "Condition": "DeployRdsAppsInstance",
       "Value": { "Ref": "RdsBrokerUser" }
+    },
+
+    "RdsAppsInstanceDns": {
+      "Description": "RDS Apps Instance DNS Name",
+      "Condition": "DeployRdsAppsInstance",
+      "Value": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] }
+    },
+    "RdsCfsInstanceDns": {
+      "Description": "RDS CF Instance DNS Name",
+      "Condition": "DeployRdsCfInstance",
+      "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] }
     }
   },
 
