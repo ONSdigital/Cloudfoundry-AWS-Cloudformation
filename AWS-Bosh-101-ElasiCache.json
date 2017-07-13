@@ -20,14 +20,14 @@
     },
     "ElastiCacheAz1Cidr": {
       "Type": "String",
-      "Default": "10.0.10.0/24",
+      "Default": "10.0.20.0/24",
       "Description": "ElastiCache AZ1 CIDR",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ElastiCacheAz2Cidr": {
       "Type": "String",
-      "Default": "10.0.11.0/24",
+      "Default": "10.0.21.0/24",
       "Description": "ElastiCache AZ2 CIDR",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
