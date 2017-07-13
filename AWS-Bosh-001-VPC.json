@@ -45,14 +45,9 @@
     }
   },
 
-  "Conditions": {
-    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } }, "NONE" ] } ] }
-  },
-
   "Resources": {
     "StackProtection": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "StackProtection",
       "Properties": {
         "Parameters": {
           "StackArn": { "Ref": "AWS::StackId" },

@@ -127,7 +127,7 @@
     "NatAz1Gateway": {
       "Type": "AWS::EC2::NatGateway",
       "Properties": {
-        "AllocationId": { "Fn::GetAtt": [ "NatAz1Ip", "AllocationId" ] },
+        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip-AllocationId" } },
         "SubnetId": { "Ref": "NatAz1Subnet" }
       }
     },
@@ -135,7 +135,7 @@
       "Type": "AWS::EC2::NatGateway",
       "Condition": "MultiAz",
       "Properties": {
-        "AllocationId": { "Fn::GetAtt": [ "NatAz2Ip", "AllocationId" ] },
+        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip-AllocationId" } },
         "SubnetId": { "Ref": "NatAz2Subnet" }
       }
     },
@@ -143,7 +143,7 @@
       "Type": "AWS::EC2::NatGateway",
       "Condition": "MultiAz",
       "Properties": {
-        "AllocationId": { "Fn::GetAtt": [ "NatAz3Ip", "AllocationId" ] },
+        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip-AllocationId" } },
         "SubnetId": { "Ref": "NatAz3Subnet" }
       }
     },
@@ -185,7 +185,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "NatAz1Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
     "NatAz2SubnetRouteTableAssociation": {
@@ -193,7 +193,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "SubnetId": { "Ref": "NatAz2Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
     "NatAz3SubnetRouteTableAssociation": {
@@ -201,7 +201,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "SubnetId": { "Ref": "NatAz3Subnet" },
-        "RouteTableId": { "Ref": "InternetRouteTable" }
+        "RouteTableId":{ "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
     "NatAz1InternetRoute": {

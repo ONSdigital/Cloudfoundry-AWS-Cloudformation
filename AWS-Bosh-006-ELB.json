@@ -125,7 +125,7 @@
 
     "DeployElb": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
 
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
         { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
@@ -137,7 +137,6 @@
   "Resources": {
     "StackProtection": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "StackProtection",
       "Properties": {
         "Parameters": {
           "StackArn": { "Ref": "AWS::StackId" },

@@ -56,7 +56,6 @@
   "Resources": {
     "StackProtection": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "StackProtection",
       "Properties": {
         "Parameters": {
           "StackArn": { "Ref": "AWS::StackId" },
@@ -101,7 +100,7 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Ref": "ExternalAz1Ip" }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } }
         ]
       }
     },
@@ -114,8 +113,8 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Ref": "ExternalAz1Ip" },
-          { "Ref": "ExternalAz2Ip" }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz2Ip" } }
         ]
       }
     },

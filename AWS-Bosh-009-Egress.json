@@ -69,7 +69,6 @@
   "Resources": {
     "StackProtection": {
       "Type": "AWS::CloudFormation::Stack",
-      "Condition": "StackProtection",
       "Properties": {
         "Parameters": {
           "StackArn": { "Ref": "AWS::StackId" },
