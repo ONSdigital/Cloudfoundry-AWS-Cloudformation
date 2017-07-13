@@ -55,6 +55,7 @@
     },
     "RdsAppsInstanceBackupRetentionPeriod": {
       "Type": "Number",
+      "Description": "RDS Apps Instnace Backup Retention Period",
       "Default": "90",
       "MinValue": "5",
       "MaxValue": "3650"
@@ -89,6 +90,7 @@
     },
     "RdsAppsInstanceStorageSize": {
       "Type": "Number",
+      "Description": "RDS Apps Instance Storage Size",
       "Default": "25",
       "MinValue": "5",
       "MaxValue": "6144"
@@ -136,6 +138,7 @@
     },
     "RdsCfInstanceBackupRetentionPeriod": {
       "Type": "Number",
+      "Description": "RDS CF Instnace Backup Retention Period",
       "Default": "90",
       "MinValue": "5",
       "MaxValue": "3650"
@@ -171,6 +174,7 @@
     "RdsCfInstanceStorageSize": {
       "Type": "Number",
       "Default": "25",
+      "Description": "RDS CF Instance Storage Size",
       "MinValue": "5",
       "MaxValue": "6144"
     },
