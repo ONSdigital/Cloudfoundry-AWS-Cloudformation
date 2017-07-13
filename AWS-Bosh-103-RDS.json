@@ -600,6 +600,34 @@
       "Properties": {
         "UserName": { "Ref": "RdsBrokerUser" }
       }
+    },
+
+    "RdsAppsInstanceDnsRrr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "DeployRdsAppsInstance",
+      "Properties": {
+        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
+        "Name": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Address" ] }
+        ]
+      }
+    },
+
+    "RdsCfInstanceDnsRrr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "DeployRdsCfInstance",
+      "Properties": {
+        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
+        "Name": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Address" ] }
+        ]
+      }
     }
   }
 }
