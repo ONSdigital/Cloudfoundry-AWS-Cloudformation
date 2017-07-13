@@ -131,7 +131,7 @@
       "Description": "SSL Validation Domain",
       "Value": {
         "Fn::If": [
-          { "Fn::Equals": [ { "Ref": "SslValidationDomain" }, "" ] },
+          "UseHostedZone",
           { "Ref": "HostedZone" },
           { "Ref": "SslValidationDomain" }
         ]
@@ -178,6 +178,7 @@
   },
 
   "Conditions": {
+    "UseHostedZone": { "Fn::Equals": [ { "Ref": "SslValidationDomain" }, "" ] },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
   },
 
