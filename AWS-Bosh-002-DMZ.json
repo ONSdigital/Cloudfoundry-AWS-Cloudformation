@@ -166,7 +166,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAzOrElb",
       "Properties": {
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } },
         "CidrBlock": { "Ref": "DmzAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
