@@ -5,7 +5,6 @@
   "Parameters": {
     "DeploymentName": {
       "Type": "String",
-      "Default": "v2",
       "Description": "Deployment Name",
       "MinLength": "1",
       "MaxLength": "16",
@@ -86,7 +85,13 @@
     }
   },
 
-  "Outputs": {},
+  "Outputs": {
+    "DirectorSecurityGroup": {
+      "Description": "Director Security Group",
+      "Value": { "Ref": "DirectorSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } }
+    }
+  },
 
   "Conditions": {
     "PermitFullAccessCidr1": {
@@ -158,7 +163,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "Stack-Protection-template.json"
+              "Stack-Protection.json"
             ]
           ]
         }
@@ -173,7 +178,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
         },
         "TemplateURL": {
@@ -183,7 +188,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -197,7 +202,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
         },
         "TemplateURL": {
@@ -207,7 +212,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -221,7 +226,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
         },
         "TemplateURL": {
@@ -231,7 +236,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -245,7 +250,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
         },
         "TemplateURL": {
@@ -255,7 +260,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -269,7 +274,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
         },
         "TemplateURL": {
@@ -279,7 +284,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -293,7 +298,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
         },
         "TemplateURL": {
@@ -303,7 +308,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -317,7 +322,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
         },
         "TemplateURL": {
@@ -327,7 +332,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -341,7 +346,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
         },
         "TemplateURL": {
@@ -351,7 +356,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -365,7 +370,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
         },
         "TemplateURL": {
@@ -375,7 +380,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -389,7 +394,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
         },
         "TemplateURL": {
@@ -399,7 +404,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -413,7 +418,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
         },
         "TemplateURL": {
@@ -423,7 +428,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -437,7 +442,7 @@
           "AllowCfSshAccess": "true",
           "AllowDirectorAccess": "true",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
         },
         "TemplateURL": {
@@ -447,7 +452,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -461,7 +466,7 @@
           "AllowCfSshAccess": "false",
           "AllowDirectorAccess": "false",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr1" }
         },
         "TemplateURL": {
@@ -471,7 +476,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -485,7 +490,7 @@
           "AllowCfSshAccess": "false",
           "AllowDirectorAccess": "false",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr2" }
         },
         "TemplateURL": {
@@ -495,7 +500,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -509,7 +514,7 @@
           "AllowCfSshAccess": "false",
           "AllowDirectorAccess": "false",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr3" }
         },
         "TemplateURL": {
@@ -519,7 +524,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
@@ -533,7 +538,7 @@
           "AllowCfSshAccess": "false",
           "AllowDirectorAccess": "false",
           "DirectorSecurityGroup": { "Ref": "DirectorSecurityGroup" },
-          "LbSecurityGroup": { "Ref": "LbSecurityGroup" },
+          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr4" }
         },
         "TemplateURL": {
@@ -543,10 +548,29 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "AWS-Bosh-whitelist-template.json"
+              "External-Access-Whitelist.json"
             ]
           ]
         }
+      }
+    },
+
+    "DirectorSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Director Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
+          { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
       }
     }
   }

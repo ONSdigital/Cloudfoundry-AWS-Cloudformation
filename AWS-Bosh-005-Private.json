@@ -5,7 +5,6 @@
   "Parameters": {
     "DeploymentName": {
       "Type": "String",
-      "Default": "v2",
       "Description": "Deployment Name",
       "MinLength": "1",
       "MaxLength": "16",
@@ -33,6 +32,12 @@
       "Description": "Private AZ3 CIDR",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -117,7 +122,7 @@
   },
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
   },
 
   "Resources": {
@@ -137,7 +142,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "Stack-Protection-template.json"
+              "Stack-Protection.json"
             ]
           ]
         }
@@ -146,7 +151,7 @@
     "PrivateAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone1" } },
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
         "CidrBlock": { "Ref": "PrivateAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
@@ -160,7 +165,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAz",
       "Properties": {
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone2" } },
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } },
         "CidrBlock": { "Ref": "PrivateAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
@@ -174,7 +179,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAz",
       "Properties": {
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone3" } },
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone3" } },
         "CidrBlock": { "Ref": "PrivateAz3Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
@@ -213,6 +218,12 @@
       "Properties": {
         "GroupDescription": "Private In Out",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }

@@ -5,7 +5,6 @@
   "Parameters": {
     "DeploymentName": {
       "Type": "String",
-      "Default": "v2",
       "Description": "Deployment Name",
       "MinLength": "1",
       "MaxLength": "16",
@@ -24,12 +23,6 @@
       "Type": "String",
       "Default": "true",
       "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
     },
     "HostedZone": {
@@ -66,7 +59,7 @@
       "Description": "Stack protection group",
       "Default": "NONE",
       "AllowedPattern": "^[A-Za-z0-9-]+$",
-      "ConstraintDescription": "Can valid group name"
+      "ConstraintDescription": "Valid group name"
     },
     "StackDeleteAllowDeny": {
       "Type": "String",
@@ -76,7 +69,7 @@
     },
     "StackUpdateAllowDeny": {
       "Type": "String",
-      "Default": "Deny",
+      "Default": "Allow",
       "Description": "Update Policy Allow/Deny",
       "AllowedValues": [ "Allow", "Deny" ]
     }
@@ -89,28 +82,23 @@
     },
     "AwsAvailabilityZone1": {
       "Description": "AWS Availability Zone 1",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": "AWS::Region" } ] },
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } }
     },
     "AwsAvailabilityZone2": {
       "Description": "AWS Availability Zone 2",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": "AWS::Region" } ] },
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } }
     },
     "AwsAvailabilityZone3": {
       "Description": "AWS Availability Zone 3",
-      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": "AWS::Region" } ] },
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone3" } }
     },
     "MultiAz": {
       "Description": "Multi AZ?",
       "Value": { "Ref": "MultiAz" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-MultiAz" } }
-    },
-    "DeployElb": {
-      "Description": "Deploy ELB",
-      "Value": { "Ref": "DeployElb" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeployElb" } }
     },
     "StackProtectionGroup": {
       "Description": "Stack Protection Group",
@@ -173,13 +161,7 @@
   },
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-    "MultiAzOrElb": {
-      "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
-      ]
-    }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
   },
 
   "Resources": {
@@ -188,9 +170,9 @@
       "Properties": {
         "Parameters": {
           "StackArn": { "Ref": "AWS::StackId" },
-          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
-          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
-          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+          "StackProtectionGroup": { "Ref": "StackProtectionGroup" },
+          "StackDeleteAllowDeny": { "Ref": "StackDeleteAllowDeny" },
+          "StackUpdateAllowDeny": { "Ref": "StackUpdateAllowDeny" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -199,7 +181,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "Stack-Protection-template.json"
+              "Stack-Protection.json"
             ]
           ]
         }

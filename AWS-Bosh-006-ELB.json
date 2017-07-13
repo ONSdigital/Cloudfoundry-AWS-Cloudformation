@@ -5,7 +5,6 @@
   "Parameters": {
     "DeploymentName": {
       "Type": "String",
-      "Default": "v2",
       "Description": "Deployment Name",
       "MinLength": "1",
       "MaxLength": "16",
@@ -40,6 +39,18 @@
       "Description": "Use pre-loaded SSL certificate",
       "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+|NONE)$",
       "ConstraintDescription": "AWS ACM SSL certificate ARN or NONE"
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -101,35 +112,35 @@
   },
 
   "Conditions": {
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+
     "GenerateElbSslCertificate": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "true" ] },
 	{ "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
     },
     "UseElbSslCertificateArn": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } ] }
       ]
     },
     "PlainTextElb": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateElbSslCertificate" }, "false" ] },
         { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] }
       ]
     },
 
-    "DeployElb": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
-
-    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] }
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
       ]
     }
   },
@@ -151,7 +162,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "Stack-Protection-template.json"
+              "Stack-Protection.json"
             ]
           ]
         }
@@ -262,6 +273,12 @@
       "Properties": {
         "GroupDescription": "ELB Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }

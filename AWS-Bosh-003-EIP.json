@@ -5,7 +5,6 @@
   "Parameters": {
     "DeploymentName": {
       "Type": "String",
-      "Default": "v2",
       "Description": "Deployment Name",
       "MinLength": "1",
       "MaxLength": "16",
@@ -17,6 +16,18 @@
       "Type": "String",
       "Default": "true",
       "Description": "Allocate External IP (eg for HA Proxy)",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
     }
   },
@@ -85,18 +96,18 @@
     "AllocateLbIp": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] }
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     },
 
-    "DeployElb": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] },
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] },
 
-    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndAllocateLbIp": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] }
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     }
   },
@@ -118,7 +129,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "Stack-Protection-template.json"
+              "Stack-Protection.json"
             ]
           ]
         }

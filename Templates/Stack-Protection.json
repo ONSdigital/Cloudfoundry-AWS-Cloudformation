@@ -6,7 +6,7 @@
     "StackArn": {
       "Type": "String",
       "Description": "Stack ARN",
-      "AllowedPattern": "^arn:aws::cloudformation:[a-z]+-[a-z]+-[0-9]+:[0-9]+:stack/[a-z0-9-]+/[0-9a-f]{8}-([0-9a-f]{4}-){2}[a-z0-9-]{12}$",
+      "AllowedPattern": "^arn:aws:cloudformation:[a-z]+-[a-z]+-[0-9]+:[0-9]+:stack/[A-Za-z0-9-]+/[0-9a-f]{8}-([0-9a-f]{4}-){3}[a-z0-9]{12}$",
       "ConstraintDescription": "Must be a valid Cloudformation Stack ARN"
     },
 
@@ -26,7 +26,7 @@
     },
     "StackUpdateAllowDeny": {
       "Type": "String",
-      "Default": "Deny",
+      "Default": "Allow",
       "Description": "Update Policy Allow/Deny",
       "AllowedValues": [ "Allow", "Deny" ]
     }

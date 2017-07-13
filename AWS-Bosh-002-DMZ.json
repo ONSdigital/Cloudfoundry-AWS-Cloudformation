@@ -5,7 +5,6 @@
   "Parameters": {
     "DeploymentName": {
       "Type": "String",
-      "Default": "v2",
       "Description": "Deployment Name",
       "MinLength": "1",
       "MaxLength": "16",
@@ -25,6 +24,18 @@
       "Description": "DMZ AZ2 CIDR",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -96,16 +107,21 @@
       "Description": "DMZ Security Groups",
       "Value": { "Ref": "DmzSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } }
+    },
+    "LbSecurityGroup": {
+      "Description": "LB Security Groups",
+      "Value": { "Ref": "LbSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } }
     }
   },
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
-    "SingleAz": { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "false" ] },
+    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-MultiAz" } }, "true" ] },
-        { "Fn::Equals": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployElb" } }, "true" ] }
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
       ]
     }
   },
@@ -127,7 +143,7 @@
                 "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
-              "Stack-Protection-template.json"
+              "Stack-Protection.json"
             ]
           ]
         }
@@ -136,7 +152,7 @@
     "DmzAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone1" } },
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
         "CidrBlock": { "Ref": "DmzAz1Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
@@ -150,7 +166,7 @@
       "Type": "AWS::EC2::Subnet",
       "Condition": "MultiAzOrElb",
       "Properties": {
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AvailabilityZone1" } },
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
         "CidrBlock": { "Ref": "DmzAz2Cidr" },
         "MapPublicIpOnLaunch": false,
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
@@ -204,8 +220,33 @@
       "Properties": {
         "GroupDescription": "DMZ In Out",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "LbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Director Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
+          { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
