@@ -33,6 +33,7 @@
     },
     "SslValidationDomain": {
       "Type": "String",
+      "Default": "",
       "Description": "Domain to send the SSL validation emails to. Should be empty, or a the parent domain of HostedZone",
       "AllowedPattern": "^((([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,})?$",
       "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"

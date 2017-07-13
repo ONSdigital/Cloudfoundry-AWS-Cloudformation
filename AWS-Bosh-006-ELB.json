@@ -67,12 +67,6 @@
       "Value": { "Ref": "ElbSslCertificateArn" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbSslCertificateArn" } }
     },
-    "LbSecurityGroup": {
-      "Description": "LB Security Groups",
-      "Condition": "DeployElb",
-      "Value": { "Ref": "LbSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } }
-    },
     "ExternalElb": {
       "Description": "External ELB",
       "Condition": "DeployElb",
@@ -211,7 +205,7 @@
           "Enabled" : "true",
           "Timeout" : { "Ref": "ElbTimeout" }
         },
-        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -236,7 +230,7 @@
           "Enabled" : "true",
           "Timeout" : { "Ref": "ElbTimeout" }
         },
-        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -259,28 +253,9 @@
           "Enabled" : "true",
           "Timeout" : { "Ref": "ElbTimeout" }
         },
-        "SecurityGroups": [ { "Ref": "LbSecurityGroup" } ],
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-
-    "LbSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployElb",
-      "Properties": {
-        "GroupDescription": "ELB Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
