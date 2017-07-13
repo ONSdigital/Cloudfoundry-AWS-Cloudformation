@@ -132,7 +132,7 @@
     "NatAz1Gateway": {
       "Type": "AWS::EC2::NatGateway",
       "Properties": {
-        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip-AllocationId" } },
+        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz1-AllocationId" } },
         "SubnetId": { "Ref": "NatAz1Subnet" }
       }
     },
@@ -140,7 +140,7 @@
       "Type": "AWS::EC2::NatGateway",
       "Condition": "MultiAz",
       "Properties": {
-        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip-AllocationId" } },
+        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz2-AllocationId" } },
         "SubnetId": { "Ref": "NatAz2Subnet" }
       }
     },
@@ -148,7 +148,7 @@
       "Type": "AWS::EC2::NatGateway",
       "Condition": "MultiAz",
       "Properties": {
-        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip-AllocationId" } },
+        "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz3-AllocationId" } },
         "SubnetId": { "Ref": "NatAz3Subnet" }
       }
     },

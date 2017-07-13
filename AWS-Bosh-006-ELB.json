@@ -159,7 +159,7 @@
           "Fn::Join": [
             "/", [
               {
-                "Fn::ImportValue": { "Fn::Sub": "${AWS::StackName}-preamble-TemplatesBucketHttpUrl" }
+                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
               },
               "Templates",
               "Stack-Protection.json"
@@ -180,11 +180,11 @@
         "DomainValidationOptions" : [
           {
             "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
-            "ValidationDomain" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Hostzone" } }
+            "ValidationDomain" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SslValidationDomain" } }
           },
           {
             "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
-            "ValidationDomain" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Hostzone" } }
+            "ValidationDomain" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SslValidationDomain" } }
           }
         ],
         "Tags": [

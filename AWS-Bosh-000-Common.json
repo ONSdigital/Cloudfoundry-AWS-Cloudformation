@@ -31,6 +31,12 @@
       "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,}$",
       "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
     },
+    "SslValidationDomain": {
+      "Type": "String",
+      "Description": "Domain to send the SSL validation emails to. Should be empty, or a the parent domain of HostedZone",
+      "AllowedPattern": "^((([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,})?$",
+      "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
+    },
     "AwsAvailabilityZone1": {
       "Type": "Number",
       "Default": "0",
@@ -120,6 +126,17 @@
       "Description": "Hosted Zone",
       "Value": { "Ref": "HostedZone" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+    },
+    "SslValidationDomain": {
+      "Description": "SSL Validation Domain",
+      "Value": {
+        "Fn::If": [
+          { "Fn::Equals": [ { "Ref": "SslValidationDomain" }, "" ] },
+          { "Ref": "HostedZone" },
+          { "Ref": "SslValidationDomain" }
+        ]
+      },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SslValidationDomain" } }
     },
     "AppsDnsName": {
       "Description": "Apps DNS Name",

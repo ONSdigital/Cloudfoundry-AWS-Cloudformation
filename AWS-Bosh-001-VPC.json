@@ -27,6 +27,11 @@
       "Value": { "Ref": "CloudFoundryVpc" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } }
     },
+    "VpcCidr": {
+      "Description": "VPC CIDR",
+      "Value": { "Ref": "VpcCidr" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }
+    },
     "InternetGateway": {
       "Description": "InternetGateway ID",
       "Value": { "Ref": "InternetGateway" },
