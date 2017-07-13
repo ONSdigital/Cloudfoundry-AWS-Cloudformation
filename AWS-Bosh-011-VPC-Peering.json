@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "AWS CloudFormation Bosh",
+  "Description": "VPC Peering",
 
   "Parameters": {
     "DeploymentName": {
@@ -163,6 +163,144 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer3" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
+      }
+    },
+
+    "VpcPeer1DmzAz1Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer1Cidr" },
+        "RouteTableId": { "Ref": "DmzAz1RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer1Id" }
+      }
+    },
+    "VpcPeer1DmzAz2Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer1Cidr" },
+        "RouteTableId": { "Ref": "DmzAz2RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer1Id" }
+      }
+    },
+    "VpcPeer1PrivateAz1Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer1Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz1RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer1Id" }
+      }
+    },
+    "VpcPeer1PrivateAz2Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer1Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz2RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer1Id" }
+      }
+    },
+    "VpcPeer1PrivateAz3Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer1Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz3RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer1Id" }
+      }
+    },
+
+    "VpcPeer2DmzAz1Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer2Cidr" },
+        "RouteTableId": { "Ref": "DmzAz1RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer2Id" }
+      }
+    },
+    "VpcPeer2DmzAz2Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer2Cidr" },
+        "RouteTableId": { "Ref": "DmzAz2RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer2Id" }
+      }
+    },
+    "VpcPeer2PrivateAz1Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer2Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz1RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer2Id" }
+      }
+    },
+    "VpcPeer2PrivateAz2Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer2Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz2RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer2Id" }
+      }
+    },
+    "VpcPeer2PrivateAz3Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer2Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz3RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer1Id" }
+      }
+    },
+
+    "VpcPeer3DmzAz1Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer3Cidr" },
+        "RouteTableId": { "Ref": "DmzAz1RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer3Id" }
+      }
+    },
+    "VpcPeer3DmzAz2Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer3Cidr" },
+        "RouteTableId": { "Ref": "DmzAz2RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer3Id" }
+      }
+    },
+    "VpcPeer3PrivateAz1Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer3Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz1RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer3Id" }
+      }
+    },
+    "VpcPeer3PrivateAz2Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer3Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz2RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer3Id" }
+      }
+    },
+    "VpcPeer3PrivateAz3Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock" : { "Ref": "VpcPeer3Cidr" },
+        "RouteTableId": { "Ref": "PrivateAz3RouteTable" },
+        "VpcPeeringConnectionId" : { "Ref": "VpcPeer1Id" }
       }
     }
   }
