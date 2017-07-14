@@ -87,6 +87,10 @@
       "Description": "Organisation",
       "Value": { "Ref": "Organisation" }
     },
+    "AwsRegion": {
+      "Description": "AWS Region",
+      "Value": { "Ref": "AWS::Region" }
+    },
     "AwsAvailabilityZone1": {
       "Description": "AWS Availability Zone 1",
       "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
@@ -141,7 +145,7 @@
     },
     "AppsDnsName": {
       "Description": "Apps DNS Name",
-      "Value": { "Fn::Sub": "*.apps.${DeploymentName}.${HostedZone}" },
+      "Value": { "Fn::Sub": "'*.apps.${DeploymentName}.${HostedZone}'" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } }
     },
     "DirectorDnsName": {
@@ -173,7 +177,7 @@
     },
     "SystemDnsName": {
       "Description": "System DNS Name",
-      "Value": { "Fn::Sub": "*.system.${DeploymentName}.${HostedZone}" },
+      "Value": { "Fn::Sub": "'*.system.${DeploymentName}.${HostedZone}'" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } }
     }
   },
