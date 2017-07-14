@@ -114,6 +114,47 @@
         ]
       }
     },
+    "PrivateAz1DefaultRoute": {
+      "Description": "Private AZ1 Default Route",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
+            "1"
+          ]
+        ]
+      }
+    },
+    "PrivateAz2DefaultRoute": {
+      "Description": "Private AZ2 Default Route",
+      "Condition": "MultiAz",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
+            "1"
+          ]
+        ]
+      }
+    },
+    "PrivateAz3DefaultRoute": {
+      "Description": "Private AZ3 Default Route",
+      "Condition": "MultiAz",
+      "Value": {
+	"Fn::Join": [
+          ".", [
+            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
+            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
+            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
+            "1"
+          ]
+        ]
+      }
+    },
     "PrivateSecurityGroup": {
       "Description": "Private Security Groups",
       "Value": { "Ref": "PrivateSecurityGroup" },
