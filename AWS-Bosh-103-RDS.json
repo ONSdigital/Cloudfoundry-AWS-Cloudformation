@@ -613,7 +613,7 @@
       }
     },
 
-    "RdsAppsInstanceDnsRrr": {
+    "RdsAppsInstanceDns": {
       "Type": "AWS::Route53::RecordSet",
       "Condition": "DeployRdsAppsInstance",
       "Properties": {
@@ -627,7 +627,7 @@
       }
     },
 
-    "RdsCfInstanceDnsRrr": {
+    "RdsCfInstanceDns": {
       "Type": "AWS::Route53::RecordSet",
       "Condition": "DeployRdsCfInstance",
       "Properties": {
