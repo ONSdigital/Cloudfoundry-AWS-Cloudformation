@@ -31,13 +31,6 @@
       "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,}$",
       "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
     },
-    "SslValidationDomain": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Domain to send the SSL validation emails to. Should be empty, or a the parent domain of HostedZone",
-      "AllowedPattern": "^((([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,})?$",
-      "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
-    },
     "AwsAvailabilityZone1": {
       "Type": "Number",
       "Default": "0",
@@ -132,21 +125,13 @@
       "Value": { "Ref": "HostedZone" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
     },
-    "SslValidationDomain": {
-      "Description": "SSL Validation Domain",
-      "Value": {
-        "Fn::If": [
-          "UseHostedZone",
-          { "Ref": "HostedZone" },
-          { "Ref": "SslValidationDomain" }
-        ]
-      },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SslValidationDomain" } }
-    },
     "AppsDnsName": {
       "Description": "Apps DNS Name",
-      "Value": { "Fn::Sub": "'*.apps.${DeploymentName}.${HostedZone}'" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } }
+      "Value": { "Fn::Sub": "'*.apps.${DeploymentName}.${HostedZone}'" }
+    },
+    "AppsDnsNameQuoted": {
+      "Description": "Apps DNS Name (quoted)",
+      "Value": { "Fn::Sub": "\"*.apps.${DeploymentName}.${HostedZone}\"" }
     },
     "DirectorDnsName": {
       "Description": "Director DNS Name",
@@ -177,13 +162,16 @@
     },
     "SystemDnsName": {
       "Description": "System DNS Name",
-      "Value": { "Fn::Sub": "'*.system.${DeploymentName}.${HostedZone}'" },
+      "Value": { "Fn::Sub": "*.system.${DeploymentName}.${HostedZone}" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } }
+    },
+    "SystemDnsNameQuoted": {
+      "Description": "System DNS Name",
+      "Value": { "Fn::Sub": "\"*.system.${DeploymentName}.${HostedZone}\"" }
     }
   },
 
   "Conditions": {
-    "UseHostedZone": { "Fn::Equals": [ { "Ref": "SslValidationDomain" }, "" ] },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
   },
 

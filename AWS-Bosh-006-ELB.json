@@ -29,7 +29,7 @@
 
     "GenerateElbSslCertificate": {
       "Type": "String",
-      "Default": "false",
+      "Default": "true",
       "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
       "AllowedValues": [ "true", "false" ]
     },
@@ -45,6 +45,13 @@
       "Default": "true",
       "Description": "Deploy multiple AZs",
       "AllowedValues": [ "true", "false" ]
+    },
+    "SslValidationDomain": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Domain to send the SSL validation emails to. Should be empty, or a the parent domain of HostedZone",
+      "AllowedPattern": "^((([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,})?$",
+      "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
     },
     "DeployElb": {
       "Type": "String",
@@ -122,6 +129,7 @@
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ElbSslCertificateArn" }, "NONE" ] } ] }
       ]
     },
+    "UseHostedZone": { "Fn::Equals": [ { "Ref": "SslValidationDomain" }, "" ] },
     "PlainTextElb": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
@@ -174,11 +182,23 @@
         "DomainValidationOptions" : [
           {
             "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
-            "ValidationDomain" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SslValidationDomain" } }
+            "ValidationDomain" : {
+              "Fn::If": [
+                "UseHostedZone",
+		{ "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+                { "Ref": "SslValidationDomain" }
+              ]
+            }
           },
           {
             "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
-            "ValidationDomain" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SslValidationDomain" } }
+            "ValidationDomain" : {
+              "Fn::If": [
+                "UseHostedZone",
+		{ "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
+                { "Ref": "SslValidationDomain" }
+              ]
+            }
           }
         ],
         "Tags": [
