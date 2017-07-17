@@ -110,9 +110,9 @@
           ]
         ]
       },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1CidrPrefix" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1DefaultRoute" } }
     },
-    "RabbitmqAz1DefaultRoute": {
+    "RabbitmqAz2DefaultRoute": {
       "Description": "RabbitMQ AZ2 Default Route",
       "Condition": "CreateRabbitmqNetworks",
       "Value": {
@@ -125,7 +125,7 @@
           ]
         ]
       },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1CidrPrefix" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2CidrDefaultRoute" } }
     },
 
     "RabbitmqSecurityGroup": {
