@@ -39,7 +39,7 @@
       "Value": { "Ref": "AllocateLbIp" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AllocateLbIp" } }
     },
-    "BoshLiteIp": {
+    "BoshLitePublicIp": {
       "Description": "Bosh Lite (Bootstrap) IP",
       "Value": { "Ref": "BoshLiteIp" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshLiteIp" } }
