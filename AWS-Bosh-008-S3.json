@@ -14,69 +14,64 @@
   },
 
   "Outputs": {
+    "S3BoshBucketAccessInstanceProfile": {
+      "Description": "S3 Bosh Bucket Access Instance Profile",
+      "Value": { "Ref": "S3BoshBucketAccessInstanceProfile" }
+    },
     "S3BucketAccessInstanceProfile": {
       "Description": "S3 Bucket Access Instance Profile",
       "Value": { "Ref": "S3BucketAccessInstanceProfile" }
     },
 
-    "BoshBlobstoreBucket": {
+    "S3BoshBlobstoreBucket": {
       "Description": "S3 Blobstore Bucket",
-      "Value": { "Ref": "BlobstoreBucket" }
+      "Value": { "Ref": "S3BoshBlobstoreBucket" }
     }, 
-    "BoshCompiledPackageCacheBucket": {
+    "S3BoshCompiledPackageCacheBucket": {
       "Description": "S3 Bosh Compiled Package Cache Bucket",
-      "Value": { "Ref": "BoshCompiledPackageCacheBucket" }
+      "Value": { "Ref": "S3BoshCompiledPackageCacheBucket" }
     }, 
-    "BoshDirectorBackupBucket": {
+    "S3BoshDirectorBackupBucket": {
       "Description": "S3 Director Backup Bucket",
-      "Value": { "Ref": "BoshDirectorBackupBucket" }
+      "Value": { "Ref": "S3BoshDirectorBackupBucket" }
     }, 
 
-    "BlobstoreBucket": {
+    "S3BlobstoreBucket": {
       "Description": "S3 Blobstore Bucket",
-      "Value": { "Ref": "BlobstoreBucket" }
+      "Value": { "Ref": "S3BlobstoreBucket" }
     },
-    "BuildpackBucket": {
+    "S3BuildpackBucket": {
       "Description": "S3 Buildpack Bucket",
-      "Value": { "Ref": "BuildpackBucket" }
+      "Value": { "Ref": "S3BuildpackBucket" }
     },
-    "DropletBucket": {
+    "S3DropletBucket": {
       "Description": "S3 Droplet Bucket",
-      "Value": { "Ref": "DropletBucket" }
+      "Value": { "Ref": "S3DropletBucket" }
     },
-    "PackageBucket": {
+    "S3PackageBucket": {
       "Description": "S3 Package Bucket",
-      "Value": { "Ref": "PackageBucket" }
+      "Value": { "Ref": "S3PackageBucket" }
     },
-    "ResourceBucket": {
+    "S3ResourceBucket": {
       "Description": "S3 Resource Bucket",
-      "Value": { "Ref": "ResourceBucket" }
+      "Value": { "Ref": "S3ResourceBucket" }
     },
     "S3Buckets": {
       "Description": "S3 Buckets - used during stack deletion",
       "Value": {
         "Fn::Join": [
           ",", [
-            { "Ref": "BlobstoreBucket" },
-            { "Ref": "BuildpackBucket" },
-            { "Ref": "DropletBucket" },
-            { "Ref": "PackageBucket" },
-            { "Ref": "ResourceBucket" }
+            { "Ref": "S3BoshBlobstoreBucket" },
+            { "Ref": "S3BoshCompiledPackageCacheBucket" },
+            { "Ref": "S3BoshDirectorBackupBucket" },
+            { "Ref": "S3BlobstoreBucket" },
+            { "Ref": "S3BuildpackBucket" },
+            { "Ref": "S3DropletBucket" },
+            { "Ref": "S3PackageBucket" },
+            { "Ref": "S3ResourceBucket" }
           ]
         ]
       }
-    },
-    "S3BoshBucketAccessKeyId": {
-      "Description": "S3 Bosh Bucket Access Key Id",
-      "Value": { "Ref": "S3BoshBucketAccessKey" }
-    },
-    "S3BoshBucketAccessKey": {
-      "Description": "S3 Bosh Bucket Access Key",
-      "Value": { "Fn::GetAtt": [ "S3BoshBucketAccessKey", "SecretAccessKey" ] }
-    },
-    "S3BoshBucketUserName": {
-      "Description": "S3 Bosh Bucket User Name",
-      "Value": { "Ref": "S3BoshBucketUser" }
     }
   },
 
@@ -104,20 +99,71 @@
       }
     },
 
-    "BlobstoreBucket": {
+    "S3BoshBlobstoreBucket": {
       "Type": "AWS::S3::Bucket"
     },
-    "BuildpackBucket": {
+    "S3BoshCompiledPackageCacheBucket": {
       "Type": "AWS::S3::Bucket"
     },
-    "DropletBucket": {
+    "S3BoshDirectorBackupBucket": {
       "Type": "AWS::S3::Bucket"
     },
-    "PackageBucket": {
+    "S3BlobstoreBucket": {
       "Type": "AWS::S3::Bucket"
     },
-    "ResourceBucket": {
+    "S3BuildpackBucket": {
       "Type": "AWS::S3::Bucket"
+    },
+    "S3DropletBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3PackageBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3ResourceBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+
+    "S3BoshBucketAccessRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "ec2.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "S3BoshBucketAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": [
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshDirectorBackupBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshDirectorBackupBucket}/*" }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
     },
 
     "S3BucketAccessRole": {
@@ -147,16 +193,16 @@
                     "s3:*"
                   ],
                   "Resource": [
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${BuildpackBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${BuildpackBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${DropletBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${DropletBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${PackageBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${PackageBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${ResourceBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${ResourceBucket}/*" }
+                    { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BuildpackBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BuildpackBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3DropletBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3DropletBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3PackageBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3PackageBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3ResourceBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3ResourceBucket}/*" }
                   ]
                 }
               ]
@@ -166,54 +212,20 @@
       }
     },
 
-    "S3BoshBucketUser": {
-      "Type": "AWS::IAM::User",
+    "S3BoshBucketAccessInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
       "Properties": {
-        "Policies": [
-          {
-            "PolicyName": { "Fn::Sub": "${DeploymentName}-CfS3BoshBucketPolicy" },
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Action": [
-                    "s3:*"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:s3:::{BoshBlobstoreBucket}" }
-                },
-                {
-                  "Action": [
-                    "s3:*"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:s3:::{BoshCompiledPackageCacheBucket}" }
-                },
-                {
-                  "Action": [
-                    "s3:*"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:s3:::{BoshDirectorBackupBucket}" }
-                },
-                {
-                  "Action": [
-                    "iam:GetUser"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": "*"
-                }
-              ]
-            }
-          }
+        "Roles": [
+          { "Ref": "S3BoshBucketAccessRole" }
         ]
       }
     },
-
-    "S3BoshBucketAccessKey": {
-      "Type": "AWS::IAM::AccessKey",
+    "S3BucketAccessInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
       "Properties": {
-        "UserName": { "Ref": "S3BoshBucketUser" }
+        "Roles": [
+          { "Ref": "S3BucketAccessRole" }
+        ]
       }
     }
   }
