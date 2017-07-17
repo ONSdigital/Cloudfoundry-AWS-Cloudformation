@@ -18,6 +18,20 @@
       "Description": "S3 Bucket Access Instance Profile",
       "Value": { "Ref": "S3BucketAccessInstanceProfile" }
     },
+
+    "BoshBlobstoreBucket": {
+      "Description": "S3 Blobstore Bucket",
+      "Value": { "Ref": "BlobstoreBucket" }
+    }, 
+    "BoshCompiledPackageCacheBucket": {
+      "Description": "S3 Bosh Compiled Package Cache Bucket",
+      "Value": { "Ref": "BoshCompiledPackageCacheBucket" }
+    }, 
+    "BoshDirectorBackupBucket": {
+      "Description": "S3 Director Backup Bucket",
+      "Value": { "Ref": "BoshDirectorBackupBucket" }
+    }, 
+
     "BlobstoreBucket": {
       "Description": "S3 Blobstore Bucket",
       "Value": { "Ref": "BlobstoreBucket" }
@@ -51,6 +65,18 @@
           ]
         ]
       }
+    },
+    "S3BoshBucketAccessKeyId": {
+      "Description": "S3 Bosh Bucket Access Key Id",
+      "Value": { "Ref": "S3BoshBucketAccessKey" }
+    },
+    "S3BoshBucketAccessKey": {
+      "Description": "S3 Bosh Bucket Access Key",
+      "Value": { "Fn::GetAtt": [ "S3BoshBucketAccessKey", "SecretAccessKey" ] }
+    },
+    "S3BoshBucketUserName": {
+      "Description": "S3 Bosh Bucket User Name",
+      "Value": { "Ref": "S3BoshBucketUser" }
     }
   },
 
@@ -140,12 +166,54 @@
       }
     },
 
-    "S3BucketAccessInstanceProfile": {
-      "Type": "AWS::IAM::InstanceProfile",
+    "S3BoshBucketUser": {
+      "Type": "AWS::IAM::User",
       "Properties": {
-        "Roles": [
-          { "Ref": "S3BucketAccessRole" }
+        "Policies": [
+          {
+            "PolicyName": { "Fn::Sub": "${DeploymentName}-CfS3BoshBucketPolicy" },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": { "Fn::Sub": "arn:aws:s3:::{BoshBlobstoreBucket}" }
+                },
+                {
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": { "Fn::Sub": "arn:aws:s3:::{BoshCompiledPackageCacheBucket}" }
+                },
+                {
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": { "Fn::Sub": "arn:aws:s3:::{BoshDirectorBackupBucket}" }
+                },
+                {
+                  "Action": [
+                    "iam:GetUser"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
         ]
+      }
+    },
+
+    "S3BoshBucketAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "UserName": { "Ref": "S3BoshBucketUser" }
       }
     }
   }
