@@ -175,13 +175,34 @@
       "Type": "AWS::CertificateManager::Certificate",
       "Condition": "GenerateElbSslCertificate",
       "Properties": {
-        "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
+        "DomainName": {
+          "Fn::Join": [
+            ".", [
+              "*.apps",
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+            ]
+          ]
+        },
         "SubjectAlternativeNames": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } }
+          {
+            "Fn::Join": [
+              ".", [
+                "*.system",
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+              ]
+            ]
+          }
         ],
         "DomainValidationOptions" : [
           {
-            "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
+            "DomainName": {
+              "Fn::Join": [
+                ".", [
+                  "*.apps",
+                  { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+                ]
+              ]
+            },
             "ValidationDomain" : {
               "Fn::If": [
                 "UseHostedZone",
@@ -191,7 +212,14 @@
             }
           },
           {
-            "DomainName": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
+            "DomainName": {
+              "Fn::Join": [
+                ".", [
+                  "*.system",
+                  { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+                ]
+              ]
+            },
             "ValidationDomain" : {
               "Fn::If": [
                 "UseHostedZone",

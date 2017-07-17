@@ -127,7 +127,14 @@
       "Condition": "DeployElb",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*.apps",
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+            ]
+          ]
+        },
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
@@ -141,7 +148,14 @@
       "Condition": "SingleAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsName" } },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*.apps",
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+            ]
+          ]
+        },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -154,7 +168,14 @@
       "Condition": "MultiAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDnsNames" } },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*.apps",
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+            ]
+          ]
+        },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -246,7 +267,14 @@
       "Condition": "DeployElb",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*.system",
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+            ]
+          ]
+        },
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
@@ -259,7 +287,14 @@
       "Condition": "SingleAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*.system",
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+            ]
+          ]
+        },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -272,7 +307,14 @@
       "Condition": "MultiAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } },
+        "Name": {
+          "Fn::Join": [
+            ".", [
+              "*.system",
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+            ]
+          ]
+        },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [

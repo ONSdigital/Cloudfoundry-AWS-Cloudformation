@@ -125,14 +125,6 @@
       "Value": { "Ref": "HostedZone" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
     },
-    "AppsDnsName": {
-      "Description": "Apps DNS Name",
-      "Value": { "Fn::Sub": "'*.apps.${DeploymentName}.${HostedZone}'" }
-    },
-    "AppsDnsNameQuoted": {
-      "Description": "Apps DNS Name (quoted)",
-      "Value": { "Fn::Sub": "\"*.apps.${DeploymentName}.${HostedZone}\"" }
-    },
     "DirectorDnsName": {
       "Description": "Director DNS Name",
       "Value": { "Fn::Sub": "director.${DeploymentName}.${HostedZone}" },
@@ -159,15 +151,6 @@
       "Condition": "MultiAz",
       "Value": { "Fn::Sub": "nat-z3.${DeploymentName}.${HostedZone}" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3DnsName" } }
-    },
-    "SystemDnsName": {
-      "Description": "System DNS Name",
-      "Value": { "Fn::Sub": "*.system.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SystemDnsName" } }
-    },
-    "SystemDnsNameQuoted": {
-      "Description": "System DNS Name",
-      "Value": { "Fn::Sub": "\"*.system.${DeploymentName}.${HostedZone}\"" }
     }
   },
 
