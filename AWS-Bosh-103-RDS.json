@@ -683,7 +683,8 @@
             }
           }
         ]
-      },
+      }
+    },
 
     "RdsLambaCreateAppsDb": {
       "Type": "AWS::Lambda::Function",
@@ -715,19 +716,19 @@
                   ]
                 },
                 "def create_database_and_user(event, context)",
-                "	try:",
-                "		conn = psycopg2.connect(conn_string)",
-                "		cursor = conn.cursor()",
-                "		try:",
-                "			cursor.execute(\"CREATE USER %s\",event['user'])",
-                "			try:",
-                "				cursor.execute(\"CREATE DATABASE %s OWNER %s\",event['database'],event['user'])"
-                "			except Exception as e:",
-                "				logging.info('Failed to create database')",
-                "		except Exception as e:",
-                "			logging.info('Failed to create user')",
-                "	except Exception as e:",
-                "		logging.info('Failed to connect to Apps RDS instance')"
+                "  try:",
+                "    conn = psycopg2.connect(conn_string)",
+                "    cursor = conn.cursor()",
+                "    try:",
+                "      cursor.execute(\"CREATE USER %s\",event['user'])",
+                "      try:",
+                "        cursor.execute(\"CREATE DATABASE %s OWNER %s\",event['database'],event['user'])",
+                "      except Exception as e:",
+                "        logging.info('Failed to create database')",
+                "    except Exception as e:",
+                "      logging.info('Failed to create user')",
+                "  except Exception as e:",
+                "    logging.info('Failed to connect to Apps RDS instance')"
               ]
             ]
           }
@@ -764,19 +765,19 @@
                   ]
                 },
                 "def create_database_and_user(event, context)",
-                "	try:",
-                "		conn = psycopg2.connect(conn_string)",
-                "		cursor = conn.cursor()",
-                "		try:",
-                "			cursor.execute(\"CREATE USER %s\",event['user'])",
-                "			try:",
-                "				cursor.execute(\"CREATE DATABASE %s OWNER %s\",event['database'],event['user'])"
-                "			except Exception as e:",
-                "				logging.info('Failed to create database')",
-                "		except Exception as e:",
-                "			logging.info('Failed to create user')",
-                "	except Exception as e:",
-                "		logging.info('Failed to connect to CF RDS instance')"
+                "  try:",
+                "    conn = psycopg2.connect(conn_string)",
+                "    cursor = conn.cursor()",
+                "    try:",
+                "      cursor.execute(\"CREATE USER %s\",event['user'])",
+                "      try:",
+                "        cursor.execute(\"CREATE DATABASE %s OWNER %s\",event['database'],event['user'])",
+                "      except Exception as e:",
+                "        logging.info('Failed to create database')",
+                "    except Exception as e:",
+                "      logging.info('Failed to create user')",
+                "  except Exception as e:",
+                "    logging.info('Failed to connect to Apps RDS instance')"
               ]
             ]
           }
