@@ -16,77 +16,84 @@
       "Default": "NONE",
       "Description": "VPC Peer ID 1",
       "AllowedPattern": "^(vpc-[a-f0-9]{8}|NONE)$",
-      "ConstraintDescription": "Valid VPC ID"
+      "ConstraintDescription": "Valid VPC ID or NONE"
     },
     "Peer2VpcId": {
       "Type": "String",
       "Default": "NONE",
       "Description": "VPC Peer ID 2",
       "AllowedPattern": "^(vpc-[a-f0-9]{8}|NONE)$",
-      "ConstraintDescription": "Valid VPC ID"
+      "ConstraintDescription": "Valid VPC ID or NONE"
     },
     "Peer3VpcId": {
       "Type": "String",
       "Default": "NONE",
       "Description": "VPC Peer ID 3",
       "AllowedPattern": "^(vpc-[a-f0-9]{8}|NONE)$",
-      "ConstraintDescription": "Valid VPC ID"
+      "ConstraintDescription": "Valid VPC ID or NONE"
     },
     "Peer1OwnerId": {
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 1 Owner Account Id",
-      "AllowedPattern": "^[0-9]+$",
-      "ConstraintDescription": "Valid CIDR"
+      "AllowedPattern": "^([0-9]+|NONE)$",
+      "ConstraintDescription": "Peer Owner Id or NONE"
     },
     "Peer2OwnerId": {
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 2 Owner Account Id",
-      "AllowedPattern": "^[0-9]+$",
-      "ConstraintDescription": "Valid CIDR"
+      "AllowedPattern": "^([0-9]+|NONE)$",
+      "ConstraintDescription": "Valid CIDR or NONE"
     },
     "Peer3OwnerId": {
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 3 Owner Account Id",
-      "AllowedPattern": "^[0-9]+$",
-      "ConstraintDescription": "Valid CIDR"
+      "AllowedPattern": "^([0-9]+|NONE)$",
+      "ConstraintDescription": "Valid CIDR or NONE"
     },
     "Peer1RoleArn": {
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 1 Role ARN",
       "AllowedPattern": "^(arn:aws::iam::[0-9]+:*/[0-9]+:[A-Za-z0-9-]+|NONE)$",
-      "ConstraintDescription": "Peer 1 ARN"
+      "ConstraintDescription": "Peer 1 ARN or NONE"
     },
     "Peer2RoleArn": {
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 2 Role ARN",
       "AllowedPattern": "^(arn:aws::iam::[0-9]+:*/[0-9]+:[A-Za-z0-9-]+|NONE)$",
-      "ConstraintDescription": "Peer 2 ARN"
+      "ConstraintDescription": "Peer 2 ARN or NONE"
     },
     "Peer3RoleArn": {
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 3 Role ARN",
       "AllowedPattern": "^(arn:aws::iam::[0-9]+:*/[0-9]+:[A-Za-z0-9-]+|NONE)$",
-      "ConstraintDescription": "Peer 3 ARN"
+      "ConstraintDescription": "Peer 3 ARN or NONE"
+    },
+    "Peer1VpcCidr": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": "VPC Peer CIDR 1",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}|NONE)$",
+      "ConstraintDescription": "Valid CIDR or NONE"
     },
     "Peer2VpcCidr": {
       "Type": "String",
-      "Default": "127.0.0.0/8",
+      "Default": "NONE",
       "Description": "VPC Peer CIDR 2",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}|NONE)$",
+      "ConstraintDescription": "Valid CIDR or NONE"
     },
     "Peer3VpcCidr": {
       "Type": "String",
-      "Default": "127.0.0.0/8",
+      "Default": "NONE",
       "Description": "VPC Peer CIDR 3",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
-      "ConstraintDescription": "Valid CIDR"
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}|NONE)$",
+      "ConstraintDescription": "Valid CIDR or NONE"
     },
     "MultiAz": {
       "Type": "String",
