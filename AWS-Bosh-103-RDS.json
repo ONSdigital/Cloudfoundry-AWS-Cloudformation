@@ -38,23 +38,6 @@
       "Description": "Deploy Cf RDS Instance",
       "AllowedValues": [ "true", "false" ]
     },
-    "DeployDatabaseMaintenanceInstance": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy RDS Maintenance Instance",
-      "AllowedValues": [ "true", "false" ]
-    },
-
-    "DatabaseMaintenanceInstanceSize": {
-      "Type": "String",
-      "Default": "t2.nano",
-      "Description": "Database Maintenance Instance Size",
-      "AllowedValues": [
-        "t2.nano",
-        "t2.micro",
-        "t2.small"
-      ]
-    },
     "RdsAppsInstancePreferredBackupWindow": {
       "Type": "String",
       "Default": "01:00-04:00",
@@ -232,19 +215,19 @@
   "Outputs": {
     "RdsAz1Cidr": {
       "Description": "RDS AZ1 CIDR",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Value": { "Ref": "RdsAz1Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz1Cidr" } }
     },
     "RdsAz2Cidr": {
       "Description": "RDS AZ2 CIDR",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Value": { "Ref": "RdsAz2Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } }
     },
     "RdsAz1CidrPrefix": {
       "Description": "RDS AZ1 CIDR Prefix",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Value": {
         "Fn::Join": [
           ".", [
@@ -258,7 +241,7 @@
     },
     "RdsAz2CidrPrefix": {
       "Description": "RDS AZ2 CIDR Prefix",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Value": {
         "Fn::Join": [
           ".", [
@@ -272,7 +255,7 @@
     },
     "RdsAz1DefaultRoute": {
       "Description": "RDS AZ1 Default Route",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Value": {
         "Fn::Join": [
           ".", [
@@ -287,7 +270,7 @@
     },
     "RdsAz2DefaultRoute": {
       "Description": "RDS AZ1 Default Route",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Value": {
         "Fn::Join": [
           ".", [
@@ -303,12 +286,12 @@
 
     "RdsSubnetGroup": {
       "Description": "RDS Database Subnet Group",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Value": { "Ref": "RdsSubnetGroup" }
     },
     "RdsSecurityGroup": {
       "Description": "RDS Database Security Group",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Value": { "Ref": "RdsSecurityGroup" }
     },
     "RdsAppsInstanceAddress": {
@@ -356,11 +339,16 @@
       "Description": "RDS CF Instance DNS Name",
       "Condition": "DeployRdsCfInstance",
       "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] }
+    },
+    "RdsLambaCreateAppsDbArn": {
+      "Description": "RDS CF Instance DNS Name",
+      "Condition": "DeployRdsAppsInstance",
+      "Value": { "Fn::GetAtt": [ "RdsLambaCreateAppsDb", "Arn" ] }
     }
   },
 
   "Conditions": {
-    "CreateRdsNetworks": {
+    "CreateRdsInfrastructure": {
       "Fn::Or": [
         { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] }
@@ -368,7 +356,6 @@
     },
     "DeployRdsAppsInstance": { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
     "DeployRdsCfInstance": { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] },
-    "DeployDatabaseMaintenanceInstance": { "Fn::Equals": [ { "Ref": "DeployDatabaseMaintenanceInstance" }, "true" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndDeployRdsAppsInstance": {
@@ -432,7 +419,7 @@
     },
     "RdsAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Properties": {
         "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
         "CidrBlock": { "Ref": "RdsAz1Cidr" },
@@ -446,7 +433,7 @@
     },
     "RdsAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Properties": {
         "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } },
         "CidrBlock": { "Ref": "RdsAz2Cidr" },
@@ -461,7 +448,7 @@
 
     "RdsSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Properties": {
         "GroupDescription": "RDS Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
@@ -480,7 +467,7 @@
 
     "RdsSubnetGroup": {
       "Type" : "AWS::RDS::DBSubnetGroup",
-      "Condition": "CreateRdsNetworks",
+      "Condition": "CreateRdsInfrastructure",
       "Properties" : {
         "DBSubnetGroupDescription" : "RDS Subnet Group",
         "SubnetIds" : [
@@ -666,53 +653,132 @@
       }
     },
 
-    "DatabaseMaintenanceInstance": {
-      "Type": "AWS::EC2::Instance",
-      "Condition": "DeployDatabaseMaintenanceInstance",
+    "RdsLambaCreateDbRole": {
+      "Type": "AWS::IAM::Role",
       "Properties": {
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
-        "ImageId": { "Fn::FindInMap": [ "RegionAmiMap", { "Ref": "AWS::Region" }, "HVM" ] },
-        "InstanceInitiatedShutdownBehavior": "stop",
-        "InstanceType": { "Ref": "DatabaseMaintenanceInstanceSize" },
-        "KeyName": { "Fn::Sub": "${DeploymentName}-key" },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DatabaseMaintenanceInstance" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ],
-        "UserData": {
-          "Fn::Base64": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "lambda.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ] }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "root",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [ "logs:*" ],
+                  "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:*:*" }
+                }
+              ]
+            }
+          }
+        ]
+      },
+
+    "RdsLambaCreateAppsDb": {
+      "Type": "AWS::Lambda::Function",
+      "Condition": "DeployRdsAppsInstance",
+      "Properties": {
+        "Description": "Create databases within the Apps RDS Instance",
+        "Handler": "create_database_and_user",
+        "Role": { "Ref": "RdsLambaCreateDbRole" },
+        "Runtime": "python3.6",
+        "Timeout": "60",
+        "VpcConfig": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Code": {
+          "ZipFile": {
             "Fn::Join": [
               "\n", [
-                "#!/bin/sh",
-                "set -ex",
-                "# HOME is not set",
-                "export HOME=~",
-                "cd",
+                "import psycopg2",
+                "import logging",
+                "import sys",
+                "",
                 {
                   "Fn::Join": [
-                    " ", [
-                      "/opt/aws/bin/cfn-init --verbose",
-                      "--stack",
-                      { "Ref": "AWS::StackName" },
-                      "--region",
-                      { "Ref": "AWS::Region" },
-                      "--resource DatabaseMaintenanceInstance"
+                    "", [
+                      "conn_string = \"",
+                      { "Fn::Sub": "host='${RdsAppsInstance.Endpoint.Address}' port='${RdsAppsInstance.Endpoint.Port}'" },
+                      " ",
+                      { "Fn::Sub": "dbname='postgres' user='${RdsAppsInstanceUsername}' password='${RdsAppsInstancePassword}'" },
+                      "\""
                     ]
                   ]
-                }
+                },
+                "def create_database_and_user(event, context)",
+                "	try:",
+                "		conn = psycopg2.connect(conn_string)",
+                "		cursor = conn.cursor()",
+                "		try:",
+                "			cursor.execute(\"CREATE USER %s\",event['user'])",
+                "			try:",
+                "				cursor.execute(\"CREATE DATABASE %s OWNER %s\",event['database'],event['user'])"
+                "			except Exception as e:",
+                "				logging.info('Failed to create database')",
+                "		except Exception as e:",
+                "			logging.info('Failed to create user')",
+                "	except Exception as e:",
+                "		logging.info('Failed to connect to Apps RDS instance')"
               ]
             ]
           }
         }
-      },
-      "Metadata": {
-        "AWS::CloudFormation::Init": {
-          "config": {
-            "packages": {
-              "yum": {
-                "postgresql": []
-              }
-            }
+      }
+    },
+    "RdsLambaCreateCfDb": {
+      "Type": "AWS::Lambda::Function",
+      "Condition": "DeployRdsCfInstance",
+      "Properties": {
+        "Description": "Create databases within the Cf RDS Instance",
+        "Handler": "create_database_and_user",
+        "Role": { "Ref": "RdsLambaCreateDbRole" },
+        "Runtime": "python3.6",
+        "Timeout": "60",
+        "VpcConfig": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "\n", [
+                "import psycopg2",
+                "import logging",
+                "import sys",
+                "",
+                {
+                  "Fn::Join": [
+                    "", [
+                      "conn_string = \"",
+                      { "Fn::Sub": "host='${RdsCfInstance.Endpoint.Address}' port='${RdsCfInstance.Endpoint.Port}'" },
+                      " ",
+                      { "Fn::Sub": "dbname='postgres' user='${RdsCfInstanceUsername}' password='${RdsCfInstancePassword}'" },
+                      "\""
+                    ]
+                  ]
+                },
+                "def create_database_and_user(event, context)",
+                "	try:",
+                "		conn = psycopg2.connect(conn_string)",
+                "		cursor = conn.cursor()",
+                "		try:",
+                "			cursor.execute(\"CREATE USER %s\",event['user'])",
+                "			try:",
+                "				cursor.execute(\"CREATE DATABASE %s OWNER %s\",event['database'],event['user'])"
+                "			except Exception as e:",
+                "				logging.info('Failed to create database')",
+                "		except Exception as e:",
+                "			logging.info('Failed to create user')",
+                "	except Exception as e:",
+                "		logging.info('Failed to connect to CF RDS instance')"
+              ]
+            ]
           }
         }
       }
