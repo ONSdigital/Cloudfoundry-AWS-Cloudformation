@@ -179,7 +179,7 @@
           "Fn::Join": [
             ".", [
               "*.apps",
-              { "Ref": "HostedZone" }
+              {"Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
             ]
           ]
         },
@@ -188,7 +188,7 @@
             "Fn::Join": [
               ".", [
                 "*.system",
-                { "Ref": "HostedZone" }
+                {"Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
               ]
             ]
           }
@@ -199,14 +199,14 @@
               "Fn::Join": [
                 ".", [
                   "*.apps",
-                  { "Ref": "HostedZone" }
+                  {"Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
                 ]
               ]
             },
             "ValidationDomain" : {
               "Fn::If": [
                 "UseHostedZone",
-		{ "Ref": "HostedZone" },
+		{"Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
                 { "Ref": "SslValidationDomain" }
               ]
             }
@@ -216,14 +216,14 @@
               "Fn::Join": [
                 ".", [
                   "*.system",
-                  { "Ref": "HostedZone" }
+                  {"Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
                 ]
               ]
             },
             "ValidationDomain" : {
               "Fn::If": [
                 "UseHostedZone",
-		{ "Ref": "HostedZone" },
+		{"Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } },
                 { "Ref": "SslValidationDomain" }
               ]
             }
