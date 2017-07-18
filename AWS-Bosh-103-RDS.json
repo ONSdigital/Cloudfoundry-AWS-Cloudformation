@@ -38,7 +38,23 @@
       "Description": "Deploy Cf RDS Instance",
       "AllowedValues": [ "true", "false" ]
     },
+    "DeployDatabaseMaintenanceInstance": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy RDS Maintenance Instance",
+      "AllowedValues": [ "true", "false" ]
+    },
 
+    "DatabaseMaintenanceInstanceSize": {
+      "Type": "String",
+      "Default": "t2.nano",
+      "Description": "Database Maintenance Instance Size",
+      "AllowedValues": [
+        "t2.nano",
+        "t2.micro",
+        "t2.small"
+      ]
+    },
     "RdsAppsInstancePreferredBackupWindow": {
       "Type": "String",
       "Default": "01:00-04:00",
@@ -352,6 +368,7 @@
     },
     "DeployRdsAppsInstance": { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
     "DeployRdsCfInstance": { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] },
+    "DeployDatabaseMaintenanceInstance": { "Fn::Equals": [ { "Ref": "DeployDatabaseMaintenanceInstance" }, "true" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndDeployRdsAppsInstance": {
@@ -379,6 +396,14 @@
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsCfInstanceSize" }, "NONE" ] } ] }
       ]
+    }
+  },
+
+  "Mappings": {
+    "RegionAmiMap": {
+      "eu-central-1": { "HVM": "ami-b968bad6", "PV": "ami-ba68bad5" },
+      "eu-west-1": { "HVM": "ami-01ccc867", "PV": "ami-d1c0c4b7" },
+      "eu-west-2": { "HVM": "ami-b6daced2" }
     }
   },
 
@@ -638,6 +663,58 @@
         "ResourceRecords": [
           { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Address" ] }
         ]
+      }
+    },
+
+    "DatabaseMaintenanceInstance": {
+      "Type": "AWS::EC2::Instance",
+      "Condition": "DeployDatabaseMaintenanceInstance",
+      "Properties": {
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
+        "ImageId": { "Fn::FindInMap": [ "RegionAmiMap", { "Ref": "AWS::Region" }, "HVM" ] },
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "InstanceType": { "Ref": "DatabaseMaintenanceInstanceSize" },
+        "KeyName": { "Fn::Sub": "${DeploymentName}-key" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DatabaseMaintenanceInstance" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "\n", [
+                "#!/bin/sh",
+                "set -ex",
+                "# HOME is not set",
+                "export HOME=~",
+                "cd",
+                {
+                  "Fn::Join": [
+                    " ", [
+                      "/opt/aws/bin/cfn-init --verbose",
+                      "--stack",
+                      { "Ref": "AWS::StackName" },
+                      "--region",
+                      { "Ref": "AWS::Region" },
+                      "--resource DatabaseMaintenanceInstance"
+                    ]
+                  ]
+                }
+              ]
+            ]
+          }
+        }
+      },
+      "Metadata": {
+        "AWS::CloudFormation::Init": {
+          "config": {
+            "packages": {
+              "yum": {
+                "postgresql": []
+              }
+            }
+          }
+        }
       }
     }
   }
