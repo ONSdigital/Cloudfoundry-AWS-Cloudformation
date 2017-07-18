@@ -472,20 +472,32 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "SecurityGroupEgress": [
           {
-            "CidrIp": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Address" ] },
+            "CidrIp": { "Ref": "RdsAz1Cidr" },
             "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
             "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
             "IpProtocol": "tcp"
           },
           {
-            "CidrIp": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Address" ] },
+            "CidrIp": { "Ref": "RdsAz2Cidr" },
+            "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
+            "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "RdsAz1Cidr" },
+            "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
+            "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Ref": "RdsAz2Cidr" },
             "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
             "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
             "IpProtocol": "tcp"
           }
         ],
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsLambdaSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
