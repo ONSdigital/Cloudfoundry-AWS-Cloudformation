@@ -79,7 +79,7 @@
   },
 
   "Conditions": {
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] },
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndAllocateLbIp": {
