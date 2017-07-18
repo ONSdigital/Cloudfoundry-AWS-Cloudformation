@@ -43,6 +43,17 @@
         ]
       }
     },
+    "DomainName": {
+      "Description": "Main DNS name",
+      "Value": {
+        "Fn::Join": [
+          ".", [
+            { "Fn::Sub": "${DeploymentName}" },
+            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+          ]
+        ]
+      }
+    },
     "DirectorDns": {
       "Description": "Director DNS name",
       "Value": {
@@ -65,12 +76,47 @@
         ]
       }
     },
-    "DomainName": {
-      "Description": "Main DNS name",
+    "NatDns": {
+      "Description": "NAT DNS Name",
       "Value": {
         "Fn::Join": [
           ".", [
-            { "Fn::Sub": "${DeploymentName}" },
+            { "Fn::Sub": "nat.${DeploymentName}" },
+            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+          ]
+        ]
+      }
+    },
+    "NatAz1DnsName": {
+      "Description": "NAT AZ1 DNS Name",
+      "Value": {
+        "Fn::Join": [
+          ".", [
+            { "Fn::Sub": "nat-z1.${DeploymentName}" },
+            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+          ]
+        ]
+      }
+    },
+    "NatAz2DnsName": {
+      "Description": "NAT AZ2 DNS Name",
+      "Condition": "MultiAz",
+      "Value": {
+        "Fn::Join": [
+          ".", [
+            { "Fn::Sub": "nat-z2.${DeploymentName}" },
+            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+          ]
+        ]
+      }
+    },
+    "NatAz3DnsName": {
+      "Description": "NAT AZ3 DNS Name",
+      "Condition": "MultiAz",
+      "Value": {
+        "Fn::Join": [
+          ".", [
+            { "Fn::Sub": "nat-z3.${DeploymentName}" },
             { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
           ]
         ]
@@ -127,14 +173,7 @@
       "Condition": "DeployElb",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "*.apps",
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
-            ]
-          ]
-        },
+        "Name": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
@@ -148,14 +187,7 @@
       "Condition": "SingleAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "*.apps",
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
-            ]
-          ]
-        },
+        "Name": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -168,14 +200,7 @@
       "Condition": "MultiAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "*.apps",
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
-            ]
-          ]
-        },
+        "Name": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -188,7 +213,7 @@
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorDnsName" } },
+        "Name": { "Fn::Join": [ ".", [ "director", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -201,7 +226,7 @@
       "Condition": "SingleAz",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatDnsName" } },
+        "Name": { "Fn::Join": [ ".", [ "nat", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -214,7 +239,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatDnsName" } },
+        "Name": { "Fn::Join": [ ".", [ "nat", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -228,7 +253,7 @@
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1DnsName" } },
+        "Name": { "Fn::Join": [ ".", [ "nat-z1", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -241,7 +266,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2DnsName" } },
+        "Name": { "Fn::Join": [ ".", [ "nat-z2", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -254,7 +279,7 @@
       "Condition": "MultiAz",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3DnsName" } },
+        "Name": { "Fn::Join": [ ".", [ "nat-z3", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -267,14 +292,7 @@
       "Condition": "DeployElb",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "*.system",
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
-            ]
-          ]
-        },
+        "Name": { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
@@ -287,14 +305,7 @@
       "Condition": "SingleAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "*.system",
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
-            ]
-          ]
-        },
+        "Name": { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
@@ -307,14 +318,7 @@
       "Condition": "MultiAzAndAllocateLbIp",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": {
-          "Fn::Join": [
-            ".", [
-              "*.system",
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
-            ]
-          ]
-        },
+        "Name": { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [

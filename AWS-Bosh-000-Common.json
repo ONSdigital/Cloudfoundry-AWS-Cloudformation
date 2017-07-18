@@ -124,33 +124,6 @@
       "Description": "Hosted Zone",
       "Value": { "Ref": "HostedZone" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
-    },
-    "DirectorDnsName": {
-      "Description": "Director DNS Name",
-      "Value": { "Fn::Sub": "director.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorDnsName" } }
-    },
-    "NatDnsName": {
-      "Description": "NAT DNS Name",
-      "Value": { "Fn::Sub": "nat.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatDnsName" } }
-    },
-    "NatAz1DnsName": {
-      "Description": "NAT AZ1 DNS Name",
-      "Value": { "Fn::Sub": "nat-z1.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz1DnsName" } }
-    },
-    "NatAz2DnsName": {
-      "Description": "NAT AZ2 DNS Name",
-      "Condition": "MultiAz",
-      "Value": { "Fn::Sub": "nat-z2.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2DnsName" } }
-    },
-    "NatAz3DnsName": {
-      "Description": "NAT AZ3 DNS Name",
-      "Condition": "MultiAz",
-      "Value": { "Fn::Sub": "nat-z3.${DeploymentName}.${HostedZone}" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3DnsName" } }
     }
   },
 

@@ -464,6 +464,32 @@
         ]
       }
     },
+    "RdsLambdaSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "CreateRdsInfrastructure",
+      "Properties": {
+        "GroupDescription": "RDS Lambda Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Address" ] },
+            "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
+            "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Address" ] },
+            "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
+            "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
+            "IpProtocol": "tcp"
+          }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
 
     "RdsSubnetGroup": {
       "Type" : "AWS::RDS::DBSubnetGroup",
@@ -695,7 +721,15 @@
         "Role": { "Ref": "RdsLambaCreateDbRole" },
         "Runtime": "python3.6",
         "Timeout": "60",
-        "VpcConfig": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            { "Ref": "RdsLambdaSecurityGroup" }
+          ],
+          "SubnetIds": [
+            { "Ref": "RdsAz1Subnet" },
+            { "Ref": "RdsAz2Subnet" }
+          ]
+        },
         "Code": {
           "ZipFile": {
             "Fn::Join": [
@@ -744,7 +778,15 @@
         "Role": { "Ref": "RdsLambaCreateDbRole" },
         "Runtime": "python3.6",
         "Timeout": "60",
-        "VpcConfig": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "VpcConfig": {
+          "SecurityGroupIds": [
+            { "Ref": "RdsLambdaSecurityGroup" }
+          ],
+          "SubnetIds": [
+            { "Ref": "RdsAz1Subnet" },
+            { "Ref": "RdsAz2Subnet" }
+          ]
+        },
         "Code": {
           "ZipFile": {
             "Fn::Join": [
