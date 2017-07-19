@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "AWS CloudFormation Bosh",
+  "Description": "RDS CF and Application Instances",
 
   "Parameters": {
     "DeploymentName": {
@@ -223,6 +223,12 @@
       "Default": "true",
       "Description": "Deploy multiple AZs",
       "AllowedValues": [ "true", "false" ]
+    },
+    "WhitelistDmzRdsAccess": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Whitelist access to RDS instances from DMZ CIDR(s)",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -353,11 +359,6 @@
       "Description": "RDS CF Instance DNS Name",
       "Condition": "DeployRdsCfInstance",
       "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
-    },
-    "RdsLambaCreateAppsDbArn": {
-      "Description": "RDS CF Instance DNS Name",
-      "Condition": "DeployRdsAppsInstance",
-      "Value": { "Fn::GetAtt": [ "RdsLambaCreateAppsDb", "Arn" ] }
     }
   },
 
@@ -370,7 +371,18 @@
     },
     "DeployRdsAppsInstance": { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
     "DeployRdsCfInstance": { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] },
-
+    "DeployRdsAppsInstanceAndWhitelistDmzRdsAccess": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "WhitelistDmzRdsAccess" }, "true" ] }
+      ]
+    },
+    "DeployRdsCfInstanceAndWhitelistDmzRdsAccess": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "WhitelistDmzRdsAccess" }, "true" ] }
+      ]
+    },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndDeployRdsAppsInstance": {
       "Fn::And": [
@@ -476,58 +488,46 @@
         ]
       }
     },
-    "RdsLambdaSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "CreateRdsInfrastructure",
-      "Properties": {
-        "GroupDescription": "RDS Lambda Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsLambdaSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
 
-    "LambdaRdsAppsInstancAz1SecurityGroupEgress": {
+    "BoshRdsAppsInstancAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployRdsAppsInstance",
+      "Condition": "DeployRdsAppsInstanceAndWhitelistDmzRdsAccess",
       "Properties": {
-        "GroupId": { "Ref": "RdsLambdaSecurityGroup" },
-        "CidrIp": { "Ref": "RdsAz1Cidr" },
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
         "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
       }
     },
-    "LambdaRdsAppsInstancAz2SecurityGroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployRdsAppsInstance",
+    "BoshRdsAppsInstancAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRdsAppsInstanceAndWhitelistDmzRdsAccess",
       "Properties": {
-        "GroupId": { "Ref": "RdsLambdaSecurityGroup" },
-        "CidrIp": { "Ref": "RdsAz2Cidr" },
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
         "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
       }
     },
-    "LambdaRdsCfInstancAz1SecurityGroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployRdsCfInstance",
+    "BoshRdsCfInstancAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRdsCfInstanceAndWhitelistDmzRdsAccess",
       "Properties": {
-        "GroupId": { "Ref": "RdsLambdaSecurityGroup" },
-        "CidrIp": { "Ref": "RdsAz1Cidr" },
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
         "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
       }
     },
-    "LambdaRdsCfInstancAz2SecurityGroupEgress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployRdsCfInstance",
+    "BoshRdsCfInstancAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRdsCfInstanceAndWhitelistDmzRdsAccess",
       "Properties": {
-        "GroupId": { "Ref": "RdsLambdaSecurityGroup" },
-        "CidrIp": { "Ref": "RdsAz2Cidr" },
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
         "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
         "IpProtocol": "tcp"
@@ -719,167 +719,6 @@
         "ResourceRecords": [
           { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Address" ] }
         ]
-      }
-    },
-
-    "RdsLambaCreateDbRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [ "lambda.amazonaws.com" ]
-              },
-              "Action": [ "sts:AssumeRole" ] }
-          ]
-        },
-        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
-        "Policies": [
-          {
-            "PolicyName": { "Fn::Sub": "${DeploymentName}-RdsLambdaPolicy" },
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "logs:CreateLogGroup",
-                    "logs:CreateLogStream",
-                    "logs:PutLogEvents"
-                  ],
-                  "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*" }
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "ec2:DescribeNetworkInterfaces",
-                    "ec2:CreateNetworkInterface",
-                    "ec2:DeleteNetworkInterface"
-                  ],
-                  "Resource": { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*" }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-
-    "RdsLambaCreateAppsDb": {
-      "Type": "AWS::Lambda::Function",
-      "Condition": "DeployRdsAppsInstance",
-      "Properties": {
-        "Description": "Create databases within the Apps RDS Instance",
-        "Handler": "create_database_and_user",
-        "Role": { "Fn::GetAtt": [ "RdsLambaCreateDbRole", "Arn" ] },
-        "Runtime": "python3.6",
-        "Timeout": "60",
-        "VpcConfig": {
-          "SecurityGroupIds": [
-            { "Ref": "RdsLambdaSecurityGroup" }
-          ],
-          "SubnetIds": [
-            { "Ref": "RdsAz1Subnet" },
-            { "Ref": "RdsAz2Subnet" }
-          ]
-        },
-        "Code": {
-          "ZipFile": {
-            "Fn::Join": [
-              "\n", [
-                "import psycopg2",
-                "import logging",
-                "import sys",
-                "",
-                {
-                  "Fn::Join": [
-                    "", [
-                      "conn_string = \"",
-                      { "Fn::Sub": "host='${RdsAppsInstance.Endpoint.Address}' port='${RdsAppsInstance.Endpoint.Port}'" },
-                      " ",
-                      { "Fn::Sub": "dbname='postgres' user='${RdsAppsInstanceUsername}' password='${RdsAppsInstancePassword}'" },
-                      "\""
-                    ]
-                  ]
-                },
-                "def create_database_and_user(event, context)",
-                "  try:",
-                "    conn = psycopg2.connect(conn_string)",
-                "    cursor = conn.cursor()",
-                "    try:",
-                "      cursor.execute(\"CREATE USER %s\",event['user'])",
-                "      try:",
-                "        cursor.execute(\"CREATE DATABASE %s OWNER %s\",event['database'],event['user'])",
-                "      except Exception as e:",
-                "        logging.info('Failed to create database')",
-                "    except Exception as e:",
-                "      logging.info('Failed to create user')",
-                "  except Exception as e:",
-                "    logging.info('Failed to connect to Apps RDS instance')"
-              ]
-            ]
-          }
-        }
-      }
-    },
-    "RdsLambaCreateCfDb": {
-      "Type": "AWS::Lambda::Function",
-      "Condition": "DeployRdsCfInstance",
-      "Properties": {
-        "Description": "Create databases within the Cf RDS Instance",
-        "Handler": "create_database_and_user",
-        "Role": { "Fn::GetAtt": [ "RdsLambaCreateDbRole", "Arn" ] },
-        "Runtime": "python3.6",
-        "Timeout": "60",
-        "VpcConfig": {
-          "SecurityGroupIds": [
-            { "Ref": "RdsLambdaSecurityGroup" }
-          ],
-          "SubnetIds": [
-            { "Ref": "RdsAz1Subnet" },
-            { "Ref": "RdsAz2Subnet" }
-          ]
-        },
-        "Code": {
-          "ZipFile": {
-            "Fn::Join": [
-              "\n", [
-                "import psycopg2",
-                "import logging",
-                "import sys",
-                "",
-                {
-                  "Fn::Join": [
-                    "", [
-                      "conn_string = \"",
-                      { "Fn::Sub": "host='${RdsCfInstance.Endpoint.Address}' port='${RdsCfInstance.Endpoint.Port}'" },
-                      " ",
-                      { "Fn::Sub": "dbname='postgres' user='${RdsCfInstanceUsername}' password='${RdsCfInstancePassword}'" },
-                      "\""
-                    ]
-                  ]
-                },
-                "def create_database_and_user(event, context)",
-                "  try:",
-                "    conn = psycopg2.connect(conn_string)",
-                "    cursor = conn.cursor()",
-                "    try:",
-                "      cursor.execute(\"CREATE USER %s\",event['user'])",
-                "      try:",
-                "        cursor.execute(\"CREATE DATABASE %s OWNER %s\",event['database'],event['user'])",
-                "      except Exception as e:",
-                "        logging.info('Failed to create database')",
-                "    except Exception as e:",
-                "      logging.info('Failed to create user')",
-                "  except Exception as e:",
-                "    logging.info('Failed to connect to Apps RDS instance')"
-              ]
-            ]
-          }
-        }
       }
     }
   }
