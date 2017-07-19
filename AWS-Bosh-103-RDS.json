@@ -632,14 +632,10 @@
                     "rds:CreateDBInstance",
                     "rds:ModifyDBInstance",
                     "rds:DeleteDBInstance",
-                    "rds:DescribeDBClusters",
-                    "rds:CreateDBCluster",
-                    "rds:ModifyDBCluster",
-                    "rds:DeleteDBCluster",
                     "rds:AddTagsToResource"
                   ],
                   "Effect": "Allow",
-                  "Resource": "*"
+                  "Resource": { "Fn::Sub": "arn:aws:rds:${AWS::Region}:${AWS::AccountId}:db:*" }
                 },
                 {
                   "Action": [
@@ -730,7 +726,7 @@
       "Properties": {
         "Description": "Create databases within the Apps RDS Instance",
         "Handler": "create_database_and_user",
-        "Role": { "Ref": "RdsLambaCreateDbRole" },
+        "Role": { "Fn::GetAtt": [ "RdsLambaCreateDbRole", "Arn" ] },
         "Runtime": "python3.6",
         "Timeout": "60",
         "VpcConfig": {
@@ -787,7 +783,7 @@
       "Properties": {
         "Description": "Create databases within the Cf RDS Instance",
         "Handler": "create_database_and_user",
-        "Role": { "Ref": "RdsLambaCreateDbRole" },
+        "Role": { "Fn::GetAtt": [ "RdsLambaCreateDbRole", "Arn" ] },
         "Runtime": "python3.6",
         "Timeout": "60",
         "VpcConfig": {
