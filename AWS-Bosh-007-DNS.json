@@ -43,17 +43,6 @@
         ]
       }
     },
-    "DomainName": {
-      "Description": "Main DNS name",
-      "Value": {
-        "Fn::Join": [
-          ".", [
-            { "Fn::Sub": "${DeploymentName}" },
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }
-          ]
-        ]
-      }
-    },
     "DirectorDns": {
       "Description": "Director DNS name",
       "Value": {
