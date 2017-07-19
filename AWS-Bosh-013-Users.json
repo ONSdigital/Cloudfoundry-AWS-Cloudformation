@@ -92,7 +92,8 @@
                 },
                 {
                   "Action": [
-                    "iam:GetUser"
+                    "iam:GetUser",
+                    "iam:PassRole"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
