@@ -92,6 +92,18 @@
                 },
                 {
                   "Action": [
+                    "elasticloadbalancing:DescribeInstanceHealth",
+                    "elasticloadbalancing:DescribeLoadBalancerAttributes",
+                    "elasticloadbalancing:DescribeLoadBalancerPolicyTypes",
+                    "elasticloadbalancing:DescribeLoadBalancers",
+                    "elasticloadbalancing:DescribeLoadBalancerPolicies",
+                    "elasticloadbalancing:DescribeTags"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:*" }
+                },
+                {
+                  "Action": [
                     "events:*"
                   ],
                   "Effect": "Allow",
