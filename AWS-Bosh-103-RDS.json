@@ -333,12 +333,12 @@
     "RdsAppsInstanceDns": {
       "Description": "RDS Apps Instance DNS Name",
       "Condition": "DeployRdsAppsInstance",
-      "Value": { "Fn::Join": [ ".", [ "app-rds", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] }
+      "Value": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
     },
     "RdsCfsInstanceDns": {
       "Description": "RDS CF Instance DNS Name",
       "Condition": "DeployRdsCfInstance",
-      "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] }
+      "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
     },
     "RdsLambaCreateAppsDbArn": {
       "Description": "RDS CF Instance DNS Name",
@@ -361,13 +361,13 @@
     "MultiAzAndDeployRdsAppsInstance": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsAppsInstanceSize" }, "NONE" ] } ] }
+        { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] }
       ]
     },
     "MultiAzAndDeployRdsCfInstance": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsCfInstanceSize" }, "NONE" ] } ] }
+        { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] }
       ]
     },
 
@@ -375,13 +375,13 @@
     "SingleAzAndDeployRdsAppsInstance": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsAppsInstanceSize" }, "NONE" ] } ] }
+        { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] }
       ]
     },
     "SingleAzAndDeployRdsCfInstance": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "RdsCfInstanceSize" }, "NONE" ] } ] }
+        { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] }
       ]
     }
   },
@@ -407,9 +407,7 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-              {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
               "Templates",
               "Stack-Protection.json"
             ]
@@ -470,36 +468,55 @@
       "Properties": {
         "GroupDescription": "RDS Lambda Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          {
-            "CidrIp": { "Ref": "RdsAz1Cidr" },
-            "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
-            "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "RdsAz2Cidr" },
-            "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
-            "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "RdsAz1Cidr" },
-            "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
-            "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
-            "IpProtocol": "tcp"
-          },
-          {
-            "CidrIp": { "Ref": "RdsAz2Cidr" },
-            "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
-            "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
-            "IpProtocol": "tcp"
-          }
-        ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsLambdaSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
+      }
+    },
+
+    "LambdaRdsAppsInstancAz1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployRdsAppsInstance",
+      "Properties": {
+        "GroupId": { "Ref": "RdsLambdaSecurityGroup" },
+        "CidrIp": { "Ref": "RdsAz1Cidr" },
+        "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
+        "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
+        "IpProtocol": "tcp"
+      }
+    },
+    "LambdaRdsAppsInstancAz2SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployRdsAppsInstance",
+      "Properties": {
+        "GroupId": { "Ref": "RdsLambdaSecurityGroup" },
+        "CidrIp": { "Ref": "RdsAz2Cidr" },
+        "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
+        "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
+        "IpProtocol": "tcp"
+      }
+    },
+    "LambdaRdsCfInstancAz1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployRdsCfInstance",
+      "Properties": {
+        "GroupId": { "Ref": "RdsLambdaSecurityGroup" },
+        "CidrIp": { "Ref": "RdsAz1Cidr" },
+        "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
+        "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
+        "IpProtocol": "tcp"
+      }
+    },
+    "LambdaRdsCfInstancAz2SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployRdsCfInstance",
+      "Properties": {
+        "GroupId": { "Ref": "RdsLambdaSecurityGroup" },
+        "CidrIp": { "Ref": "RdsAz2Cidr" },
+        "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
+        "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
+        "IpProtocol": "tcp"
       }
     },
 
@@ -620,6 +637,7 @@
       "Type": "AWS::IAM::User",
       "Condition": "DeployRdsAppsInstance",
       "Properties": {
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
         "Policies": [
           {
             "PolicyName": { "Fn::Sub": "${DeploymentName}-CfRdsPolicy" },
@@ -664,7 +682,7 @@
       "Condition": "DeployRdsAppsInstance",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::Join": [ ".", [ "app-rds", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+        "Name": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
@@ -678,7 +696,7 @@
       "Condition": "DeployRdsCfInstance",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::Join": [ ".", [ "cf-rds", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+        "Name": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
@@ -701,7 +719,7 @@
               "Action": [ "sts:AssumeRole" ] }
           ]
         },
-        "Path": "/",
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
         "Policies": [
           {
             "PolicyName": "root",
@@ -710,7 +728,11 @@
               "Statement": [
                 {
                   "Effect": "Allow",
-                  "Action": [ "logs:*" ],
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
                   "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:*:*" }
                 }
               ]

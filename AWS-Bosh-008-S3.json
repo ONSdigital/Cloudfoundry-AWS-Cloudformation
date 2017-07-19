@@ -88,9 +88,7 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-              {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
               "Templates",
               "Stack-Protection.json"
             ]
@@ -139,6 +137,7 @@
             }
           ]
         },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
         "Policies": [
           {
             "PolicyName": "S3BoshBucketAccess",
@@ -181,6 +180,7 @@
             }
           ]
         },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
         "Policies": [
           {
             "PolicyName": "S3BucketAccess",

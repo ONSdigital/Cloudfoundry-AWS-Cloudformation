@@ -124,6 +124,16 @@
       "Description": "Hosted Zone",
       "Value": { "Ref": "HostedZone" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+    },
+    "DomainName": {
+      "Description": "Main DNS Name",
+      "Value": { "Fn::Sub": "${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DomainName" } }
+    },
+    "DeploymentIamGroup": {
+      "Description": "IAM Group",
+      "Value": { "Ref": "DeploymentIamGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
     }
   },
 
@@ -144,15 +154,22 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-	      {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
+	      { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
               "Templates",
               "Stack-Protection.json"
             ]
           ]
         }
       }
+    },
+
+    "DeploymentIamGroup": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "GroupName": { "Ref": "DeploymentName" },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" }
+      }
     }
+
   }
 }
