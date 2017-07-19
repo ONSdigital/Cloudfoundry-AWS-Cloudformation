@@ -67,28 +67,12 @@
                     "ec2:*"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:image/*" }
-                },
-                {
-                  "Action": [
-                    "ec2:*"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*" }
-                },
-                {
-                  "Action": [
-                    "ec2:*"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:snapshot/*" }
-                },
-                {
-                  "Action": [
-                    "ec2:*"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:volume/*" }
+                  "Resources": [
+                    { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:image/*" },
+                    { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*" },
+                    { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:snapshot/*" },
+                    { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:volume/*" }
+                  ]
                 },
                 {
                   "Action": [

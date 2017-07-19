@@ -739,7 +739,7 @@
         "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
         "Policies": [
           {
-            "PolicyName": "root",
+            "PolicyName": { "Fn::Sub": "${DeploymentName}-RdsLambdaPolicy" },
             "PolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
@@ -751,15 +751,6 @@
                     "logs:PutLogEvents"
                   ],
                   "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*" }
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "ec2:DescribeNetworkInterfaces",
-                    "ec2:CreateNetworkInterface",
-                    "ec2:DeleteNetworkInterface"
-                  ],
-                  "Resource": { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:network-interface" }
                 },
                 {
                   "Effect": "Allow",

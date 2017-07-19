@@ -149,7 +149,7 @@
                   "Action": [
                     "s3:*"
                   ],
-                  "Resource": [
+                  "Resources": [
                     { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}" },
@@ -192,7 +192,7 @@
                   "Action": [
                     "s3:*"
                   ],
-                  "Resource": [
+                  "Resources": [
                     { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${S3BuildpackBucket}" },
