@@ -67,7 +67,7 @@
                     "ec2:*"
                   ],
                   "Effect": "Allow",
-                  "Resources": [
+                  "Resource": [
                     { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:image/*" },
                     { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/*" },
                     { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:snapshot/*" },
