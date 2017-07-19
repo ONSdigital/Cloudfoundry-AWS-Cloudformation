@@ -72,6 +72,16 @@
           ]
         ]
       }
+    },
+    "S3BoshBucketAccessRole": {
+      "Description": "Bosh S3 Bucket Access Role",
+      "Value": { "Fn::GetAtt": [ "S3BoshBucketAccessRole", "Arn" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3BoshBucketAccessRole" } }
+    },
+    "S3BucketAccessRole": {
+      "Description": "S3 Bucket Access Role",
+      "Value": { "Fn::GetAtt": [ "S3BucketAccessRole", "Arn" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3BucketAccessRole" } }
     }
   },
 

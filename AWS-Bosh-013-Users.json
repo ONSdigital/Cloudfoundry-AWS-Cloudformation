@@ -78,6 +78,20 @@
                 },
                 {
                   "Action": [
+                    "elasticloadbalancing:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      "", [
+                        { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
+                        { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalElb" } }
+                      ]
+                    ]
+                  }
+                },
+                {
+                  "Action": [
                     "events:*"
                   ],
                   "Effect": "Allow",
@@ -92,11 +106,20 @@
                 },
                 {
                   "Action": [
-                    "iam:GetUser",
-                    "iam:PassRole"
+                    "iam:GetUser"
                   ],
                   "Effect": "Allow",
                   "Resource": "*"
+                },
+                {
+                  "Action": [
+                    "iam:PassRole"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": [
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3BoshBucketAccessRole" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3BucketAccessRole" } }
+                  ]
                 }
               ]
             }
