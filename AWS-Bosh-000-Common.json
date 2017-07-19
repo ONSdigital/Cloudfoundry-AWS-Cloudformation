@@ -164,7 +164,7 @@
     },
 
     "DeploymentIamGroup": {
-      "Type": "AWS::EC2::Instance",
+      "Type": "AWS::IAM::Group",
       "Properties": {
         "GroupName": { "Ref": "DeploymentName" },
         "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" }
