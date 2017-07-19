@@ -94,6 +94,13 @@
       "MinValue": "5",
       "MaxValue": "6144"
     },
+    "RdsAppsInstanceMaxConnections": {
+      "Type": "Number",
+      "Description": "RDS Apps Instance Max Connections",
+      "Default": "100",
+      "MinValue": "5",
+      "MaxValue": "999"
+    },
     "RdsAppsInstanceName": {
       "Type": "String",
       "Description" : "Apps RDS Instance Name",
@@ -169,6 +176,13 @@
         "db.m4.large",
         "db.m4.xlarge"
       ]
+    },
+    "RdsCfInstanceMaxConnections": {
+      "Type": "Number",
+      "Description": "RDS CF Instance Max Connections",
+      "Default": "100",
+      "MinValue": "5",
+      "MaxValue": "999"
     },
     "RdsCfInstanceStorageSize": {
       "Type": "Number",
@@ -638,6 +652,9 @@
       "Condition": "DeployRdsAppsInstance",
       "Properties": {
         "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
+        "Groups": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
+        ],
         "Policies": [
           {
             "PolicyName": { "Fn::Sub": "${DeploymentName}-CfRdsPolicy" },
@@ -733,7 +750,25 @@
                     "logs:CreateLogStream",
                     "logs:PutLogEvents"
                   ],
-                  "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:*:*" }
+                  "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*" }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "ec2:DescribeNetworkInterfaces",
+                    "ec2:CreateNetworkInterface",
+                    "ec2:DeleteNetworkInterface"
+                  ],
+                  "Resource": { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:network-interface" }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "ec2:DescribeNetworkInterfaces",
+                    "ec2:CreateNetworkInterface",
+                    "ec2:DeleteNetworkInterface"
+                  ],
+                  "Resource": { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*" }
                 }
               ]
             }
