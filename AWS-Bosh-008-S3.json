@@ -146,10 +146,8 @@
               "Statement": [
                 {
                   "Effect": "Allow",
-                  "Action": [
-                    "s3:*"
-                  ],
-                  "Resources": [
+                  "Action": "s3:*",
+                  "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}" },
@@ -192,7 +190,7 @@
                   "Action": [
                     "s3:*"
                   ],
-                  "Resources": [
+                  "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${S3BuildpackBucket}" },
