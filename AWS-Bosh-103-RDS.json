@@ -339,7 +339,7 @@
       "Condition": "DeployRdsAppsInstance",
       "Value": { "Ref": "RdsBrokerAccessKey" }
     },
-    "RdsBrokerAccessKey": {
+    "RdsBrokerSecretAccessKey": {
       "Description": "RDS Broker Access Key",
       "Condition": "DeployRdsAppsInstance",
       "Value": { "Fn::GetAtt": [ "RdsBrokerAccessKey", "SecretAccessKey" ] }

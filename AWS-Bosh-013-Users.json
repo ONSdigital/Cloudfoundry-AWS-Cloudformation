@@ -18,7 +18,7 @@
       "Description": "ElastiCache Broker Access Key Id",
       "Value": { "Ref": "BoshAwsAccessKey" }
     },
-    "BoshAwsAccessKey": {
+    "BoshAwsSecretAccessKey": {
       "Description": "ElastiCache Broker Access Key",
       "Value": { "Fn::GetAtt": [ "BoshAwsAccessKey", "SecretAccessKey" ] }
     },

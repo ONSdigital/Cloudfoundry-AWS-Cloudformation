@@ -46,7 +46,7 @@
       "Condition": "CreateElastiCacheNetworks",
       "Value": { "Ref": "ElastiCacheBrokerAccessKey" }
     },
-    "ElastiCacheBrokerAccessKey": {
+    "ElastiCacheBrokerSecretAccessKey": {
       "Description": "ElastiCache Broker Access Key",
       "Condition": "CreateElastiCacheNetworks",
       "Value": { "Fn::GetAtt": [ "ElastiCacheBrokerAccessKey", "SecretAccessKey" ] }
