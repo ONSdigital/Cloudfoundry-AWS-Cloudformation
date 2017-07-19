@@ -51,8 +51,19 @@
       "Value": { "Ref": "DmzAz2Subnet" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
     },
-    "DmzAz1CidrPrefix": {
+    "DmzAz1Cidr": {
       "Description": "DMZ AZ1 CIDR",
+      "Value": { "Ref": "DmzAz1Cidr" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } }
+    },
+    "DmzAz2Cidr": {
+      "Description": "DMZ AZ2 CIDR",
+      "Condition": "MultiAzOrElb",
+      "Value": { "Ref": "DmzAz2Cidr" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } }
+    },
+    "DmzAz1CidrPrefix": {
+      "Description": "DMZ AZ1 CIDR Prefix",
       "Value": {
 	"Fn::Join": [
           ".", [
