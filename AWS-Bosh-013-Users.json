@@ -81,14 +81,7 @@
                     "elasticloadbalancing:*"
                   ],
                   "Effect": "Allow",
-                  "Resource": {
-                    "Fn::Join": [
-                      "", [
-                        { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
-                        { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalElb" } }
-                      ]
-                    ]
-                  }
+                  "Resource": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalElbArn" } }
                 },
                 {
                   "Action": [
@@ -100,7 +93,7 @@
                     "elasticloadbalancing:DescribeTags"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:*" }
+                  "Resource": "*"
                 },
                 {
                   "Action": [

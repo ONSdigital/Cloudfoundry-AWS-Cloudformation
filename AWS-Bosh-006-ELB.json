@@ -92,6 +92,24 @@
       },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalElb" } }
     },
+    "ExternalElbArn": {
+      "Description": "External ELB ARN",
+      "Condition": "DeployElb",
+      "Value": {
+        "Fn::If": [
+          "GenerateElbSslCertificate",
+          { "Fn::GetAtt": [ "ExternalAcmSslElb", "Arn" ] },
+          {
+            "Fn::If": [
+              "UseElbSslCertificateArn",
+              { "Fn::GetAtt": [ "ExternalExistingSslElb", "Arn" ] },
+              { "Fn::GetAtt": [ "ExternalPlainTextElb", "Arn" ] }
+            ]
+          }
+        ]
+      },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalElbArn" } }
+    },
     "ElbDnsName": {
       "Description": "ELB DNS Name",
       "Condition": "DeployElb",
