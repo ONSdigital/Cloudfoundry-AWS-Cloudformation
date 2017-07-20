@@ -73,6 +73,18 @@
       "Condition": "DeployElb",
       "Value": { "Fn::GetAtt": [ "ExternalElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbDnsName" } }
+    },
+    "ElbTargetGroup80": {
+      "Description": "ELB DNS Name",
+      "Condition": "DeployElb",
+      "Value": { "Ref": "ElbTargetGroup80" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup80" } }
+    },
+    "ElbTargetGroup443": {
+      "Description": "ELB DNS Name",
+      "Condition": "SslElb",
+      "Value": { "Ref": "ElbTargetGroup443" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443" } }
     }
   },
 
