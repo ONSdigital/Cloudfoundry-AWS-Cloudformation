@@ -224,7 +224,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer1VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer1VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer1" }
       }
     },
     "VpcPeer1DmzAz2Route": {
@@ -233,7 +233,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer1VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer1VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer1" }
       }
     },
     "VpcPeer1PrivateAz1Route": {
@@ -242,7 +242,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer1VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer1VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer1" }
       }
     },
     "VpcPeer1PrivateAz2Route": {
@@ -251,7 +251,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer1VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer1VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer1" }
       }
     },
     "VpcPeer1PrivateAz3Route": {
@@ -260,7 +260,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer1VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer1VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer1" }
       }
     },
 
@@ -270,7 +270,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer2VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer2VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer2" }
       }
     },
     "VpcPeer2DmzAz2Route": {
@@ -279,7 +279,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer2VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer2VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer2" }
       }
     },
     "VpcPeer2PrivateAz1Route": {
@@ -288,7 +288,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer2VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer2VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer2" }
       }
     },
     "VpcPeer2PrivateAz2Route": {
@@ -297,7 +297,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer2VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer2VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer2" }
       }
     },
     "VpcPeer2PrivateAz3Route": {
@@ -306,7 +306,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer2VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer1VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer2" }
       }
     },
 
@@ -316,7 +316,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer3VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer3VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer3" }
       }
     },
     "VpcPeer3DmzAz2Route": {
@@ -325,7 +325,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer3VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer3VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer3" }
       }
     },
     "VpcPeer3PrivateAz1Route": {
@@ -334,7 +334,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer3VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer3VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer3" }
       }
     },
     "VpcPeer3PrivateAz2Route": {
@@ -343,7 +343,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer3VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer3VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer3" }
       }
     },
     "VpcPeer3PrivateAz3Route": {
@@ -352,7 +352,7 @@
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer3VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref": "Peer1VpcId" }
+        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer3" }
       }
     }
   }
