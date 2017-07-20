@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Elastic Load Balancer",
+  "Description": "Elastic Load Balancer v2",
 
   "Parameters": {
     "DeploymentName": {
@@ -235,7 +235,7 @@
     },
 
     "ExternalAcmSslElb": {
-      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Condition": "GenerateElbSslCertificate",
       "Properties": {
         "Scheme": { "Ref": "ElbScheme" },
@@ -243,6 +243,60 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
+        "LoadBalancerAttributes": {
+          "Key" : "idle_timeout.timeout_seconds",
+          "Value" : { "Ref": "ElbTimeout" }
+        },
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "ExternalExistingSslElb": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Condition": "GenerateElbSslCertificate",
+      "Properties": {
+        "Scheme": { "Ref": "ElbScheme" },
+        "Subnets": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+        ],
+        "LoadBalancerAttributes": {
+          "Key" : "idle_timeout.timeout_seconds",
+          "Value" : { "Ref": "ElbTimeout" }
+        },
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "ExternalPlainTextElb": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Condition": "GenerateElbSslCertificate",
+      "Properties": {
+        "Scheme": { "Ref": "ElbScheme" },
+        "Subnets": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+        ],
+        "LoadBalancerAttributes": {
+          "Key" : "idle_timeout.timeout_seconds",
+          "Value" : { "Ref": "ElbTimeout" }
+        },
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    
+
         "Listeners": [
           {
             "InstancePort": "80",
@@ -264,66 +318,6 @@
             "Protocol": "TCP",
             "SSLCertificateId": { "Ref": "ElbSslCertificate"  }
           }
-	],
-        "ConnectionDrainingPolicy": {
-          "Enabled" : "true",
-          "Timeout" : { "Ref": "ElbTimeout" }
-        },
-        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-
-    "ExternalExistingSslElb": {
-      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
-      "Condition": "UseElbSslCertificateArn",
-      "Properties": {
-        "Scheme": { "Ref": "ElbScheme" },
-        "Subnets": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
-        ],
-        "ConnectionDrainingPolicy": {
-          "enabled" : "true",
-          "Timeout" : { "Ref": "ElbTimeout" }
-        },
-        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "ExternalPlainTextElb": {
-      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
-      "Condition": "PlainTextElb",
-      "Properties": {
-        "Scheme": { "Ref": "ElbScheme" },
-        "Subnets": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
-        ],
-        "Listeners": [
-          {
-            "InstancePort": "80",
-            "InstanceProtocol": "HTTP",
-            "LoadBalancerPort": "80",
-            "Protocol": "HTTP"
-          }
-	],
-        "ConnectionDrainingPolicy": {
-          "Enabled" : "true",
-          "Timeout" : { "Ref": "ElbTimeout" }
-        },
-        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
     }
   }
 }
