@@ -77,13 +77,13 @@
     "ElbTargetGroup80": {
       "Description": "ELB DNS Name",
       "Condition": "DeployElb",
-      "Value": { "Fn::GetAtt": [ "ElbTargetGroup80", "TargetGroupFullName" ] },
+      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ElbTargetGroup80", "TargetGroupFullName" ] } ] } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup80" } }
     },
     "ElbTargetGroup443": {
       "Description": "ELB DNS Name",
       "Condition": "SslElb",
-      "Value": { "Fn::GetAtt": [ "ElbTargetGroup443", "TargetGroupFullName" ] },
+      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ElbTargetGroup443", "TargetGroupFullName" ] } ] } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443" } }
     }
   },
