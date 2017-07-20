@@ -44,51 +44,51 @@
       "Value": { "Ref": "BoshLiteIp" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshLiteIp" } }
     },
-    "ExternalIpAz1": {
-      "Description": "LB external IP 1",
+    "ExternalAz1Ip": {
+      "Description": "LB External AZ1 IP",
       "Condition": "AllocateLbIp",
       "Value": { "Ref": "ExternalAz1Ip" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalIpAz1" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } }
     },
-    "ExternalIpAz2": {
-      "Description": "LB external IP 2",
+    "ExternalAz2Ip": {
+      "Description": "LB External AZ2 IP",
       "Condition": "MultiAzAndAllocateLbIp",
       "Value": { "Ref": "ExternalAz2Ip" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalIpAz2" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalAz2Ip" } }
     },
-    "NatIpAz1": {
-      "Description": "NAT IP 1",
+    "NatAz1Ip": {
+      "Description": "NAT AZ1 IP 1",
       "Value": { "Ref": "NatAz1Ip" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatIpAz1" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } }
     },
-    "NatIpAz2": {
-      "Description": "NAT IP 2",
+    "NatAz2Ip": {
+      "Description": "NAT AZ2 IP 2",
       "Value": { "Ref": "NatAz2Ip" },
       "Condition": "MultiAz",
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatIpAz2" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } }
     },
-    "NatIpAz3": {
-      "Description": "NAT IP 3",
+    "NatAz3Ip": {
+      "Description": "NAT AZ3 IP",
       "Condition": "MultiAz",
       "Value": { "Ref": "NatAz3Ip" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatIpAz3" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } }
     },
-    "NatIpAz1AllocationId": {
-      "Description": "NAT IP 1",
+    "NatAz1IpAllocationId": {:
+      "Description": "NAT AZ1 Allocation IDIP",
       "Value": { "Fn::GetAtt": [ "NatAz1Ip", "AllocationId" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatIpAz1-AllocationId" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz1Ip-AllocationId" } }
     },
-    "NatIpAz2AllocationId": {
-      "Description": "NAT IP 2",
+    "NatAz2IpAllocationId": {
+      "Description": "NAT AZ2 IP Allocation ID",
       "Value": { "Fn::GetAtt": [ "NatAz2Ip", "AllocationId" ] },
       "Condition": "MultiAz",
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatIpAz2-AllocationId" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2Ip-AllocationId" } }
     },
-    "NatIpAz3AllocationId": {
-      "Description": "NAT IP 3",
+    "NatAz3IpAllocationId": {
+      "Description": "NAT AZ3 IP Allocation ID",
       "Condition": "MultiAz",
       "Value": { "Fn::GetAtt": [ "NatAz3Ip", "AllocationId" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatIpAz3-AllocationId" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3Ip-AllocationId" } }
     }
   },
 

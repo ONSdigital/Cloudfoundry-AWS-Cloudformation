@@ -217,7 +217,7 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz1" } }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } }
         ]
       }
     },
@@ -230,9 +230,9 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz1" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz2" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz3" } }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } }
         ]
       }
     },
@@ -244,7 +244,7 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz1" } }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } }
         ]
       }
     },
@@ -257,7 +257,7 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz2" } }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } }
         ]
       }
     },
@@ -270,7 +270,7 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatIpAz3" } }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } }
         ]
       }
     },
