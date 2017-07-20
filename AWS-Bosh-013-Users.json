@@ -97,6 +97,7 @@
                     "elasticloadbalancing:DescribeLoadBalancerPolicyTypes",
                     "elasticloadbalancing:DescribeLoadBalancers",
                     "elasticloadbalancing:DescribeLoadBalancerPolicies",
+                    "elasticloadbalancing:DescribeTargetGroups",
                     "elasticloadbalancing:DescribeTags"
                   ],
                   "Effect": "Allow",
