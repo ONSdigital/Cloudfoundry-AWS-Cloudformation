@@ -181,10 +181,9 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
-        "LoadBalancerAttributes": {
-          "Key" : "idle_timeout.timeout_seconds",
-          "Value" : { "Ref": "ElbTimeout" }
-        },
+        "LoadBalancerAttributes": [
+          { "Key" : "idle_timeout.timeout_seconds", "Value" : { "Ref": "ElbTimeout" } }
+        ],
         "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
