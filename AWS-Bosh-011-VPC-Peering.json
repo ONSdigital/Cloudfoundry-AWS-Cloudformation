@@ -57,21 +57,21 @@
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 1 Role ARN",
-      "AllowedPattern": "^(arn:aws::iam::[0-9]+:*/[0-9]+:[A-Za-z0-9-]+|NONE)$",
+      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+|NONE)$",
       "ConstraintDescription": "Peer 1 ARN or NONE"
     },
     "Peer2RoleArn": {
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 2 Role ARN",
-      "AllowedPattern": "^(arn:aws::iam::[0-9]+:*/[0-9]+:[A-Za-z0-9-]+|NONE)$",
+      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+|NONE)$",
       "ConstraintDescription": "Peer 2 ARN or NONE"
     },
     "Peer3RoleArn": {
       "Type": "String",
       "Default": "NONE",
       "Description": "Peer 3 Role ARN",
-      "AllowedPattern": "^(arn:aws::iam::[0-9]+:*/[0-9]+:[A-Za-z0-9-]+|NONE)$",
+      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+|NONE)$",
       "ConstraintDescription": "Peer 3 ARN or NONE"
     },
     "Peer1VpcCidr": {
