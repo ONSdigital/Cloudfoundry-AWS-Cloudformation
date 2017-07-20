@@ -73,7 +73,7 @@
       "Value": { "Ref": "NatAz3Ip" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } }
     },
-    "NatAz1IpAllocationId": {:
+    "NatAz1IpAllocationId": {
       "Description": "NAT AZ1 Allocation IDIP",
       "Value": { "Fn::GetAtt": [ "NatAz1Ip", "AllocationId" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz1Ip-AllocationId" } }
