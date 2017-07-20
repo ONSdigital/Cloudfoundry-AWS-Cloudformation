@@ -241,11 +241,13 @@
       "Properties": {
         "Certificates": [
           {
-            "Fn::If": [
-              "GenerateSslCertificate",
-              { "Ref": "GeneratedSslCertificate" },
-              { "Ref": "ExistingSslCertificate" }
-            ]
+            "CertificateArn": {
+              "Fn::If": [
+                "GenerateSslCertificate",
+                { "Ref": "GeneratedSslCertificate" },
+                { "Ref": "ExistingSslCertificate" }
+              ]
+            }
           }
         ],
         "DefaultActions": [
