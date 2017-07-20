@@ -158,12 +158,12 @@
                   "Effect": "Allow",
                   "Action": "s3:*",
                   "Resource": [
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BoshBlobstoreBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BoshBlobstoreBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BoshCompiledPackageCacheBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BoshCompiledPackageCacheBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BoshDirectorBackupBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BoshDirectorBackupBucket}/*" }
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshDirectorBackupBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshDirectorBackupBucket}/*" }
                   ]
                 }
               ]
@@ -201,16 +201,16 @@
                     "s3:*"
                   ],
                   "Resource": [
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BlobstoreBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BlobstoreBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BuildpackBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3BuildpackBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3DropletBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3DropletBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3PackageBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3PackageBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3ResourceBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${AWS::AccountId}:${S3ResourceBucket}/*" }
+                    { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BuildpackBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BuildpackBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3DropletBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3DropletBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3PackageBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3PackageBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3ResourceBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3ResourceBucket}/*" }
                   ]
                 }
               ]

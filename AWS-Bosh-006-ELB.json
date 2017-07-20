@@ -244,8 +244,26 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
         "Listeners": [
-          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
-          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificate"  } }
+          {
+            "InstancePort": "80",
+            "InstanceProtocol": "HTTP",
+            "LoadBalancerPort": "80",
+            "Protocol": "HTTP"
+          },
+          {
+            "InstancePort": "80",
+            "InstanceProtocol": "HTTP",
+            "LoadBalancerPort": "443",
+            "Protocol": "HTTPS",
+            "SSLCertificateId": { "Ref": "ElbSslCertificate"  }
+          },
+          {
+            "InstancePort": "80",
+            "InstanceProtocol": "TCP",
+            "LoadBalancerPort": "4443",
+            "Protocol": "TCP",
+            "SSLCertificateId": { "Ref": "ElbSslCertificate"  }
+          }
 	],
         "ConnectionDrainingPolicy": {
           "Enabled" : "true",
@@ -260,7 +278,7 @@
     },
 
     "ExternalExistingSslElb": {
-      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Condition": "UseElbSslCertificateArn",
       "Properties": {
         "Scheme": { "Ref": "ElbScheme" },
@@ -268,12 +286,8 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
-        "Listeners": [
-          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" },
-          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "443", "Protocol": "HTTPS", "SSLCertificateId": { "Ref": "ElbSslCertificateArn"  } }
-	],
         "ConnectionDrainingPolicy": {
-          "Enabled" : "true",
+          "enabled" : "true",
           "Timeout" : { "Ref": "ElbTimeout" }
         },
         "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
@@ -293,7 +307,12 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
         "Listeners": [
-          { "InstancePort": "80", "InstanceProtocol": "HTTP", "LoadBalancerPort": "80", "Protocol": "HTTP" }
+          {
+            "InstancePort": "80",
+            "InstanceProtocol": "HTTP",
+            "LoadBalancerPort": "80",
+            "Protocol": "HTTP"
+          }
 	],
         "ConnectionDrainingPolicy": {
           "Enabled" : "true",
