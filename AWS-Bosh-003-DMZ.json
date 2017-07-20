@@ -275,7 +275,14 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+              "/32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
@@ -286,7 +293,14 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+              "/32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
@@ -297,7 +311,14 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+              "/32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
@@ -308,7 +329,14 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+              "/32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
@@ -319,7 +347,14 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+              "/32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
@@ -330,7 +365,14 @@
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+              "/32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
