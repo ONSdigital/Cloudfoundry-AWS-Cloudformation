@@ -35,49 +35,6 @@
           ]
         }
       }
-    },
-
-    "DmzAz1Private80SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
-        "FromPort": "80",
-        "ToPort": "80",
-        "IpProtocol": "tcp"
-      }
-    },
-    "DmzAz2Private80SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
-        "FromPort": "80",
-        "ToPort": "80",
-        "IpProtocol": "tcp"
-      }
-    },
-    "DmzAz1Private443SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
-        "FromPort": "443",
-        "ToPort": "443",
-        "IpProtocol": "tcp"
-      }
-    },
-    "DmzAz2Private443SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Ref": "PrivateSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
-        "FromPort": "443",
-        "ToPort": "443",
-        "IpProtocol": "tcp"
-      }
     }
   }
 }
