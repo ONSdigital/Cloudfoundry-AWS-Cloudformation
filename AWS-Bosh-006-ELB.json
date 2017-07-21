@@ -14,21 +14,21 @@
 
     "ElbTimeout": {
       "Type": "Number",
-      "Default": "60",
+      "Default": "30",
       "Description": "ELB Timeout",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "ElbHealthCheckInternal": {
       "Type": "Number",
-      "Default": "60",
+      "Default": "30",
       "Description": "ELB Health Check Interval",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "ElbHealthCheckTimeout": {
       "Type": "Number",
-      "Default": "60",
+      "Default": "10",
       "Description": "ELB Health Check Timeout",
       "MinValue": "1",
       "MaxValue": "999"
