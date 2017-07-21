@@ -84,7 +84,8 @@
                   "Resource": [
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalElb" } },
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup80Arn" } },
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443Arn" } }
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443Arn" } },
+                    "*"
                   ]
                 },
                 {
