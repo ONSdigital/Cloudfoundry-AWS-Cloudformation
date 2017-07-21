@@ -82,14 +82,7 @@
                   ],
                   "Effect": "Allow",
                   "Resource": [
-                    {
-                      "Fn::Join": [
-                        "", [
-                          { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
-                          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalElb" } }
-                        ]
-                      ]
-                    },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalElb" } },
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup80Arn" } },
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443Arn" } }
                   ]
