@@ -286,6 +286,16 @@
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2DefaultRoute" } }
     },
 
+    "RequiredNonRdsCfPostgresInstances": {
+      "Description": "Non-RDS PostgreSQL CF Instances",
+       "Value": {
+         "Fn::If": [
+           "DeployRdsCfInstance",
+           "0",
+           "1"
+         ]
+       }
+    },
     "RdsSubnetGroup": {
       "Description": "RDS Database Subnet Group",
       "Condition": "CreateRdsInfrastructure",
