@@ -54,8 +54,7 @@
           { "Ref": "BoshLiteIp" },
           ""
         ]
-      },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshLiteIp" } }
+      }
     },
     "BoshLiteIp": {
       "Description": "Bosh Lite (Bootstrap) IP",
