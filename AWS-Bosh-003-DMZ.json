@@ -222,7 +222,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } }
       }
     },
     "DmzAz2SubnetRouteTableAssociation": {
@@ -230,9 +230,26 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } }
       }
     },
+    "DmzAz1Route": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": { "Ref": "InternetGateway" },
+        "RouteTableId": { "Ref": "DmzAz1RouteTable" }
+      }
+    },
+    "DmzAz2Route": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": { "Ref": "InternetGateway" },
+        "RouteTableId": { "Ref": "DmzAz2RouteTable" }
+      }
+    },
+
 
     "DmzSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
@@ -255,7 +272,7 @@
     "LbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "Director Security Group",
+        "GroupDescription": "LB Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "SecurityGroupEgress": [
           { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
@@ -271,7 +288,7 @@
       }
     },
 
-    "DmzNatAz1SecurityGroupIngress": {
+    "DmzNatAz1SecurityGroupIngressNEW": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
@@ -288,7 +305,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DmzNatAz2SecurityGroupIngress": {
+    "DmzNatAz2SecurityGroupIngressNEW": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
@@ -306,7 +323,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DmzNatAz3SecurityGroupIngress": {
+    "DmzNatAz3SecurityGroupIngressNEW": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
@@ -325,7 +342,7 @@
       }
     },
 
-    "LbNatAz1SecurityGroupIngress": {
+    "LbNatAz1SecurityGroupIngressNEW": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
@@ -342,7 +359,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "LbNatAz2SecurityGroupIngress": {
+    "LbNatAz2SecurityGroupIngressNEW": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
@@ -360,7 +377,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "LbNatAz3SecurityGroupIngress": {
+    "LbNatAz3SecurityGroupIngressNEW": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
