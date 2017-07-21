@@ -50,7 +50,7 @@
       "Description": "Bosh Lite (Bootstrap) IP",
       "Value": {
         "Fn::If": [
-          "AllocateBoshIpOverride",
+          "AllocateBoshIp",
           { "Ref": "BoshLiteIp" },
           ""
         ]
@@ -60,7 +60,7 @@
       "Description": "Bosh Lite (Bootstrap) IP",
       "Value": {
         "Fn::If": [
-          "AllocateBoshIpOverride",
+          "AllocateBoshIp",
           { "Ref": "BoshLiteIp" },
           { "Ref": "BoshIpOverride" }
         ]
@@ -125,7 +125,7 @@
 
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
 
-    "AllocateBoshIpOverride": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "BoshIpOverride" }, "" ] } ] },
+    "AllocateBoshIp": { "Fn::Equals": [ { "Ref": "BoshIpOverride" }, "" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndAllocateLbIp": {
@@ -160,7 +160,7 @@
     },  
     "BoshLiteIp": {
       "Type": "AWS::EC2::EIP",
-      "Condition": "AllocateBoshIpOverride"
+      "Condition": "AllocateBoshIp"
     },
     "NatAz1Ip": {
       "Type": "AWS::EC2::EIP"
