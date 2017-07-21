@@ -233,11 +233,12 @@
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } }
       }
     },
+
     "DmzAz1Route": {
       "Type": "AWS::EC2::Route",
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
-        "GatewayId": { "Ref": "InternetGateway" },
+        "GatewayId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetGateway" } },
         "RouteTableId": { "Ref": "DmzAz1RouteTable" }
       }
     },
@@ -245,7 +246,7 @@
       "Type": "AWS::EC2::Route",
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
-        "GatewayId": { "Ref": "InternetGateway" },
+        "GatewayId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetGateway" } },
         "RouteTableId": { "Ref": "DmzAz2RouteTable" }
       }
     },
@@ -272,7 +273,7 @@
     "LbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "LB Security Group",
+        "GroupDescription": "Director Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "SecurityGroupEgress": [
           { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
