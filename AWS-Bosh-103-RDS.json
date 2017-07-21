@@ -136,7 +136,7 @@
     "RdsCfInstanceBackupRetentionPeriod": {
       "Type": "Number",
       "Description": "RDS CF Instnace Backup Retention Period",
-      "Default": "90",
+      "Default": "14",
       "MinValue": "5",
       "MaxValue": "3650"
     },
