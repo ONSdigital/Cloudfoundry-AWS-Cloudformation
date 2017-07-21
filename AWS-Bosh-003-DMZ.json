@@ -283,7 +283,7 @@
           { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
         ],
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorSecurityGroup" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
