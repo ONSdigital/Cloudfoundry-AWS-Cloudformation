@@ -272,7 +272,7 @@
     },
 
     "DmzNatAz1SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
         "CidrIp": {
@@ -289,7 +289,7 @@
       }
     },
     "DmzNatAz2SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
@@ -307,7 +307,7 @@
       }
     },
     "DmzNatAz3SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
@@ -326,7 +326,7 @@
     },
 
     "LbNatAz1SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
         "CidrIp": {
@@ -343,7 +343,7 @@
       }
     },
     "LbNatAz2SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
@@ -361,7 +361,7 @@
       }
     },
     "LbNatAz3SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
