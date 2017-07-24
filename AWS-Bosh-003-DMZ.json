@@ -222,7 +222,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } }
+        "RouteTableId": { "Ref": "DmzAz1RouteTable" }
       }
     },
     "DmzAz2SubnetRouteTableAssociation": {
@@ -230,7 +230,7 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } }
+        "RouteTableId": { "Ref": "DmzAz1RouteTable" }
       }
     },
 
