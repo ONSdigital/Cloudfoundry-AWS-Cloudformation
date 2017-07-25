@@ -14,6 +14,10 @@
   },
 
   "Outputs": {
+    "BlobstoreBucketAccessInstanceProfile": {
+      "Description": "Blobstore S3 Bucket Access Instance Profile",
+      "Value": { "Ref": "BlobstoreBucketAccessInstanceProfile" }
+    },
     "CcBucketAccessInstanceProfile": {
       "Description": "Cloudcontroller S3 Bucket Access Instance Profile",
       "Value": { "Ref": "CcBucketAccessInstanceProfile" }
@@ -70,6 +74,12 @@
           ]
         ]
       }
+    },
+
+    "BlobstoreBucketAccessRole": {
+      "Description": "Blobstore Bucket Access Role",
+      "Value": { "Fn::GetAtt": [ "BlobstoreBucketAccessRole", "Arn" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketAccessRole" } }
     },
     "CompileNodesBucketAccessRole": {
       "Description": "Compile Nodes Bucket Access Role",
@@ -136,6 +146,44 @@
     },
 
 
+    "BlobstoreBucketAccessRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "ec2.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ]
+            }
+          ]
+        },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
+        "Policies": [
+          {
+            "PolicyName": "BlobstoreBucketAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": [
+                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
     "BlobstoreBucketAccessRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
