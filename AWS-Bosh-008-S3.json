@@ -1,0 +1,240 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "S3 Buckets",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    }
+  },
+
+  "Outputs": {
+    "S3BoshBucketAccessInstanceProfile": {
+      "Description": "S3 Bosh Bucket Access Instance Profile",
+      "Value": { "Ref": "S3BoshBucketAccessInstanceProfile" }
+    },
+    "S3BucketAccessInstanceProfile": {
+      "Description": "S3 Bucket Access Instance Profile",
+      "Value": { "Ref": "S3BucketAccessInstanceProfile" }
+    },
+
+    "S3BoshBlobstoreBucket": {
+      "Description": "S3 Blobstore Bucket",
+      "Value": { "Ref": "S3BoshBlobstoreBucket" }
+    }, 
+    "S3BoshCompiledPackageCacheBucket": {
+      "Description": "S3 Bosh Compiled Package Cache Bucket",
+      "Value": { "Ref": "S3BoshCompiledPackageCacheBucket" }
+    }, 
+    "S3BoshDirectorBackupBucket": {
+      "Description": "S3 Director Backup Bucket",
+      "Value": { "Ref": "S3BoshDirectorBackupBucket" }
+    }, 
+
+    "S3BlobstoreBucket": {
+      "Description": "S3 Blobstore Bucket",
+      "Value": { "Ref": "S3BlobstoreBucket" }
+    },
+    "S3BuildpackBucket": {
+      "Description": "S3 Buildpack Bucket",
+      "Value": { "Ref": "S3BuildpackBucket" }
+    },
+    "S3DropletBucket": {
+      "Description": "S3 Droplet Bucket",
+      "Value": { "Ref": "S3DropletBucket" }
+    },
+    "S3PackageBucket": {
+      "Description": "S3 Package Bucket",
+      "Value": { "Ref": "S3PackageBucket" }
+    },
+    "S3ResourceBucket": {
+      "Description": "S3 Resource Bucket",
+      "Value": { "Ref": "S3ResourceBucket" }
+    },
+    "S3Buckets": {
+      "Description": "S3 Buckets - used during stack deletion",
+      "Value": {
+        "Fn::Join": [
+          ",", [
+            { "Ref": "S3BoshBlobstoreBucket" },
+            { "Ref": "S3BoshCompiledPackageCacheBucket" },
+            { "Ref": "S3BoshDirectorBackupBucket" },
+            { "Ref": "S3BlobstoreBucket" },
+            { "Ref": "S3BuildpackBucket" },
+            { "Ref": "S3DropletBucket" },
+            { "Ref": "S3PackageBucket" },
+            { "Ref": "S3ResourceBucket" }
+          ]
+        ]
+      }
+    },
+    "S3BoshBucketAccessRole": {
+      "Description": "Bosh S3 Bucket Access Role",
+      "Value": { "Fn::GetAtt": [ "S3BoshBucketAccessRole", "Arn" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3BoshBucketAccessRole" } }
+    },
+    "S3BucketAccessRole": {
+      "Description": "S3 Bucket Access Role",
+      "Value": { "Fn::GetAtt": [ "S3BucketAccessRole", "Arn" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3BucketAccessRole" } }
+    }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
+              "Templates",
+              "Stack-Protection.json"
+            ]
+          ]
+        }
+      }
+    },
+
+    "S3BoshBlobstoreBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3BoshCompiledPackageCacheBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3BoshDirectorBackupBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3BlobstoreBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3BuildpackBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3DropletBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3PackageBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+    "S3ResourceBucket": {
+      "Type": "AWS::S3::Bucket"
+    },
+
+    "S3BoshBucketAccessRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "ec2.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ]
+            }
+          ]
+        },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
+        "Policies": [
+          {
+            "PolicyName": "S3BoshBucketAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "s3:*",
+                  "Resource": [
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshDirectorBackupBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshDirectorBackupBucket}/*" }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+
+    "S3BucketAccessRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "ec2.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ]
+            }
+          ]
+        },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
+        "Policies": [
+          {
+            "PolicyName": "S3BucketAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": [
+                    { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BlobstoreBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BuildpackBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BuildpackBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3DropletBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3DropletBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3PackageBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3PackageBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3ResourceBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3ResourceBucket}/*" }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+
+    "S3BoshBucketAccessInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          { "Ref": "S3BoshBucketAccessRole" }
+        ]
+      }
+    },
+    "S3BucketAccessInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          { "Ref": "S3BucketAccessRole" }
+        ]
+      }
+    }
+  }
+}

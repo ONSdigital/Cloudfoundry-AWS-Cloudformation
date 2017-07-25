@@ -15,10 +15,34 @@
       "Description": "Deletion Policy Allow/Deny",
       "AllowedPattern": "^(Allow|Deny)$",
       "ConstraintDescription": "Allow or Deny"
+    },
+    "UpdateAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Update Policy Allow/Deny",
+      "AllowedPattern": "^(Allow|Deny)$",
+      "ConstraintDescription": "Allow or Deny"
     }
   },
 
   "Resources": {
+    "PreventStackUpdate": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "PreventStackDeletion",
+        "Users": [ "*" ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "UpdateAllowDeny" },
+              "Action": "Update:*",
+              "Resource": "LogicalResourceId/*"
+            }
+          ]
+        }
+      }
+    },
     "PreventStackDeletion": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
@@ -28,11 +52,9 @@
           "Version":"2012-10-17",
           "Statement": [
             {
-              "Effect":"Deny",
-              "Action":[
-                "cloudformation:DeleteStack"
-              ],
-              "Resource": { "Ref": "AWS::StackId" }
+              "Effect": { "Ref": "DeleteAllowDeny" },
+              "Action": "Delete:*",
+              "Resource": "LogicalResourceId/*"
             }
           ]
         }

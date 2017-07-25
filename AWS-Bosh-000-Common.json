@@ -1,0 +1,175 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Common Values",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+    "Organisation": {
+      "Type": "String",
+      "Description": "Organisation Name",
+      "MinLength": "1",
+      "MaxLength": "63",
+      "AllowedPattern": "^[A-Za-z0-9 -]+$",
+      "ConstraintDescription": "Can be any printable alphanumeric character, spaces or hypens"
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "HostedZone": {
+      "Type": "String",
+      "Description": "DNS Zone",
+      "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,}$",
+      "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/"
+    },
+    "AwsAvailabilityZone1": {
+      "Type": "Number",
+      "Default": "0",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+    "AwsAvailabilityZone2": {
+      "Type": "Number",
+      "Default": "1",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+    "AwsAvailabilityZone3": {
+      "Type": "Number",
+      "Default": "2",
+      "MinValue": "0",
+      "MaxValue": "9",
+      "Description": "AWS Availability Zone [0-9]"
+    },
+    "StackProtectionGroup": {
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "128",
+      "Description": "Stack protection group",
+      "Default": "NONE",
+      "AllowedPattern": "^[A-Za-z0-9-]+$",
+      "ConstraintDescription": "Valid group name"
+    },
+    "StackDeleteAllowDeny": {
+      "Type": "String",
+      "Default": "Deny",
+      "Description": "Deletion Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    },
+    "StackUpdateAllowDeny": {
+      "Type": "String",
+      "Default": "Allow",
+      "Description": "Update Policy Allow/Deny",
+      "AllowedValues": [ "Allow", "Deny" ]
+    }
+  },
+
+  "Outputs": {
+    "Organisation": {
+      "Description": "Organisation",
+      "Value": { "Ref": "Organisation" }
+    },
+    "AwsRegion": {
+      "Description": "AWS Region",
+      "Value": { "Ref": "AWS::Region" }
+    },
+    "AwsAvailabilityZone1": {
+      "Description": "AWS Availability Zone 1",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone1" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } }
+    },
+    "AwsAvailabilityZone2": {
+      "Description": "AWS Availability Zone 2",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone2" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } }
+    },
+    "AwsAvailabilityZone3": {
+      "Description": "AWS Availability Zone 3",
+      "Value": { "Fn::Select": [ { "Ref": "AwsAvailabilityZone3" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone3" } }
+    },
+    "MultiAz": {
+      "Description": "Multi AZ?",
+      "Value": { "Ref": "MultiAz" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-MultiAz" } }
+    },
+    "StackProtectionGroup": {
+      "Description": "Stack Protection Group",
+      "Value": { "Ref": "StackProtectionGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } }
+    },
+    "StackDeleteAllowDeny": {
+      "Description": "Stack Delete Allow/Deny",
+      "Value": { "Ref": "StackDeleteAllowDeny" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } }
+    },
+    "StackUpdateAllowDeny": {
+      "Description": "Stack Update Allow/Deny",
+      "Value": { "Ref": "StackUpdateAllowDeny" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+    },
+
+    "HostedZone": {
+      "Description": "Hosted Zone",
+      "Value": { "Ref": "HostedZone" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-HostedZone" } }
+    },
+    "DomainName": {
+      "Description": "Main DNS Name",
+      "Value": { "Fn::Sub": "${DeploymentName}.${HostedZone}" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DomainName" } }
+    },
+    "DeploymentIamGroup": {
+      "Description": "IAM Group",
+      "Value": { "Ref": "DeploymentIamGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
+    }
+  },
+
+  "Conditions": {
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Ref": "StackProtectionGroup" },
+          "StackDeleteAllowDeny": { "Ref": "StackDeleteAllowDeny" },
+          "StackUpdateAllowDeny": { "Ref": "StackUpdateAllowDeny" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+	      { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
+              "Templates",
+              "Stack-Protection.json"
+            ]
+          ]
+        }
+      }
+    },
+
+    "DeploymentIamGroup": {
+      "Type": "AWS::IAM::Group",
+      "Properties": {
+        "GroupName": { "Ref": "DeploymentName" },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" }
+      }
+    }
+
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS User",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    }
+  },
+
+  "Outputs": {
+    "BoshAwsAccessKeyId": {
+      "Description": "ElastiCache Broker Access Key Id",
+      "Value": { "Ref": "BoshAwsAccessKey" }
+    },
+    "BoshAwsSecretAccessKey": {
+      "Description": "ElastiCache Broker Access Key",
+      "Value": { "Fn::GetAtt": [ "BoshAwsAccessKey", "SecretAccessKey" ] }
+    },
+    "BoshAwsUserName": {
+      "Description": "ElastiCache Broker User Name",
+      "Value": { "Ref": "BoshAwsUser" }
+    }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
+              "Templates",
+              "Stack-Protection.json"
+            ]
+          ]
+        }
+      }
+    },
+
+    "BoshAwsUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Groups": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
+        ],
+        "Policies": [
+          {
+            "PolicyName": { "Fn::Sub": "${DeploymentName}-CfBoshAwsEc2Permissions" },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "ec2:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                },
+                {
+                  "Action": [
+                    "cloudwatch:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": { "Fn::Sub": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:*" }
+                },
+                {
+                  "Action": [
+                    "elasticloadbalancing:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": [
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalElb" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup80Arn" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443Arn" } },
+                    "*"
+                  ]
+                },
+                {
+                  "Action": [
+                    "elasticloadbalancing:DescribeInstanceHealth",
+                    "elasticloadbalancing:DescribeLoadBalancerAttributes",
+                    "elasticloadbalancing:DescribeLoadBalancerPolicyTypes",
+                    "elasticloadbalancing:DescribeLoadBalancers",
+                    "elasticloadbalancing:DescribeLoadBalancerPolicies",
+                    "elasticloadbalancing:DescribeTargetGroups",
+                    "elasticloadbalancing:DescribeTags"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                },
+                {
+                  "Action": [
+                    "events:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": { "Fn::Sub": "arn:aws:events:${AWS::Region}:${AWS::AccountId}:*" }
+                },
+                {
+                  "Action": [
+                    "logs:*"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*" }
+                },
+                {
+                  "Action": [
+                    "iam:GetUser"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                },
+                {
+                  "Action": [
+                    "iam:PassRole"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": [
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3BoshBucketAccessRole" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3BucketAccessRole" } }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "BoshAwsAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "UserName": { "Ref": "BoshAwsUser" }
+      }
+    }
+  }
+}

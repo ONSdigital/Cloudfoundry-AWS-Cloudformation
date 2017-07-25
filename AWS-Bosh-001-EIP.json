@@ -1,0 +1,185 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Elastic IPs",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+
+    "AllocateLbIp": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Allocate External IP (eg for HA Proxy)",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "BoshIpOverride": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Override Bosh IP - causes a public IP to not be allocated for Bosh",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3})?$",
+      "ConstraintDescription": "Valid CIDR"
+    }
+  },
+
+  "Outputs": {
+    "AllocateLbIp": {
+      "Description": "Allocate LB IP",
+      "Condition": "AllocateLbIp",
+      "Value": { "Ref": "AllocateLbIp" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AllocateLbIp" } }
+    },
+    "BoshLitePublicIp": {
+      "Description": "Bosh Lite (Bootstrap) IP",
+      "Value": {
+        "Fn::If": [
+          "AllocateBoshIp",
+          { "Ref": "BoshLiteIp" },
+          ""
+        ]
+      }
+    },
+    "BoshLiteIp": {
+      "Description": "Bosh Lite (Bootstrap) IP",
+      "Value": {
+        "Fn::If": [
+          "AllocateBoshIp",
+          { "Ref": "BoshLiteIp" },
+          { "Ref": "BoshIpOverride" }
+        ]
+      },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshLiteIp" } }
+    },
+    "ExternalAz1Ip": {
+      "Description": "LB External AZ1 IP",
+      "Condition": "AllocateLbIp",
+      "Value": { "Ref": "ExternalAz1Ip" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } }
+    },
+    "ExternalAz2Ip": {
+      "Description": "LB External AZ2 IP",
+      "Condition": "MultiAzAndAllocateLbIp",
+      "Value": { "Ref": "ExternalAz2Ip" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalAz2Ip" } }
+    },
+    "NatAz1Ip": {
+      "Description": "NAT AZ1 IP 1",
+      "Value": { "Ref": "NatAz1Ip" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } }
+    },
+    "NatAz2Ip": {
+      "Description": "NAT AZ2 IP 2",
+      "Value": { "Ref": "NatAz2Ip" },
+      "Condition": "MultiAz",
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } }
+    },
+    "NatAz3Ip": {
+      "Description": "NAT AZ3 IP",
+      "Condition": "MultiAz",
+      "Value": { "Ref": "NatAz3Ip" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } }
+    },
+    "NatAz1IpAllocationId": {
+      "Description": "NAT AZ1 Allocation IDIP",
+      "Value": { "Fn::GetAtt": [ "NatAz1Ip", "AllocationId" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz1Ip-AllocationId" } }
+    },
+    "NatAz2IpAllocationId": {
+      "Description": "NAT AZ2 IP Allocation ID",
+      "Value": { "Fn::GetAtt": [ "NatAz2Ip", "AllocationId" ] },
+      "Condition": "MultiAz",
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2Ip-AllocationId" } }
+    },
+    "NatAz3IpAllocationId": {
+      "Description": "NAT AZ3 IP Allocation ID",
+      "Condition": "MultiAz",
+      "Value": { "Fn::GetAtt": [ "NatAz3Ip", "AllocationId" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz3Ip-AllocationId" } }
+    }
+  },
+
+  "Conditions": {
+    "AllocateLbIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
+      ]
+    },
+
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+
+    "AllocateBoshIp": { "Fn::Equals": [ { "Ref": "BoshIpOverride" }, "" ] },
+
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAzAndAllocateLbIp": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "StackProtection": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "Parameters": {
+          "StackArn": { "Ref": "AWS::StackId" },
+          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
+          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
+          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
+              "Templates",
+              "Stack-Protection.json"
+            ]
+          ]
+        }
+      }
+    },  
+    "BoshLiteIp": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "AllocateBoshIp"
+    },
+    "NatAz1Ip": {
+      "Type": "AWS::EC2::EIP"
+    },
+    "NatAz2Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "MultiAz"
+    },
+    "NatAz3Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "MultiAz"
+    },
+    "ExternalAz1Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "AllocateLbIp"
+    },
+    "ExternalAz2Ip": {
+      "Type": "AWS::EC2::EIP",
+      "Condition": "MultiAzAndAllocateLbIp"
+    }
+  }
+}

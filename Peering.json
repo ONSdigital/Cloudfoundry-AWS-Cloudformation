@@ -1,0 +1,200 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "AWS CloudFormation Bosh - preamble",
+
+  "Parameters": {
+    "VpcPeer1Id": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": "VPC Peer ID 1",
+      "AllowedPattern": "^vpc-[a-f0-9]{8}$",
+      "ConstraintDescription": "Valid VPC ID"
+    },
+    "VpcPeer2Id": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": "VPC Peer ID 2",
+      "AllowedPattern": "^vpc-[a-f0-9]{8}$",
+      "ConstraintDescription": "Valid VPC ID"
+    },
+    "VpcPeer3Id": {
+      "Type": "String",
+      "Default": "NONE",
+      "Description": "VPC Peer ID 3",
+      "AllowedPattern": "^vpc-[a-f0-9]{8}$",
+      "ConstraintDescription": "Valid VPC ID"
+    },
+    "VpcCidrPeer1":
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "VPC Peer CIDR 1",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "VpcCidrPeer2":
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "VPC Peer CIDR 2",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "VpcCidrPeer3":
+      "Type": "String",
+      "Default": "127.0.0.0/8",
+      "Description": "VPC Peer CIDR 3",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+
+  "Conditions": {
+    "Peer1Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer1Id" }, "NONE" ] ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer1" }, "127.0.0.1" ] ] }
+      ]
+    },
+    "Peer2Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer2Id" }, "NONE" ] ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer2" }, "127.0.0.1" ] ] }
+      ]
+    },
+    "Peer3Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer3Id" }, "NONE" ] ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer3" }, "127.0.0.1" ] ] }
+      ]
+    },
+    "MultiAzAndPeer1Vpc": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer1Id" }, "NONE" ] ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer1" }, "127.0.0.1" ] ] }
+      ]
+    },
+    "MultiAzAndPeer2Vpc": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer2Id" }, "NONE" ] ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer2" }, "127.0.0.1" ] ] }
+      ]
+    },
+    "MultiAzAndPeer3Vpc": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcPeer3Id" }, "NONE" ] ] },
+        { "Fn::Not": [ "Fn::Equals": [ { "Ref": "VpcCidrPeer3" }, "127.0.0.1" ] ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "VpcPeer1": {
+      "Type" : "AWS::EC2::VPCPeeringConnection",
+      "Condition": "Peer1Vpc",
+      "Properties" : {
+          "PeerVpcId" : { "Ref": "VpcPeer1Id" },
+          "VpcId" : { "Ref": "CloudFoundryVpc" },
+          "Tags": [
+            { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer1" } },
+            { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          ]
+        }
+      }
+    },
+    "VpcPeer2": {
+      "Type" : "AWS::EC2::VPCPeeringConnection",
+      "Condition": "Peer2Vpc",
+      "Properties" : {
+          "PeerVpcId" : { "Ref": "VpcPeer1Id" },
+          "VpcId" : { "Ref": "CloudFoundryVpc" },
+          "Tags": [
+            { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer2" } },
+            { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          ]
+        }
+      }
+    },
+    "VpcPeer3": {
+      "Type" : "AWS::EC2::VPCPeeringConnection",
+      "Condition": "Peer3Vpc",
+      "Properties" : {
+          "PeerVpcId" : { "Ref": "VpcPeer3Id" },
+          "VpcId" : { "Ref": "CloudFoundryVpc" },
+          "Tags": [
+            { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer3" } },
+            { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          ]
+        }
+      },
+
+    "DmzAz1InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "VpcCidrPeer1" },
+        "RouteTableId": { "Ref": "DmzAz1RouteTable" },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
+      }
+    },
+    "DmzAz2InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "VpcCidrPeer2" },
+        "RouteTableId": { "Ref": "DmzAz2RouteTable" },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
+      }
+    },
+    "PrivateAz1InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "VpcCidrPeer1" },
+        "RouteTableId": { "Ref": "PrivateAz1RouteTable" },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
+      }
+    },
+    "PrivateAz2InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "VpcCidrPeer2" },
+        "RouteTableId": { "Ref": "PrivateAz2RouteTable" },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
+      }
+    },
+    "PrivateAz3InternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "VpcCidrPeer3" },
+        "RouteTableId": { "Ref": "PrivateAz3RouteTable" },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
+      }
+    },
+
+    "PrivatePort3VpcCidrPeer1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistVpcCidrPeer1Port3",
+       "Properties": {
+        "GroupId": { "Ref": "PrivateSecurityGroup" },
+        "CidrIp": { "Ref": "VpcCidrPeer1" },
+        "FromPort": "",
+        "ToPort": "",
+        "IpProtocol": ""
+       }
+     },
+    "DmzPort3VpcCidrPeer1SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistVpcCidrPeer1Port3",
+       "Properties": {
+        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "CidrIp": { "Ref": "VpcCidrPeer1" },
+        "FromPort": "",
+        "ToPort": "",
+        "IpProtocol": ""
+       }
+     }
+  }
+}
