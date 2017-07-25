@@ -145,7 +145,6 @@
       "Type": "AWS::S3::Bucket"
     },
 
-
     "BlobstoreBucketAccessRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -171,50 +170,10 @@
                 {
                   "Effect": "Allow",
                   "Action": [
-                    "s3:*"
+                    "s3:GetObject",
+                    "s3:GetObjectVersion"
                   ],
-                  "Resource": [
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
-                  ]
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    "BlobstoreBucketAccessRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version" : "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [ "ec2.amazonaws.com" ]
-              },
-              "Action": [ "sts:AssumeRole" ]
-            }
-          ]
-        },
-        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
-        "Policies": [
-          {
-            "PolicyName": "BlobstoreBucketAccess",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "s3:*"
-                  ],
-                  "Resource": [
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
-                  ]
+                  "Resource": { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
                 }
               ]
             }
