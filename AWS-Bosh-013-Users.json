@@ -128,9 +128,9 @@
                   ],
                   "Effect": "Allow",
                   "Resource": [
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3BoshCompileNodesBucketAccessRole" } },
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3BoshBucketAccessRole" } },
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3BucketAccessRole" } }
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CcBucketAccessRole" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CompileNodesBucketAccessRole" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorBucketAccessRole" } }
                   ]
                 }
               ]
