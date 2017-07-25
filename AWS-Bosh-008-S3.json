@@ -18,6 +18,10 @@
       "Description": "S3 Bosh Bucket Access Instance Profile",
       "Value": { "Ref": "S3BoshBucketAccessInstanceProfile" }
     },
+    "S3BoshCompileNodesBucketAccessInstanceProfile": {
+      "Description": "S3 Bosh Compile Nodes Bucket Access Instance Profile",
+      "Value": { "Ref": "S3BoshCompileNodesBucketAccessInstanceProfile" }
+    },
     "S3BucketAccessInstanceProfile": {
       "Description": "S3 Bucket Access Instance Profile",
       "Value": { "Ref": "S3BucketAccessInstanceProfile" }
@@ -72,6 +76,11 @@
           ]
         ]
       }
+    },
+    "S3BoshCompileNodesBucketAccessRole": {
+      "Description": "Bosh S3 Compile Nodes Bucket Access Role",
+      "Value": { "Fn::GetAtt": [ "S3BoshCompileNodesBucketAccessRole", "Arn" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3BoshCompileNodesBucketAccessRole" } }
     },
     "S3BoshBucketAccessRole": {
       "Description": "Bosh S3 Bucket Access Role",
@@ -172,6 +181,45 @@
         ]
       }
     },
+    "S3BoshCompileNodesBucketAccessRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version" : "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "ec2.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ]
+            }
+          ]
+        },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
+        "Policies": [
+          {
+            "PolicyName": "S3BoshCompileNodesBucketAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "s3:*",
+                  "Resource": [
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshBlobstoreBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${S3BoshCompiledPackageCacheBucket}/*" }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+
 
     "S3BucketAccessRole": {
       "Type": "AWS::IAM::Role",
@@ -220,6 +268,14 @@
       }
     },
 
+    "S3BoshCompileNodesBucketAccessInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          { "Ref": "S3BoshCompileNodesBucketAccessRole" }
+        ]
+      }
+    },
     "S3BoshBucketAccessInstanceProfile": {
       "Type": "AWS::IAM::InstanceProfile",
       "Properties": {
