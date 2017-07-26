@@ -62,7 +62,7 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3RouteTable" } }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
         ],
         "ServiceName" : {
           "Fn::Join": [
