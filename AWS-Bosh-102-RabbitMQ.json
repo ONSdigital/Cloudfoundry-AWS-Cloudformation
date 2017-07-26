@@ -201,14 +201,14 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "RabbitmqAz1Subnet" },
-        "RouteTableId": { "Ref": "S3OnlyRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
       }
     },
     "RabbitmqAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
-        "RouteTableId": { "Ref": "S3OnlyRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
       }
     },
 
