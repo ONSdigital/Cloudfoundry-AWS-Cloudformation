@@ -59,6 +59,11 @@
       "Description": "InternetRouteTable ID",
       "Value": { "Ref": "InternetRouteTable" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
+    },
+    "InternetRouteTable": {
+      "Description": "S3OnlyRouteTable ID",
+      "Value": { "Ref": "S3OnlyRouteTable" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
     }
   },
 
@@ -125,6 +130,17 @@
         ]
       }
     },
+    "S3OnlyRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:S3OnlyRouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
 
     "InternetRoute": {
       "Type": "AWS::EC2::Route",

@@ -197,6 +197,21 @@
       }
     },
 
+    "RabbitmqAz1SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "RabbitmqAz1Subnet" },
+        "RouteTableId": { "Ref": "S3OnlyRouteTable" }
+      }
+    },
+    "RabbitmqAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
+        "RouteTableId": { "Ref": "S3OnlyRouteTable" }
+      }
+    },
+
     "RabbitmqSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "CreateRabbitmqNetworks",
