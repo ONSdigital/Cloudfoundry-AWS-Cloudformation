@@ -40,13 +40,13 @@
  "Conditions": {
     "AllowCfSshAccess": {
       "Fn::And": [
-        "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
       ]
     },
     "AllowDirectorAccess": {
       "Fn::And": [
-        "Fn::Equals": [ { "Ref": "AllowDirectorAccess" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "AllowDirectorAccess" }, "true" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
       ]
     },
