@@ -462,6 +462,23 @@
       }
     },
 
+    "RdsAz1SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "CreateRdsInfrastructure",
+      "Properties": {
+        "SubnetId": { "Ref": "RdsAz1Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } }
+      }
+    },
+    "RdsAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "CreateRdsInfrastructure",
+      "Properties": {
+        "SubnetId": { "Ref": "RdsAz2Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } }
+      }
+    },
+
     "RdsSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "CreateRdsInfrastructure",

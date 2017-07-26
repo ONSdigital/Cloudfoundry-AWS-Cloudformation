@@ -143,8 +143,7 @@
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] } 
       ]
-    },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
+    }
   },
 
   "Resources": {
@@ -195,6 +194,22 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqAz2Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
+      }
+    },
+    "RabbitmqAz1SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "SubnetId": { "Ref": "RabbitmqAz1Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } }
+      }
+    },
+    "RabbitmqAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } }
       }
     },
 
