@@ -239,7 +239,7 @@
     "LbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "GroupDescription": "Director Security Group",
+        "GroupDescription": "Load Balancer Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "SecurityGroupEgress": [
           { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
@@ -255,7 +255,7 @@
       }
     },
 
-    "DmzNatAz1SecurityGroupIngressNEW": {
+    "DmzNatAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "DmzSecurityGroup" },
@@ -272,7 +272,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DmzNatAz2SecurityGroupIngressNEW": {
+    "DmzNatAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
@@ -290,7 +290,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DmzNatAz3SecurityGroupIngressNEW": {
+    "DmzNatAz3SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
@@ -309,7 +309,7 @@
       }
     },
 
-    "LbNatAz1SecurityGroupIngressNEW": {
+    "LbNatAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
@@ -326,7 +326,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "LbNatAz2SecurityGroupIngressNEW": {
+    "LbNatAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
@@ -344,7 +344,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "LbNatAz3SecurityGroupIngressNEW": {
+    "LbNatAz3SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
