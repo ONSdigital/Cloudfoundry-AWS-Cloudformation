@@ -218,6 +218,15 @@
       }
     },
 
+    "DmzInternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetGateway" } },
+        "RouteTableId": { "Ref": "DmzRouteTable" }
+      }
+    },
+
     "DmzSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
