@@ -5,9 +5,9 @@
   "Parameters": {
     "WhitelistedCidr": {
       "Type": "String",
-      "Default": "127.0.0.1/32",
+      "Default": "",
       "Description": "CIDR to whitelist",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "DirectorSecurityGroup": {
@@ -38,8 +38,19 @@
   },
 
  "Conditions": {
-    "AllowCfSshAccess": { "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
-    "AllowDirectorAccess": { "Fn::Equals": [ { "Ref": "AllowDirectorAccess" }, "true" ] }
+    "AllowCfSshAccess": {
+      "Fn::And": [
+        "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
+      ]
+    },
+    "AllowDirectorAccess": {
+      "Fn::And": [
+        "Fn::Equals": [ { "Ref": "AllowDirectorAccess" }, "true" ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
+      ]
+    },
+    "AllowLbAccess": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
   },
 
   "Resources": {
@@ -90,6 +101,7 @@
     },
     "Lb80AccessIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "AllowLbAccess",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
         "CidrIp": { "Ref": "WhitelistedCidr" },
@@ -100,6 +112,7 @@
     },
     "Lb443AccessIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "AllowLbAccess",
       "Properties": {
         "GroupId": { "Ref": "LbSecurityGroup" },
         "CidrIp": { "Ref": "WhitelistedCidr" },

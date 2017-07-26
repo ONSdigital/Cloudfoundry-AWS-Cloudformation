@@ -54,11 +54,11 @@
     },
     "StackProtectionGroup": {
       "Type": "String",
-      "MinLength": "1",
+      "MinLength": "0",
       "MaxLength": "128",
       "Description": "Stack protection group",
-      "Default": "NONE",
-      "AllowedPattern": "^[A-Za-z0-9-]+$",
+      "Default": "",
+      "AllowedPattern": "^[A-Za-z0-9-]*$",
       "ConstraintDescription": "Valid group name"
     },
     "StackDeleteAllowDeny": {

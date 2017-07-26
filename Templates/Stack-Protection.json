@@ -12,10 +12,11 @@
 
     "StackProtectionGroup": {
       "Type": "String",
-      "MinLength": "1",
+      "MinLength": "0",
       "MaxLength": "128",
+      "Default": "",
       "Description": "Stack protection group",
-      "AllowedPattern": "^[A-Za-z0-9-]+$",
+      "AllowedPattern": "^[A-Za-z0-9-]*$",
       "ConstraintDescription": "Can valid group name"
     },
     "StackDeleteAllowDeny": {
@@ -33,7 +34,7 @@
   },
 
   "Conditions": {
-    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "NONE" ] } ] }
+    "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "" ] } ] }
   },
 
   "Resources": {

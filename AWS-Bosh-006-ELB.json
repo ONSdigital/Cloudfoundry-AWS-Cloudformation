@@ -49,10 +49,10 @@
     },
     "ExistingSslCertificate": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "Existing SSL certificate ARN",
-      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+|NONE)$",
-      "ConstraintDescription": "AWS ACM SSL certificate ARN or NONE"
+      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
     },
     "MultiAz": {
       "Type": "String",
@@ -121,7 +121,7 @@
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateSslCertificate" }, "true" ] },
-	{ "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "NONE" ] }
+	{ "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "" ] }
       ]
     },
     "SslElb": {
@@ -130,7 +130,7 @@
         {
           "Fn::Or": [
             { "Fn::Equals": [ { "Ref": "GenerateSslCertificate" }, "true" ] },
-            { "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "true" ] }
+            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "" ] } ] }
           ]
         }
       ]
@@ -139,7 +139,7 @@
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateSslCertificate" }, "false" ] },
-        { "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "NONE" ] }
+        { "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "" ] }
       ]
     },
 

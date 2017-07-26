@@ -71,7 +71,7 @@
       "Type": "String",
       "Default": "",
       "Description": "Apps RDS snapshot identifier - for restores",
-      "AllowedPattern": "^([a-z0-9:.-]+)?$",
+      "AllowedPattern": "^[a-z0-9:.-]*$",
       "ConstraintDescription": "AWS RDS snapshot identifier, or empty to create a new database"
     },
     "RdsAppsInstanceSize": {
@@ -152,7 +152,7 @@
       "Type": "String",
       "Default": "",
       "Description": "Cloudfoundry RDS snapshot identifier - for restores",
-      "AllowedPattern": "^([a-z0-9:.-]+)?$",
+      "AllowedPattern": "^[a-z0-9:.-]*$",
       "ConstraintDescription": "AWS RDS snapshot identifier, or empty to create a new database"
     },
     "RdsCfInstanceSize": {
@@ -211,6 +211,13 @@
       "Default": "true",
       "Description": "Whitelist access to RDS instances from DMZ CIDR(s)",
       "AllowedValues": [ "true", "false" ]
+    },
+    "RdsAppInstanceKmsKeyArn": {
+      "Type": "String",
+      "Default": "",
+      "Description": "KMS Key Arn",
+      "AllowedPattern": "^(arn:aws:kms::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "Peer 1 ARN or empty"
     }
   },
 

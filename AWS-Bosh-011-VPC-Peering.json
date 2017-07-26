@@ -13,87 +13,87 @@
     },
     "Peer1VpcId": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "VPC Peer ID 1",
-      "AllowedPattern": "^(vpc-[a-f0-9]{8}|NONE)$",
-      "ConstraintDescription": "Valid VPC ID or NONE"
+      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
+      "ConstraintDescription": "Valid VPC ID or empty"
     },
     "Peer2VpcId": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "VPC Peer ID 2",
-      "AllowedPattern": "^(vpc-[a-f0-9]{8}|NONE)$",
-      "ConstraintDescription": "Valid VPC ID or NONE"
+      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
+      "ConstraintDescription": "Valid VPC ID or empty"
     },
     "Peer3VpcId": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "VPC Peer ID 3",
-      "AllowedPattern": "^(vpc-[a-f0-9]{8}|NONE)$",
-      "ConstraintDescription": "Valid VPC ID or NONE"
+      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
+      "ConstraintDescription": "Valid VPC ID or empty"
     },
     "Peer1OwnerId": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "Peer 1 Owner Account Id",
-      "AllowedPattern": "^([0-9]+|NONE)$",
-      "ConstraintDescription": "Peer Owner Id or NONE"
+      "AllowedPattern": "^[0-9]*$",
+      "ConstraintDescription": "Peer Owner Id or empty"
     },
     "Peer2OwnerId": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "Peer 2 Owner Account Id",
-      "AllowedPattern": "^([0-9]+|NONE)$",
-      "ConstraintDescription": "Valid CIDR or NONE"
+      "AllowedPattern": "^[0-9]*$",
+      "ConstraintDescription": "Valid CIDR or empty"
     },
     "Peer3OwnerId": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "Peer 3 Owner Account Id",
-      "AllowedPattern": "^([0-9]+|NONE)$",
-      "ConstraintDescription": "Valid CIDR or NONE"
+      "AllowedPattern": "^[0-9]*$",
+      "ConstraintDescription": "Valid CIDR or empty"
     },
     "Peer1RoleArn": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "Peer 1 Role ARN",
-      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+|NONE)$",
-      "ConstraintDescription": "Peer 1 ARN or NONE"
+      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "Peer 1 ARN or empty"
     },
     "Peer2RoleArn": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "Peer 2 Role ARN",
-      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+|NONE)$",
-      "ConstraintDescription": "Peer 2 ARN or NONE"
+      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "Peer 2 ARN or empty"
     },
     "Peer3RoleArn": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "Peer 3 Role ARN",
-      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+|NONE)$",
-      "ConstraintDescription": "Peer 3 ARN or NONE"
+      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "Peer 3 ARN or empty"
     },
     "Peer1VpcCidr": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "VPC Peer CIDR 1",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}|NONE)$",
-      "ConstraintDescription": "Valid CIDR or NONE"
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
+      "ConstraintDescription": "Valid CIDR or empty"
     },
     "Peer2VpcCidr": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "VPC Peer CIDR 2",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}|NONE)$",
-      "ConstraintDescription": "Valid CIDR or NONE"
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
+      "ConstraintDescription": "Valid CIDR or empty"
     },
     "Peer3VpcCidr": {
       "Type": "String",
-      "Default": "NONE",
+      "Default": "",
       "Description": "VPC Peer CIDR 3",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}|NONE)$",
-      "ConstraintDescription": "Valid CIDR or NONE"
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
+      "ConstraintDescription": "Valid CIDR or empty"
     },
     "MultiAz": {
       "Type": "String",
@@ -108,47 +108,53 @@
   "Conditions": {
     "Peer1Vpc": {
       "Fn::And": [
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1OwnerId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1RoleArn" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcCidr" }, "127.0.0.1" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcCidr" }, "" ] } ] }
       ]
     },
     "Peer2Vpc": {
       "Fn::And": [
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2OwnerId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2RoleArn" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcCidr" }, "127.0.0.1" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcCidr" }, "" ] } ] }
       ]
     },
     "Peer3Vpc": {
       "Fn::And": [
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3OwnerId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RoleArn" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "127.0.0.1" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
       ]
     },
     "MultiAzAndPeer1Vpc": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcCidr" }, "127.0.0.1" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcCidr" }, "" ] } ] }
       ]
     },
     "MultiAzAndPeer2Vpc": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcCidr" }, "127.0.0.1" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcCidr" }, "" ] } ] }
       ]
     },
     "MultiAzAndPeer3Vpc": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "NONE" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "127.0.0.1" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
       ]
     }
   },
