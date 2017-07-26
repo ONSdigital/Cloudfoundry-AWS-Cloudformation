@@ -134,11 +134,6 @@
       "Description": "IAM Group",
       "Value": { "Ref": "DeploymentIamGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
-    },
-    "S3RoutingPrefix": {
-      "Description": "IAM Group",
-      "Value": { "Fn::FindInMap": [ "RoutingPrefixLists", { "Ref": "AWS::Region" }, "S3" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3RoutingPrefix" } }
     }
   },
 
