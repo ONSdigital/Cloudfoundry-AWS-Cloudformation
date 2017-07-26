@@ -114,15 +114,10 @@
         ]
       }
     },
-    "DmzAz1RouteTable": {
-      "Description": "DMZ AZ1 Route Table",
-      "Value": { "Ref": "DmzAz1RouteTable" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } }
-    },
-    "DmzAz2RouteTable": {
-      "Description": "DMZ AZ2 Route Table",
-      "Value": { "Ref": "DmzAz2RouteTable" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } }
+    "DmzRouteTable": {
+      "Description": "DMZ Route Table",
+      "Value": { "Ref": "DmzRouteTable" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } }
     },
     "DmzSecurityGroup": {
       "Description": "DMZ Security Groups",
@@ -196,23 +191,12 @@
       }
     },
 
-    "DmzAz1RouteTable": {
+    "DmzRouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz1RouteTable" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "DmzAz2RouteTable": {
-      "Type": "AWS::EC2::RouteTable",
-      "Condition": "MultiAzOrElb",
-      "Properties": {
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzAz2RouteTable" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzRouteTable" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -222,7 +206,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz1Subnet" },
-        "RouteTableId": { "Ref": "DmzAz1RouteTable" }
+        "RouteTableId": { "Ref": "DmzRouteTable" }
       }
     },
     "DmzAz2SubnetRouteTableAssociation": {
@@ -230,27 +214,9 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz2Subnet" },
-        "RouteTableId": { "Ref": "DmzAz2RouteTable" }
+        "RouteTableId": { "Ref": "DmzRouteTable" }
       }
     },
-
-    "DmzAz1Route": {
-      "Type": "AWS::EC2::Route",
-      "Properties": {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "GatewayId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetGateway" } },
-        "RouteTableId": { "Ref": "DmzAz1RouteTable" }
-      }
-    },
-    "DmzAz2Route": {
-      "Type": "AWS::EC2::Route",
-      "Properties": {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "GatewayId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetGateway" } },
-        "RouteTableId": { "Ref": "DmzAz2RouteTable" }
-      }
-    },
-
 
     "DmzSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",

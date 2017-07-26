@@ -196,22 +196,6 @@
         ]
       }
     },
-    "RabbitmqAz1SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "SubnetId": { "Ref": "RabbitmqAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } }
-      }
-    },
-    "RabbitmqAz2SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } }
-      }
-    },
 
     "RabbitmqSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",

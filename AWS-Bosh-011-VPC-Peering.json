@@ -218,21 +218,12 @@
       }
     },
 
-    "VpcPeer1DmzAz1Route": {
+    "VpcPeer1DmzRoute": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer1Vpc",
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer1VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer1" }
-      }
-    },
-    "VpcPeer1DmzAz2Route": {
-      "Type": "AWS::EC2::Route",
-      "Condition": "MultiAzAndPeer1Vpc",
-      "Properties": {
-        "DestinationCidrBlock" : { "Ref": "Peer1VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
         "VpcPeeringConnectionId" : { "Ref" : "VpcPeer1" }
       }
     },
@@ -264,21 +255,12 @@
       }
     },
 
-    "VpcPeer2DmzAz1Route": {
+    "VpcPeer2DmzRoute": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer2Vpc",
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer2VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer2" }
-      }
-    },
-    "VpcPeer2DmzAz2Route": {
-      "Type": "AWS::EC2::Route",
-      "Condition": "MultiAzAndPeer2Vpc",
-      "Properties": {
-        "DestinationCidrBlock" : { "Ref": "Peer2VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
         "VpcPeeringConnectionId" : { "Ref" : "VpcPeer2" }
       }
     },
@@ -310,21 +292,12 @@
       }
     },
 
-    "VpcPeer3DmzAz1Route": {
+    "VpcPeer3DmzRoute": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer3Vpc",
       "Properties": {
         "DestinationCidrBlock" : { "Ref": "Peer3VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1RouteTable" } },
-        "VpcPeeringConnectionId" : { "Ref" : "VpcPeer3" }
-      }
-    },
-    "VpcPeer3DmzAz2Route": {
-      "Type": "AWS::EC2::Route",
-      "Condition": "MultiAzAndPeer3Vpc",
-      "Properties": {
-        "DestinationCidrBlock" : { "Ref": "Peer3VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2RouteTable" } },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
         "VpcPeeringConnectionId" : { "Ref" : "VpcPeer3" }
       }
     },

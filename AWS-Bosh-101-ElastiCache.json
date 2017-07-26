@@ -137,23 +137,6 @@
       } 
     },
 
-    "ElasticCacheAz1SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "CreateElasticCacheInfrastructure",
-      "Properties": {
-        "SubnetId": { "Ref": "ElasticCacheAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } }
-      }
-    },
-    "ElasticCacheAz2SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "CreateElasticCacheInfrastructure",
-      "Properties": {
-        "SubnetId": { "Ref": "ElasticCacheAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } }
-      }
-    },
-
     "ElastiCacheSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "CreateElasticCacheInfrastructure",

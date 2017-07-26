@@ -404,14 +404,6 @@
     }
   },
 
-  "Mappings": {
-    "RegionAmiMap": {
-      "eu-central-1": { "HVM": "ami-b968bad6", "PV": "ami-ba68bad5" },
-      "eu-west-1": { "HVM": "ami-01ccc867", "PV": "ami-d1c0c4b7" },
-      "eu-west-2": { "HVM": "ami-b6daced2" }
-    }
-  },
-
   "Resources": {
     "StackProtection": {
       "Type": "AWS::CloudFormation::Stack",
@@ -459,23 +451,6 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsAz2Subnet" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
-      }
-    },
-
-    "RdsAz1SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "CreateRdsInfrastructure",
-      "Properties": {
-        "SubnetId": { "Ref": "RdsAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } }
-      }
-    },
-    "RdsAz2SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "CreateRdsInfrastructure",
-      "Properties": {
-        "SubnetId": { "Ref": "RdsAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } }
       }
     },
 
