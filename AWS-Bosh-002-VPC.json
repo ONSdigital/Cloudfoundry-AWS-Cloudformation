@@ -60,7 +60,7 @@
       "Value": { "Ref": "InternetRouteTable" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
     },
-    "InternetRouteTable": {
+    "S3OnlyRouteTable": {
       "Description": "S3OnlyRouteTable ID",
       "Value": { "Ref": "S3OnlyRouteTable" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
@@ -130,6 +130,7 @@
         ]
       }
     },
+
     "S3OnlyRouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
@@ -140,7 +141,6 @@
         ]
       }
     },
-
 
     "InternetRoute": {
       "Type": "AWS::EC2::Route",
