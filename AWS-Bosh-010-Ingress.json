@@ -10,10 +10,19 @@
       "MaxLength": "16",
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+    "ScanSourceCidr": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Scan Source CIDR",
+      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
+      "ConstraintDescription": "Valid CIDR"
     }
   },
 
-  "Conditions": {},
+  "Conditions": {
+    "WhitelistScanSource": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ScanSourceCidr" }, "" ] } ] }
+  },
 
   "Resources": {
     "StackProtection": {
@@ -34,6 +43,61 @@
             ]
           ]
         }
+      }
+    },
+
+   "ScanSourceToDmzSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistScanSource",
+      "Properties": {
+        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "CidrIp": { "Ref": "ScanSourceCidr" },
+        "IpProtocol": "-1"
+      }
+    },
+   "ScanSourceToDirectorSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistScanSource",
+      "Properties": {
+        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "CidrIp": { "Ref": "ScanSourceCidr" },
+        "IpProtocol": "-1"
+      }
+    },
+   "ScanSourceToElastiCacheSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistScanSource",
+      "Properties": {
+        "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
+        "CidrIp": { "Ref": "ScanSourceCidr" },
+        "IpProtocol": "-1"
+      }
+    },
+   "ScanSourceToLbSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistScanSource",
+      "Properties": {
+        "GroupId": { "Ref": "LbSecurityGroup" },
+        "CidrIp": { "Ref": "ScanSourceCidr" },
+        "IpProtocol": "-1"
+      }
+    },
+   "ScanSourceToRabbitmqSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistScanSource",
+      "Properties": {
+        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "CidrIp": { "Ref": "ScanSourceCidr" },
+        "IpProtocol": "-1"
+      }
+    },
+   "ScanSourceToRdsSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistScanSource",
+      "Properties": {
+        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "CidrIp": { "Ref": "ScanSourceCidr" },
+        "IpProtocol": "-1"
       }
     }
   }
