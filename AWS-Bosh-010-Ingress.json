@@ -47,16 +47,16 @@
     },
 
    "ScanSourceToDmzSecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "WhitelistScanSource",
       "Properties": {
-        "GroupId": { { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }
     },
    "ScanSourceToDirectorSecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "WhitelistScanSource",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
@@ -65,7 +65,7 @@
       }
     },
    "ScanSourceToElastiCacheSecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "WhitelistScanSource",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElastiCacheSecurityGroup" } },
@@ -74,7 +74,7 @@
       }
     },
    "ScanSourceToLbSecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "WhitelistScanSource",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
@@ -83,7 +83,7 @@
       }
     },
    "ScanSourceToRabbitmqSecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "WhitelistScanSource",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
@@ -92,10 +92,19 @@
       }
     },
    "ScanSourceToRdsSecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "WhitelistScanSource",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } },
+        "CidrIp": { "Ref": "ScanSourceCidr" },
+        "IpProtocol": "-1"
+      }
+    },
+   "ScanSourceToSshElbSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "WhitelistScanSource",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }

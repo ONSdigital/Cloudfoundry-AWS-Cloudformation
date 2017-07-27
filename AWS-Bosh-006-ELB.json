@@ -12,33 +12,129 @@
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
 
-    "ElbTimeout": {
+    "ApplicationElbTimeout": {
       "Type": "Number",
       "Default": "30",
-      "Description": "ELB Timeout",
+      "Description": "Application ELB Timeout",
       "MinValue": "1",
       "MaxValue": "999"
     },
-    "ElbHealthCheckInternal": {
+    "ApplicationElbHealthCheckInternal": {
       "Type": "Number",
       "Default": "30",
-      "Description": "ELB Health Check Interval",
+      "Description": "Application ELB Health Check Interval",
       "MinValue": "1",
       "MaxValue": "999"
     },
-    "ElbHealthCheckTimeout": {
+    "ApplicationElbHealthCheckTimeout": {
       "Type": "Number",
       "Default": "10",
-      "Description": "ELB Health Check Timeout",
+      "Description": "Application ELB Health Check Timeout",
       "MinValue": "1",
       "MaxValue": "999"
     },
-
-    "ElbScheme": {
+    "ApplicationElbScheme": {
       "Type": "String",
       "Default": "internet-facing",
-      "Description": "Internet facing or internal load balancer?",
+      "Description": "Application ELB: Internet facing or internal load balancer",
       "AllowedValues": [ "internet-facing", "internal" ]
+    },
+    "SshElbTimeout": {
+      "Type": "Number",
+      "Default": "30",
+      "Description": "SSH ELB Timeout",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+    "SshElbTarget": {
+      "Type": "String",
+      "Default": "HTTP:2223",
+      "Description": "SSH ELB Port Check",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL):[0-9]+$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
+    },
+    "SshElbPort": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "SSH ELB Port",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "SshElbProtocol": {
+      "Type": "String",
+      "Default": "TCP",
+      "Description": "SSH ELB Instance Protocol",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
+    },
+    "SshElbInstancePort": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "SSH ELB Instance Port",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "SshElbInstanceProtocol": {
+      "Type": "String",
+      "Default": "TCP",
+      "Description": "SSH ELB Instance Protocol",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
+    },
+    "SshElbInstancePort": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "SSH ELB Instance Port",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "SshElbInstancePort": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "SSH ELB Instance Port",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "SshElbHealthyThreshold": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "SSH ELB Healthy Threshold",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+    "SshElbUnhealthyThreshold": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "SSH ELB Unhealth Threshold",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+    "SshElbHealthCheckInternal": {
+      "Type": "Number",
+      "Default": "30",
+      "Description": "SSH ELB Health Check Interval",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+    "SshlbHealthCheckTimeout": {
+      "Type": "Number",
+      "Default": "10",
+      "Description": "SSH ELB Health Check Timeout",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+    "SshElbScheme": {
+      "Type": "String",
+      "Default": "internet-facing",
+      "Description": "Application ELB: Internet facing or internal load balancer",
+      "AllowedValues": [ "internet-facing", "internal" ]
+    },
+
+    "GenerateSslCertificate": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
+      "AllowedValues": [ "true", "false" ]
     },
 
     "GenerateSslCertificate": {
@@ -76,6 +172,18 @@
   },
 
   "Outputs": {
+    "SshElb": {
+      "Description": "SSH External ELB",
+      "Condition": "DeployElb",
+      "Value": { "Ref": "SshElb" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElb" } }
+    },
+    "SshElbDnsName": {
+      "Description": "SSH ELB DNS Name",
+      "Condition": "DeployElb",
+      "Value": { "Fn::GetAtt": [ "SshElb","DNSName" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElbDnsName" } }
+    },
     "ExternalElb": {
       "Description": "External ELB",
       "Condition": "DeployElb",
@@ -111,6 +219,11 @@
       "Condition": "DeployElb",
       "Value": { "Ref": "ElbTargetGroup443" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443Arn" } }
+    },
+    "SshElbSecurityGroup": {
+      "Description": "SSH ELB Security Groups",
+      "Value": { "Ref": "SshLbSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshLbSecurityGroup" } }
     }
   },
 
@@ -198,17 +311,49 @@
       }
     },
 
+    "SshElb": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "DeployElb",
+      "Properties": {
+        "Subnets": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+        ],
+        "Listeners": [
+          {
+            "InstancePort" : { "Ref": "SshElbInstancePort" },
+            "InstanceProtocol" : { "Ref": "SshElbInstanceProtocol" },
+            "LoadBalancerPort" : { "Ref": "SshElbLoadbalancerPort" },
+            "Protocol" : { "Ref": "SshElbProtocol" }
+          }
+        ],
+        "Scheme": { "Ref": "SshElbScheme" },
+        "HealthCheck": {
+          "HealthyThreshold": { "Ref": "SshElbHealthyThreshold" },
+          "Interval": { "Ref": "SshElbHealthCheckInternal" },
+          "Target": { "Ref": "SshElbTarget" },
+          "Timeout": { "Ref": "SshlbHealthCheckTimeout" },
+          "UnhealthyThreshold": { "Ref": "SshElbUnhealthyThreshold" }
+        },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedSslCertificate" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ],
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SshSecurityGroup" } } ]
+      }
+    },
+
     "ExternalElb": {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Condition": "DeployElb",
       "Properties": {
-        "Scheme": { "Ref": "ElbScheme" },
+        "Scheme": { "Ref": "ApplicationElbScheme" },
         "Subnets": [
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
         "LoadBalancerAttributes": [
-          { "Key" : "idle_timeout.timeout_seconds", "Value" : { "Ref": "ElbTimeout" } }
+          { "Key" : "idle_timeout.timeout_seconds", "Value" : { "Ref": "ApplicationElbTimeout" } }
         ],
         "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
         "Tags": [
@@ -224,12 +369,12 @@
       "Properties": {
         "Port": "80",
         "Protocol": "HTTP",
-        "HealthCheckIntervalSeconds" : { "Ref": "ElbHealthCheckInternal" },
+        "HealthCheckIntervalSeconds" : { "Ref": "ApplicationElbHealthCheckInternal" },
         "HealthCheckPath" : "/",
         "HealthCheckPort" : "80",
         "HealthCheckProtocol" : "HTTP",
         "Matcher": { "HttpCode": "404" },
-        "HealthCheckTimeoutSeconds" : { "Ref": "ElbHealthCheckTimeout" },
+        "HealthCheckTimeoutSeconds" : { "Ref": "ApplicationElbHealthCheckTimeout" },
         "Targets": [],
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
@@ -244,12 +389,12 @@
       "Properties": {
         "Port": "443",
         "Protocol":"HTTPS",
-        "HealthCheckIntervalSeconds" : { "Ref": "ElbHealthCheckInternal" },
+        "HealthCheckIntervalSeconds" : { "Ref": "ApplicationElbHealthCheckInternal" },
         "HealthCheckPath" : "/",
         "HealthCheckPort" : "443",
         "HealthCheckProtocol" : "HTTPS",
         "Matcher": { "HttpCode": "404" },
-        "HealthCheckTimeoutSeconds" : { "Ref": "ElbHealthCheckTimeout" },
+        "HealthCheckTimeoutSeconds" : { "Ref": "ApplicationElbHealthCheckTimeout" },
         "Targets": [],
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
@@ -297,6 +442,25 @@
         "LoadBalancerArn": { "Ref": "ExternalElb" },
         "Port": "443",
         "Protocol": "HTTPS"
+      }
+    },
+
+    "SshELbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupDescription": "SSH Load Balancer Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:SshElbSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
       }
     }
   }
