@@ -50,7 +50,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistScanSource",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }
@@ -59,7 +59,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistScanSource",
       "Properties": {
-        "GroupId": { "Ref": "DirectorSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }
@@ -68,7 +68,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistScanSource",
       "Properties": {
-        "GroupId": { "Ref": "ElastiCacheSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElastiCacheSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }
@@ -77,7 +77,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistScanSource",
       "Properties": {
-        "GroupId": { "Ref": "LbSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }
@@ -86,7 +86,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistScanSource",
       "Properties": {
-        "GroupId": { "Ref": "RabbitmqSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }
@@ -95,7 +95,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistScanSource",
       "Properties": {
-        "GroupId": { "Ref": "RdsSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }
