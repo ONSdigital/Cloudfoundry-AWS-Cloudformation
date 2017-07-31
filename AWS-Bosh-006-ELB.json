@@ -48,7 +48,7 @@
     },
     "SshElbTarget": {
       "Type": "String",
-      "Default": "HTTP:2223",
+      "Default": "HTTP:2223/",
       "Description": "SSH ELB Port Check",
       "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL):[0-9]+$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
