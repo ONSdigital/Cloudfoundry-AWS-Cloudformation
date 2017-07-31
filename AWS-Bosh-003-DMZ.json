@@ -131,9 +131,13 @@
     },
     "SshElbSecurityGroup": {
       "Description": "SSH ELB Security Groups",
-      "Condition": "DeployElb",
       "Value": { "Ref": "SshElbSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } }
+      "Export": {
+        "Fn::If": [
+          "DeployElb",
+          "Name": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } },
+          ""
+        ]
     }
   },
 

@@ -13,13 +13,19 @@
     "DirectorSecurityGroup": {
       "Type": "String",
       "Description": "Director Security Group",
-      "AllowedPattern": "^sg-[0-9a-f]{8}$",
+      "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
       "ConstraintDescription": "Valid security group"
     },
     "LbSecurityGroup": {
       "Type": "String",
       "Description": "LB Security Group",
-      "AllowedPattern": "^sg-[0-9a-f]{8}$",
+      "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
+      "ConstraintDescription": "Valid security group"
+    },
+    "SshElbSecurityGroup": {
+      "Type": "String",
+      "Description": "SSH ELB Security Group",
+      "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
       "ConstraintDescription": "Valid security group"
     },
 
@@ -42,12 +48,21 @@
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
+        { { "Fn::Equals": [ { "Ref": "SshElbSecurityGroup" }, "" ] }
+      ]
+    },
+    "AllowCfElbSshAccess": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "SshElbSecurityGroup" }, "" ] } ] }
       ]
     },
     "AllowDirectorAccess": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "AllowDirectorAccess" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "DirectorSecurityGroup" }, "" ] } ] }
       ]
     },
     "AllowLbAccess": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
@@ -88,17 +103,18 @@
       }
     },
 
-    "Lb22AccessIngress": {
+    "ELb2222AccessIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "AllowCfSshAccess",
+      "Condition": "AllowCfElbSshAccess",
       "Properties": {
-        "GroupId": { "Ref": "LbSecurityGroup" },
+        "GroupId": { "Ref": "SshElbSecurityGroup" },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "2222",
         "ToPort": "2222" ,
         "IpProtocol": "tcp"
       }
     },
+
     "Lb80AccessIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "AllowLbAccess",
@@ -118,6 +134,17 @@
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "443",
         "ToPort": "443" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "Lb2222AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "AllowCfSshAccess",
+      "Properties": {
+        "GroupId": { "Ref": "SshElbSecurityGroup" },
+        "CidrIp": { "Ref": "WhitelistedCidr" },
+        "FromPort": "2222",
+        "ToPort": "2222" ,
         "IpProtocol": "tcp"
       }
     }
