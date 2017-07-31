@@ -128,10 +128,17 @@
       "Description": "LB Security Groups",
       "Value": { "Ref": "LbSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } }
+    },
+    "SshElbSecurityGroup": {
+      "Description": "SSH ELB Security Groups",
+      "Condition": "DeployElb",
+      "Value": { "Ref": "SshElbSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } }
     }
   },
 
   "Conditions": {
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] },
     "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
@@ -259,6 +266,25 @@
         ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "SshElbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupDescription": "SSH Load Balancer Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:SshElbSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
