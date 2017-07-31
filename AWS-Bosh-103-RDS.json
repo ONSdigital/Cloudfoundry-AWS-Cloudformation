@@ -205,12 +205,6 @@
       "Default": "true",
       "Description": "Deploy multiple AZs",
       "AllowedValues": [ "true", "false" ]
-    },
-    "WhitelistDmzRdsAccess": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Whitelist access to RDS instances from DMZ CIDR(s)",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -403,18 +397,6 @@
     },
     "DeployRdsAppsInstance": { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
     "DeployRdsCfInstance": { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] },
-    "DeployRdsAppsInstanceAndWhitelistDmzRdsAccess": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "WhitelistDmzRdsAccess" }, "true" ] }
-      ]
-    },
-    "DeployRdsCfInstanceAndWhitelistDmzRdsAccess": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "WhitelistDmzRdsAccess" }, "true" ] }
-      ]
-    },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndDeployRdsAppsInstance": {
       "Fn::And": [
@@ -510,51 +492,6 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
-      }
-    },
-
-    "BoshRdsAppsInstancAz1SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployRdsAppsInstanceAndWhitelistDmzRdsAccess",
-      "Properties": {
-        "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
-        "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
-        "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
-        "IpProtocol": "tcp"
-      }
-    },
-    "BoshRdsAppsInstancAz2SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployRdsAppsInstanceAndWhitelistDmzRdsAccess",
-      "Properties": {
-        "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
-        "FromPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
-        "ToPort": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] },
-        "IpProtocol": "tcp"
-      }
-    },
-    "BoshRdsCfInstancAz1SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployRdsCfInstanceAndWhitelistDmzRdsAccess",
-      "Properties": {
-        "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
-        "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
-        "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
-        "IpProtocol": "tcp"
-      }
-    },
-    "BoshRdsCfInstancAz2SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployRdsCfInstanceAndWhitelistDmzRdsAccess",
-      "Properties": {
-        "GroupId": { "Ref": "RdsSecurityGroup" },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
-        "FromPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
-        "ToPort": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] },
-        "IpProtocol": "tcp"
       }
     },
 
