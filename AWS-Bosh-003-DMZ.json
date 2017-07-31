@@ -131,18 +131,19 @@
     },
     "SshElbSecurityGroup": {
       "Description": "SSH ELB Security Groups",
-      "Value": { "Ref": "SshElbSecurityGroup" },
-      "Export": {
+      "Value": {
         "Fn::If": [
           "DeployElb",
-          "Name": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } },
+          { "Ref": "SshElbSecurityGroup" },
           ""
         ]
+      },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } }
     }
   },
 
   "Conditions": {
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] },
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
     "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
