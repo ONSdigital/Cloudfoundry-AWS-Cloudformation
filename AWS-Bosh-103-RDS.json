@@ -336,6 +336,16 @@
       "Condition": "DeployRdsAppsInstance",
       "Value": { "Fn::GetAtt": [ "RdsAppsInstance", "Endpoint.Port" ] }
     },
+    "RdsAppsInstanceUsername": {
+      "Description": "Cloudfoundry RDS Username",
+      "Condition": "DeployRdsAppsInstance",
+      "Value": { "Ref": "sdsAppsInstanceUsername" }
+    },
+    "RdsAppsInstancePassword": {
+      "Description": "Cloudfoundry RDS Password",
+      "Condition": "DeployRdsAppsInstance",
+      "Value": { "Ref": "RdsAppsInstancePassword" }
+    },
     "RdsCfInstanceAddress": {
       "Description": "Cloudfoundry RDS Access Address",
       "Condition": "DeployRdsCfInstance",
@@ -345,6 +355,16 @@
       "Description": "Cloudfoundry RDS Port",
       "Condition": "DeployRdsCfInstance",
       "Value": { "Fn::GetAtt": [ "RdsCfInstance", "Endpoint.Port" ] }
+    },
+    "RdsCfInstanceUsername": {
+      "Description": "Cloudfoundry RDS Username",
+      "Condition": "DeployRdsCfInstance",
+      "Value": { "Ref": "RdsAppsInstanceUsername" }
+    },
+    "RdsCfInstancePassword": {
+      "Description": "Cloudfoundry RDS Password",
+      "Condition": "DeployRdsCfInstance",
+      "Value": { "Ref": "RdsCfInstancePassword" }
     },
     "RdsBrokerAccessKeyId": {
       "Description": "RDS Broker Access Key Id",
