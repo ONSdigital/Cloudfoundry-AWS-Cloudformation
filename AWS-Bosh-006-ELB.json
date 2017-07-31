@@ -81,14 +81,7 @@
       "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
     },
-    "SshElbInstancePort": {
-      "Type": "Number",
-      "Default": "2",
-      "Description": "SSH ELB Instance Port",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
-    "SshElbInstancePort": {
+    "SshElbLoadbalancerPort": {
       "Type": "Number",
       "Default": "2",
       "Description": "SSH ELB Instance Port",
@@ -219,11 +212,6 @@
       "Condition": "DeployElb",
       "Value": { "Ref": "ElbTargetGroup443" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443Arn" } }
-    },
-    "SshElbSecurityGroup": {
-      "Description": "SSH ELB Security Groups",
-      "Value": { "Ref": "SshLbSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshLbSecurityGroup" } }
     }
   },
 
@@ -339,7 +327,7 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedSslCertificate" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ],
-        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SshSecurityGroup" } } ]
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } } ]
       }
     },
 
@@ -442,25 +430,6 @@
         "LoadBalancerArn": { "Ref": "ExternalElb" },
         "Port": "443",
         "Protocol": "HTTPS"
-      }
-    },
-
-    "SshELbSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployElb",
-      "Properties": {
-        "GroupDescription": "SSH Load Balancer Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:SshElbSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
       }
     }
   }
