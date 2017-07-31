@@ -47,8 +47,8 @@
     "AllowCfSshAccess": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
-        { { "Fn::Equals": [ { "Ref": "SshElbSecurityGroup" }, "" ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] },
+        { "Fn::Equals": [ { "Ref": "SshElbSecurityGroup" }, "" ] }
       ]
     },
     "AllowCfElbSshAccess": {
