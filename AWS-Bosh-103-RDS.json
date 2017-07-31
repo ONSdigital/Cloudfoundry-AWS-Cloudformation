@@ -339,7 +339,7 @@
     "RdsAppsInstanceUsername": {
       "Description": "Cloudfoundry RDS Username",
       "Condition": "DeployRdsAppsInstance",
-      "Value": { "Ref": "sdsAppsInstanceUsername" }
+      "Value": { "Ref": "RdsAppsInstanceUsername" }
     },
     "RdsAppsInstancePassword": {
       "Description": "Cloudfoundry RDS Password",
