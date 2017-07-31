@@ -288,13 +288,33 @@
 
     "RequiredNonRdsCfPostgresInstances": {
       "Description": "Non-RDS PostgreSQL CF Instances",
-       "Value": {
-         "Fn::If": [
-           "DeployRdsCfInstance",
-           "0",
-           "1"
-         ]
-       }
+      "Value": {
+        "Fn::If": [
+          "DeployRdsCfInstance",
+          "0",
+          "1"
+        ]
+      }
+    },
+    "ConfigureRdsAppsPostgresInstance": {
+      "Description": "Configuration of RDS Apps PostgreSQL Instance (controls Bosh manifest errand to configure Apps PostgreSQL instance",
+      "Value": {
+        "Fn::If": [
+          "DeployRdsAppsInstance",
+          "1",
+          "0"
+        ]
+      }
+    },
+    "ConfigureRdsCfPostgresInstance": {
+      "Description": "Configuration of RDS CF PostgreSQL Instance (controls Bosh manifest errand to configure CF PostgreSQL instance)",
+      "Value": {
+        "Fn::If": [
+          "DeployRdsCfInstance",
+          "1",
+          "0"
+        ]
+      }
     },
     "RdsSubnetGroup": {
       "Description": "RDS Database Subnet Group",
