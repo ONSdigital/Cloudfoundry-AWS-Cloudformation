@@ -28,6 +28,12 @@
       "Default": "true",
       "Description": "Allocate External IP (eg for HA Proxy)",
       "AllowedValues": [ "true", "false" ]
+    },
+    "AllocateBoshPublicIp": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Allocate Public Bosh IP",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -130,7 +136,8 @@
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
-    }
+    },
+    "AllocateBoshIp": { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] }
   },
 
   "Resources": {
@@ -204,7 +211,13 @@
         "TTL": "3600",
         "Type": "A",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshLiteIp" } }
+          {
+            "Fn::If": [
+              "AllocateBoshIp",
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshLitePublicIp" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshLitePrivateIp" } }
+            ]
+          }
         ]
       }
     },

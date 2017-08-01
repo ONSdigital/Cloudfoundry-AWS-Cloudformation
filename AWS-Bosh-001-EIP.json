@@ -30,12 +30,11 @@
       "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
     },
-    "BoshIpOverride": {
+    "AllocateBoshPublicIp": {
       "Type": "String",
-      "Default": "",
-      "Description": "Override Bosh IP - causes a public IP to not be allocated for Bosh",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3})?$",
-      "ConstraintDescription": "Valid CIDR"
+      "Default": "true",
+      "Description": "Allocate Public Bosh IP",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -48,6 +47,7 @@
     },
     "BoshLitePublicIp": {
       "Description": "Bosh Lite (Bootstrap) IP",
+      "Condition": "AllocateBoshIp",
       "Value": {
         "Fn::If": [
           "AllocateBoshIp",
@@ -55,17 +55,6 @@
           ""
         ]
       }
-    },
-    "BoshLiteIp": {
-      "Description": "Bosh Lite (Bootstrap) IP",
-      "Value": {
-        "Fn::If": [
-          "AllocateBoshIp",
-          { "Ref": "BoshLiteIp" },
-          { "Ref": "BoshIpOverride" }
-        ]
-      },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshLiteIp" } }
     },
     "ExternalAz1Ip": {
       "Description": "LB External AZ1 IP",
@@ -125,7 +114,7 @@
 
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
 
-    "AllocateBoshIp": { "Fn::Equals": [ { "Ref": "BoshIpOverride" }, "" ] },
+    "AllocateBoshIp": { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndAllocateLbIp": {

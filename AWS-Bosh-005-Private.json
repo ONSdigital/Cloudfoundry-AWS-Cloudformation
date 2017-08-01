@@ -124,7 +124,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "Route",
+                "Route4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz1Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] } ] ] } ] }
               ]
@@ -143,7 +143,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "Route",
+                "Route4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz2Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] } ] ] } ] }
               ]
@@ -162,7 +162,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "Route",
+                "Route4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz3Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] } ] ] } ] }
               ]
@@ -181,7 +181,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "ReservedStart",
+                "ReservedStart4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz1Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] } ] ] } ] }
               ]
@@ -200,7 +200,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "ReservedStart",
+                "ReservedStart4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz2Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] } ] ] } ] }
               ]
@@ -219,7 +219,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "ReservedStart",
+                "ReservedStart4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz3Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] } ] ] } ] }
               ]
@@ -238,7 +238,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "ReservedStop",
+                "ReservedStop4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz1Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] } ] ] } ] }
               ]
@@ -257,7 +257,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "ReservedStop",
+                "ReservedStop4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz2Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] } ] ] } ] }
               ]
@@ -276,7 +276,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "ReservedStop",
+                "ReservedStop4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz3Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] } ] ] } ] }
               ]
@@ -295,7 +295,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "StaticStart",
+                "StaticStart4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz1Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] } ] ] } ] }
               ]
@@ -314,7 +314,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "StaticStart",
+                "StaticStart4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz2Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] } ] ] } ] }
               ]
@@ -333,7 +333,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "StaticStart",
+                "StaticStart4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz3Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] } ] ] } ] }
               ]
@@ -352,7 +352,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "StaticStop",
+                "StaticStop4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz1Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz1Cidr" } ] } ] } ] ] } ] }
               ]
@@ -371,7 +371,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "StaticStop",
+                "StaticStop4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz2Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz2Cidr" } ] } ] } ] ] } ] }
               ]
@@ -390,7 +390,7 @@
             { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] },
             {
               "Fn::FindInMap": [
-                "StaticStop",
+                "StaticStop4thOctet",
                 { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "PrivateAz3Cidr" } ] } ] },
                 { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "PrivateAz3Cidr" } ] } ] } ] ] } ] }
               ]
@@ -408,19 +408,19 @@
   },
 
   "Mappings": {
-    "Route": {
+    "Route4thOctet": {
       "24": { "0": "1" }
     },
-    "ReservedStart": {
+    "ReservedStart4thOctet": {
       "24": { "0": "4" }
     },
-    "ReservedStop": {
+    "ReservedStop4thOctet": {
       "24": { "0": "254" }
     },
-    "StaticStart": {
+    "StaticStart4thOctet": {
       "24": { "0": "200" }
     },
-    "StaticStart": {
+    "StaticStart4thOctet": {
       "24": { "0": "245" }
     }
   },
