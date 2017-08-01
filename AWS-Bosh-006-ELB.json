@@ -282,14 +282,14 @@
       "Properties": {
         "DomainName": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
         "SubjectAlternativeNames": [ { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] } ],
-        "DomainValidationOptions" : [
+        "DomainValidationOptions": [
           {
             "DomainName": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
-            "ValidationDomain" : { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
+            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
           },
           {
             "DomainName": { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
-            "ValidationDomain" : { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
+            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
           }
         ],
         "Tags": [
@@ -309,10 +309,10 @@
         ],
         "Listeners": [
           {
-            "InstancePort" : { "Ref": "SshElbInstancePort" },
-            "InstanceProtocol" : { "Ref": "SshElbInstanceProtocol" },
-            "LoadBalancerPort" : { "Ref": "SshElbLoadbalancerPort" },
-            "Protocol" : { "Ref": "SshElbProtocol" }
+            "InstancePort": { "Ref": "SshElbInstancePort" },
+            "InstanceProtocol": { "Ref": "SshElbInstanceProtocol" },
+            "LoadBalancerPort": { "Ref": "SshElbLoadbalancerPort" },
+            "Protocol": { "Ref": "SshElbProtocol" }
           }
         ],
         "Scheme": { "Ref": "SshElbScheme" },
@@ -341,7 +341,7 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
         "LoadBalancerAttributes": [
-          { "Key" : "idle_timeout.timeout_seconds", "Value" : { "Ref": "ApplicationElbTimeout" } }
+          { "Key": "idle_timeout.timeout_seconds", "Value": { "Ref": "ApplicationElbTimeout" } }
         ],
         "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
         "Tags": [
@@ -357,12 +357,12 @@
       "Properties": {
         "Port": "80",
         "Protocol": "HTTP",
-        "HealthCheckIntervalSeconds" : { "Ref": "ApplicationElbHealthCheckInternal" },
-        "HealthCheckPath" : "/",
-        "HealthCheckPort" : "80",
-        "HealthCheckProtocol" : "HTTP",
+        "HealthCheckIntervalSeconds": { "Ref": "ApplicationElbHealthCheckInternal" },
+        "HealthCheckPath": "/",
+        "HealthCheckPort": "80",
+        "HealthCheckProtocol": "HTTP",
         "Matcher": { "HttpCode": "404" },
-        "HealthCheckTimeoutSeconds" : { "Ref": "ApplicationElbHealthCheckTimeout" },
+        "HealthCheckTimeoutSeconds": { "Ref": "ApplicationElbHealthCheckTimeout" },
         "Targets": [],
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
@@ -377,12 +377,12 @@
       "Properties": {
         "Port": "443",
         "Protocol":"HTTPS",
-        "HealthCheckIntervalSeconds" : { "Ref": "ApplicationElbHealthCheckInternal" },
-        "HealthCheckPath" : "/",
-        "HealthCheckPort" : "443",
-        "HealthCheckProtocol" : "HTTPS",
+        "HealthCheckIntervalSeconds": { "Ref": "ApplicationElbHealthCheckInternal" },
+        "HealthCheckPath": "/",
+        "HealthCheckPort": "443",
+        "HealthCheckProtocol": "HTTPS",
         "Matcher": { "HttpCode": "404" },
-        "HealthCheckTimeoutSeconds" : { "Ref": "ApplicationElbHealthCheckTimeout" },
+        "HealthCheckTimeoutSeconds": { "Ref": "ApplicationElbHealthCheckTimeout" },
         "Targets": [],
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [

@@ -108,8 +108,8 @@
             {
               "Fn::FindInMap": [
                 "Route4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "RabbitmqAz1Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } ] } ] } ] ] } ] }
+                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "RabbitmqAz1Cidr" } ] } ] },
+                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } ] } ] } ] } ] }
               ]
             }
           ]
@@ -127,8 +127,8 @@
             {
               "Fn::FindInMap": [
                 "Route4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "RabbitmqAz2Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } ] } ] } ] ] } ] }
+                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "RabbitmqAz2Cidr" } ] } ] },
+                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } ] } ] } ] } ] }
               ]
             }
           ]
@@ -146,8 +146,8 @@
             {
               "Fn::FindInMap": [
                 "ReservedStart4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "RabbitmqAz1Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } ] } ] } ] ] } ] }
+                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "RabbitmqAz1Cidr" } ] } ] },
+                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } ] } ] } ] } ] }
               ]
             }
           ]
@@ -165,8 +165,8 @@
             {
               "Fn::FindInMap": [
                 "ReservedStart4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "RabbitmqAz2Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } ] } ] } ] ] } ] }
+                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "RabbitmqAz2Cidr" } ] } ] },
+                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } ] } ] } ] } ] }
               ]
             }
           ]
@@ -184,8 +184,8 @@
             {
               "Fn::FindInMap": [
                 "ReservedStop4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "RabbitmqAz1Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } ] } ] } ] ] } ] }
+                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "RabbitmqAz1Cidr" } ] } ] },
+                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz1Cidr" } ] } ] } ] } ] }
               ]
             }
           ]
@@ -203,8 +203,8 @@
             {
               "Fn::FindInMap": [
                 "ReservedStop4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split" : [ "/", { "Ref": "RabbitmqAz2Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", [ { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } ] } ] } ] ] } ] }
+                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "RabbitmqAz2Cidr" } ] } ] },
+                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "RabbitmqAz2Cidr" } ] } ] } ] } ] }
               ]
             }
           ]

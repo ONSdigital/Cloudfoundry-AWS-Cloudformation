@@ -126,11 +126,11 @@
     },
 
     "ElastiCacheSubnetGroup": {
-      "Type" : "AWS::ElastiCache::SubnetGroup",
+      "Type": "AWS::ElastiCache::SubnetGroup",
       "Condition": "CreateElasticCacheInfrastructure",
-      "Properties" : {
+      "Properties": {
         "Description": "ElastiCache Subnet Group",
-        "SubnetIds" : [
+        "SubnetIds": [
           { "Ref": "ElastiCacheAz1Subnet" },
           { "Ref": "ElastiCacheAz2Subnet" }
         ] 

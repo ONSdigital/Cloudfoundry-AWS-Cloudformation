@@ -38,9 +38,9 @@
     },
 
     "S3VpcEndpoint": {
-      "Type" : "AWS::EC2::VPCEndpoint",
-      "Properties" : {
-        "PolicyDocument" : {
+      "Type": "AWS::EC2::VPCEndpoint",
+      "Properties": {
+        "PolicyDocument": {
           "Version":"2012-10-17",
           "Statement": [
             {
@@ -56,7 +56,7 @@
             }
           ]
         },
-        "RouteTableIds" : [
+        "RouteTableIds": [
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
@@ -64,7 +64,7 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
         ],
-        "ServiceName" : {
+        "ServiceName": {
           "Fn::Join": [
             ".", [
               "com.amazonaws",
@@ -73,7 +73,7 @@
             ]
           ]
         },
-        "VpcId" : { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } }
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } }
       }
     }
   }

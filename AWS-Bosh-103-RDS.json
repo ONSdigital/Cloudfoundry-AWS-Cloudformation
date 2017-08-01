@@ -438,11 +438,11 @@
     },
 
     "RdsSubnetGroup": {
-      "Type" : "AWS::RDS::DBSubnetGroup",
+      "Type": "AWS::RDS::DBSubnetGroup",
       "Condition": "CreateRdsInfrastructure",
-      "Properties" : {
-        "DBSubnetGroupDescription" : "RDS Subnet Group",
-        "SubnetIds" : [
+      "Properties": {
+        "DBSubnetGroupDescription": "RDS Subnet Group",
+        "SubnetIds": [
           { "Ref": "RdsAz1Subnet" },
           { "Ref": "RdsAz2Subnet" }
         ],
@@ -454,7 +454,7 @@
     },
 
     "RdsAppsInstance": {
-      "Type" : "AWS::RDS::DBInstance",
+      "Type": "AWS::RDS::DBInstance",
       "Condition": "SingleAzAndDeployRdsAppsInstance",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
@@ -478,7 +478,7 @@
       }
     },
     "RdsAppsInstance": {
-      "Type" : "AWS::RDS::DBInstance",
+      "Type": "AWS::RDS::DBInstance",
       "Condition": "MultiAzAndDeployRdsAppsInstance",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
@@ -502,7 +502,7 @@
       }
     },
     "RdsCfInstance": {
-      "Type" : "AWS::RDS::DBInstance",
+      "Type": "AWS::RDS::DBInstance",
       "Condition": "SingleAzAndDeployRdsCfInstance",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-CloudfoundryDB" },
@@ -526,7 +526,7 @@
       }
     },
     "RdsCfInstance": {
-      "Type" : "AWS::RDS::DBInstance",
+      "Type": "AWS::RDS::DBInstance",
       "Condition": "MultiAzAndDeployRdsCfInstance",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-CloudfoundryDB" },
