@@ -221,64 +221,6 @@
       "Value": { "Ref": "RdsAz2Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } }
     },
-    "RdsAz1CidrPrefix": {
-      "Description": "RDS AZ1 CIDR Prefix",
-      "Condition": "CreateRdsInfrastructure",
-      "Value": {
-        "Fn::Join": [
-          ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "RdsAz1Cidr" } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "RdsAz1Cidr" } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "RdsAz1Cidr" } ] } ] }
-          ]
-        ]
-      },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz1CidrPrefix" } }
-    },
-    "RdsAz2CidrPrefix": {
-      "Description": "RDS AZ2 CIDR Prefix",
-      "Condition": "CreateRdsInfrastructure",
-      "Value": {
-        "Fn::Join": [
-          ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "RdsAz2Cidr" } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "RdsAz2Cidr" } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "RdsAz2Cidr" } ] } ] }
-          ]
-        ]
-      },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2CidrPrefix" } }
-    },
-    "RdsAz1DefaultRoute": {
-      "Description": "RDS AZ1 Default Route",
-      "Condition": "CreateRdsInfrastructure",
-      "Value": {
-        "Fn::Join": [
-          ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "RdsAz1Cidr" } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "RdsAz1Cidr" } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "RdsAz1Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz1DefaultRoute" } }
-    },
-    "RdsAz2DefaultRoute": {
-      "Description": "RDS AZ1 Default Route",
-      "Condition": "CreateRdsInfrastructure",
-      "Value": {
-        "Fn::Join": [
-          ".", [
-            { "Fn::Select": [ "0", { "Fn::Split": [ ".", { "Ref": "RdsAz2Cidr" } ] } ] },
-            { "Fn::Select": [ "1", { "Fn::Split": [ ".", { "Ref": "RdsAz2Cidr" } ] } ] },
-            { "Fn::Select": [ "2", { "Fn::Split": [ ".", { "Ref": "RdsAz2Cidr" } ] } ] },
-            "1"
-          ]
-        ]
-      },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2DefaultRoute" } }
-    },
 
     "RequiredNonRdsCfPostgresInstances": {
       "Description": "Non-RDS PostgreSQL CF Instances",
