@@ -51,7 +51,7 @@
       "Value": {
         "Fn::If": [
           "AllocateBoshIp",
-          { "Ref": "BoshLiteIp" },
+          { "Ref": "BoshLitePublicIp" },
           ""
         ]
       }
@@ -147,7 +147,7 @@
         }
       }
     },  
-    "BoshLiteIp": {
+    "BoshLitePublicIp": {
       "Type": "AWS::EC2::EIP",
       "Condition": "AllocateBoshIp"
     },
