@@ -98,8 +98,8 @@
             {
               "Fn::FindInMap": [
                 "Route4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "DmzAz1Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] } ] } ] }
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Netmask" } },
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr4thOctet" } }
               ]
             }
           ]
@@ -117,8 +117,8 @@
             {
               "Fn::FindInMap": [
                 "Route4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "DmzAz2Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] } ] } ] }
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Netmask" } },
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr4thOctet" } }
               ]
             }
           ]
@@ -136,8 +136,8 @@
             {
               "Fn::FindInMap": [
                 "ReservedStart4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "DmzAz1Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] } ] } ] }
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Netmask" } },
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr4thOctet" } }
               ]
             }
           ]
@@ -155,8 +155,8 @@
             {
               "Fn::FindInMap": [
                 "ReservedStart4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "DmzAz2Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] } ] } ] }
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Netmask" } },
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr4thOctet" } }
               ]
             }
           ]
@@ -174,8 +174,8 @@
             {
               "Fn::FindInMap": [
                 "ReservedStop4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "DmzAz1Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] } ] } ] }
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Netmask" } },
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr4thOctet" } }
               ]
             }
           ]
@@ -193,8 +193,8 @@
             {
               "Fn::FindInMap": [
                 "ReservedStop4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "DmzAz2Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "DmzAz2Cidr" } ] } ] } ] } ] }
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Netmask" } },
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr4thOctet" } }
               ]
             }
           ]
@@ -212,8 +212,8 @@
             {
               "Fn::FindInMap": [
                 "BoshPrivateIp4thOctet",
-                { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Ref": "DmzAz1Cidr" } ] } ] },
-                { "Fn::Select": [ "0", { "Fn::Split": [ "/", { "Fn::Select": [ "3", { "Fn::Split": [ ".", { "Ref": "DmzAz1Cidr" } ] } ] } ] } ] }
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Netmask" } },
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr4thOctet" } }
               ]
             }
           ]
