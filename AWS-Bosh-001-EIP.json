@@ -47,14 +47,15 @@
     },
     "BoshLitePublicIp": {
       "Description": "Bosh Lite (Bootstrap) IP",
-      "Condition": "AllocateBoshIp",
+      "Condition": "AllocateBoshPublicIp",
       "Value": {
         "Fn::If": [
-          "AllocateBoshIp",
+          "AllocateBoshPublicIp",
           { "Ref": "BoshLitePublicIp" },
           ""
         ]
-      }
+      },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshLitePublicIp" } }
     },
     "ExternalAz1Ip": {
       "Description": "LB External AZ1 IP",
@@ -114,7 +115,7 @@
 
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
 
-    "AllocateBoshIp": { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] },
+    "AllocateBoshPublicIp": { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzAndAllocateLbIp": {
@@ -149,7 +150,7 @@
     },  
     "BoshLitePublicIp": {
       "Type": "AWS::EC2::EIP",
-      "Condition": "AllocateBoshIp"
+      "Condition": "AllocateBoshPublicIp"
     },
     "NatAz1Ip": {
       "Type": "AWS::EC2::EIP"
