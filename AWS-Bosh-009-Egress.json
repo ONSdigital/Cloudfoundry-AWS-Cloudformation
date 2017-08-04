@@ -253,7 +253,7 @@
 
     "PrivateToExternalSyslogPortAz1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogAz1CidrPort",
+      "Condition": "WhitelistExternalSyslogAz1Cidr",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalSyslogAz1Cidr" },
@@ -263,7 +263,7 @@
     },
     "PrivateToExternalSyslogPortAz2SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogAz2CidrPort",
+      "Condition": "WhitelistExternalSyslogAz2Cidr",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalSyslogAz2Cidr" },
@@ -273,7 +273,7 @@
     },
     "PrivateToExternalSyslogPort3Az3SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogAz3CidrPort",
+      "Condition": "WhitelistExternalSyslogAz3Cidr",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalSyslogAz3Cidr" },
