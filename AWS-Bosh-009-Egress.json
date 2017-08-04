@@ -70,29 +70,29 @@
     "ExternalRdsPort": {
       "Type": "Number",
       "Default": "5432",
-      "Min": "1024",
-      "Max": "65535",
+      "MinValue": "1024",
+      "MaxValue": "65535",
       "Description": "External RDS Port"
     },
     "ExternalRabbitmqPort1": {
       "Type": "Number",
       "Default": "5672",
-      "Min": "1024",
-      "Max": "65535",
+      "MinValue": "1024",
+      "MaxValue": "65535",
       "Description": "External RabbitMQ Port 1"
     },
     "ExternalRabbitmqPort2": {
       "Type": "Number",
       "Default": "5672",
-      "Min": "1024",
-      "Max": "65535",
+      "MinValue": "1024",
+      "MaxValue": "65535",
       "Description": "External RabbitMQ Port 2"
     },
     "ExternalSyslogPort": {
       "Type": "Number",
       "Default": "514",
-      "Min": "1",
-      "Max": "65535",
+      "MinValue": "1",
+      "MaxValue": "65535",
       "Description": "External Syslog Port"
     }
   },
