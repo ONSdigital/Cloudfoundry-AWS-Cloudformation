@@ -15,56 +15,56 @@
       "Type": "String",
       "Default": "",
       "Description": "External RDS Database AZ1 CIDR",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/24)?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRdsAz2Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External RDS Database AZ2 CIDR",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/24)?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRdsAz3Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External RDS Database AZ3 CIDR",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/24)?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRabbitmqAz1Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External RabbitMQ CIDR AZ1",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/24)?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRabbitmqAz2Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External RabbitMQ CIDR AZ2",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/24)?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalSyslogAz1Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External Syslog CIDR AZ1",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/24)?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalSyslogAz2Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External Syslog CIDR AZ2",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/24)?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalSyslogAz3Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External Syslog CIDR AZ3",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/24$",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/24)?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRdsPort": {
