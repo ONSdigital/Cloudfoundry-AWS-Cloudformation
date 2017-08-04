@@ -59,9 +59,14 @@
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
     },
     "S3OnlyRouteTable": {
-      "Description": "S3OnlyRouteTable ID",
+      "Description": "S3 Only Route Table ID",
       "Value": { "Ref": "S3OnlyRouteTable" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
+    },
+    "VpcPeeringOnlyRouteTable": {
+      "Description": "VPC Peering Only Route Table",
+      "Value": { "Ref": "VpcPeeringOnlyRouteTable" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } }
     }
   },
 
@@ -128,13 +133,22 @@
         ]
       }
     },
-
     "S3OnlyRouteTable": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:S3OnlyRouteTable" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "VpcPeeringOnlyRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "CloudFoundryVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeeringOnlyRouteTable" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }

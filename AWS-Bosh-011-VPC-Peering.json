@@ -32,6 +32,13 @@
       "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
       "ConstraintDescription": "Valid VPC ID or empty"
     },
+    "Peer4VpcId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer ID 4",
+      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
+      "ConstraintDescription": "Valid VPC ID or empty"
+    },
     "Peer1OwnerId": {
       "Type": "String",
       "Default": "",
@@ -50,6 +57,13 @@
       "Type": "String",
       "Default": "",
       "Description": "Peer 3 Owner Account Id",
+      "AllowedPattern": "^[0-9]*$",
+      "ConstraintDescription": "Valid CIDR or empty"
+    },
+    "Peer4OwnerId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Peer 4 Owner Account Id",
       "AllowedPattern": "^[0-9]*$",
       "ConstraintDescription": "Valid CIDR or empty"
     },
@@ -74,6 +88,13 @@
       "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
       "ConstraintDescription": "Peer 3 ARN or empty"
     },
+    "Peer4RoleArn": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Peer 4 Role ARN",
+      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "Peer 4 ARN or empty"
+    },
     "Peer1VpcCidr": {
       "Type": "String",
       "Default": "",
@@ -93,6 +114,13 @@
       "Default": "",
       "Description": "VPC Peer CIDR 3",
       "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
+      "ConstraintDescription": "Valid CIDR or empty"
+    },
+    "Peer4VpcCidr": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer CIDR 4",
+      "AllowedPattern": "^(([0-9]{1,4}\\.){4}[0-9]{1,4}/[0-9]{1,2})?$",
       "ConstraintDescription": "Valid CIDR or empty"
     },
     "MultiAz": {
@@ -130,6 +158,22 @@
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
       ]
     },
+    "Peer3Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
+      ]
+    },
+    "Peer4Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcCidr" }, "" ] } ] }
+      ]
+    },
     "MultiAzAndPeer1Vpc": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
@@ -155,6 +199,15 @@
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3OwnerId" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RoleArn" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
+      ]
+    },
+    "MultiAzAndPeer4Vpc": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcCidr" }, "" ] } ] }
       ]
     }
   },
@@ -223,6 +276,20 @@
         ]
       }
     },
+    "VpcPeer4": {
+      "Type": "AWS::EC2::VPCPeeringConnection",
+      "Condition": "Peer4Vpc",
+      "Properties": {
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "PeerVpcId": { "Ref": "Peer4VpcId" },
+        "PeerOwnerId": { "Ref": "Peer4OwnerId" },
+        "PeerRoleArn": { "Ref": "Peer4RoleArn" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer4" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
 
     "VpcPeer1DmzRoute": {
       "Type": "AWS::EC2::Route",
@@ -257,6 +324,24 @@
       "Properties": {
         "DestinationCidrBlock": { "Ref": "Peer1VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
+      }
+    },
+    "VpcPeer1S3OnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer1VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
+      }
+    },
+    "VpcPeer1VpcPeeringOnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer1VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } },
         "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
       }
     },
@@ -297,6 +382,24 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
       }
     },
+    "VpcPeer2S3OnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer2VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
+      }
+    },
+    "VpcPeer2VpcPeeringOnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer2VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
+      }
+    },
 
     "VpcPeer3DmzRoute": {
       "Type": "AWS::EC2::Route",
@@ -304,6 +407,15 @@
       "Properties": {
         "DestinationCidrBlock": { "Ref": "Peer3VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
+      }
+    },
+    "VpcPeer3PeeringOnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer3VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } },
         "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
       }
     },
@@ -332,6 +444,70 @@
         "DestinationCidrBlock": { "Ref": "Peer3VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
         "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
+      }
+    },
+    "VpcPeer3S3OnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer3VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
+      }
+    },
+
+    "VpcPeer4DmzRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer4Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
+      }
+    },
+    "VpcPeer4VpcPeeringOnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer4Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
+      }
+    },
+    "VpcPeer4PrivateAz1Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer4Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
+      }
+    },
+    "VpcPeer4PrivateAz2Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer4Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
+      }
+    },
+    "VpcPeer4PrivateAz3Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "MultiAzAndPeer4Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
+      }
+    },
+    "VpcPeer4S3OnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer4Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
       }
     }
   }
