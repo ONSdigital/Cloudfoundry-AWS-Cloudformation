@@ -323,7 +323,7 @@
       "Condition": "DeployRdsAppsInstance",
       "Value": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
     },
-    "RdsCfsInstanceDns": {
+    "RdsCfInstanceDns": {
       "Description": "RDS CF Instance DNS Name",
       "Condition": "DeployRdsCfInstance",
       "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
