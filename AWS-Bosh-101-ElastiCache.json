@@ -185,7 +185,7 @@
                     "elasticache:RebootCacheCluster"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:elasticache:${AWS::Region}:${AWS::AccountId}:cluster:*" }
+                  "Resource": { "Fn::Sub": "arn:aws:elasticache:${AWS::Region}:::*" }
                 },
                 {
                   "Action": [
