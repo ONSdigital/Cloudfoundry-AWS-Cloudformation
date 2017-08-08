@@ -60,6 +60,11 @@
       "Description": "ElastiCache Broker User Name",
       "Condition": "CreateElasticCacheInfrastructure",
       "Value": { "Ref": "ElastiCacheBrokerUser" }
+    },
+    "ElastiCacheSecurityGroup": {
+      "Description": "ElastiCache Broker Security Group",
+      "Condition": "CreateElasticCacheInfrastructure",
+      "Value": { "Ref": "ElastiCacheSecurityGroup" }
     }
   },
 
