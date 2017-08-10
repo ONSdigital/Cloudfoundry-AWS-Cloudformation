@@ -168,7 +168,7 @@
       }
     },
 
-    "AppsExternalElbDnsRr": {
+    "AppsApplicationElbDnsRr": {
       "Type": "AWS::Route53::RecordSet",
       "Condition": "DeployElb",
       "Properties": {

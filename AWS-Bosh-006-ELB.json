@@ -165,26 +165,33 @@
       "AllowedValues": [ "internet-facing", "internal" ]
     },
 
-    "GenerateSslCertificate": {
+    "GenerateApplicationSslCertificate": {
       "Type": "String",
       "Default": "true",
-      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
+      "Description": "Generate Application AWS SSL certificate - requires manual intervention to validate request email",
       "AllowedValues": [ "true", "false" ]
     },
-
-    "GenerateSslCertificate": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "ExistingSslCertificate": {
+    "ExistingApplicationSslCertificate": {
       "Type": "String",
       "Default": "",
-      "Description": "Existing SSL certificate ARN",
+      "Description": "Existing Application SSL certificate ARN",
       "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
       "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
     },
+    "GenerateDirectorSslCertificate": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Generate Director AWS SSL certificate - requires manual intervention to validate request email",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "ExistingDirectorSslCertificate": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Existing Director SSL certificate ARN",
+      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
+    },
+
     "MultiAz": {
       "Type": "String",
       "Default": "true",
@@ -274,26 +281,6 @@
       "AllowedValues": [ "internet-facing", "internal" ]
     },
 
-    "GenerateSslCertificate": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
-      "AllowedValues": [ "true", "false" ]
-    },
-
-    "GenerateSslCertificate": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "ExistingSslCertificate": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Existing SSL certificate ARN",
-      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
-      "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
-    },
     "MultiAz": {
       "Type": "String",
       "Default": "true",
@@ -340,16 +327,16 @@
       "Value": { "Fn::GetAtt": [ "SshElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElbDnsName" } }
     },
-    "ExternalElb": {
+    "ApplicationElb": {
       "Description": "External ELB",
       "Condition": "DeployElb",
-      "Value": { "Ref": "ExternalElb" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalElb" } }
+      "Value": { "Ref": "ApplicationElb" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElb" } }
     },
     "ElbDnsName": {
       "Description": "ELB DNS Name",
       "Condition": "DeployElb",
-      "Value": { "Fn::GetAtt": [ "ExternalElb","DNSName" ] },
+      "Value": { "Fn::GetAtt": [ "ApplicationElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbDnsName" } }
     },
     "ElbTargetGroup80": {
@@ -360,7 +347,7 @@
     },
     "ElbTargetGroup443": {
       "Description": "ELB DNS Name",
-      "Condition": "SslElb",
+      "Condition": "ApplicationSslElb",
       "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ElbTargetGroup443", "TargetGroupFullName" ] } ] } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443" } }
     },
@@ -381,29 +368,55 @@
   "Conditions": {
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
 
-    "GenerateSslCertificate": {
+    "GenerateApplicationSslCertificate": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "GenerateSslCertificate" }, "true" ] },
-	{ "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "" ] }
+        { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
+	{ "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
       ]
     },
-    "SslElb": {
+    "GenerateDirectorSslCertificate": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateDirectorSslCertificate" }, "true" ] },
+	{ "Fn::Equals": [ { "Ref": "ExistingDirectorSslCertificate" }, "" ] }
+      ]
+    },
+
+    "ApplicationSslElb": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         {
           "Fn::Or": [
-            { "Fn::Equals": [ { "Ref": "GenerateSslCertificate" }, "true" ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "" ] } ] }
+            { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
+            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] } ] }
           ]
         }
       ]
     },
-    "PlainTextElb": {
+    "ApplicationPlainTextElb": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "GenerateSslCertificate" }, "false" ] },
-        { "Fn::Equals": [ { "Ref": "ExistingSslCertificate" }, "" ] }
+        { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "false" ] },
+        { "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
+      ]
+    },
+    "DirectorSslElb": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        {
+          "Fn::Or": [
+            { "Fn::Equals": [ { "Ref": "GenerateDirectorSslCertificate" }, "true" ] },
+            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExistingDirectorSslCertificate" }, "" ] } ] }
+          ]
+        }
+      ]
+    },
+    "DirectorPlainTextElb": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateDirectorSslCertificate" }, "false" ] },
+        { "Fn::Equals": [ { "Ref": "ExistingDirectorSslCertificate" }, "" ] }
       ]
     },
 
@@ -439,9 +452,9 @@
       }
     },
 
-    "GeneratedSslCertificate": {
+    "GeneratedApplicationSslCertificate": {
       "Type": "AWS::CertificateManager::Certificate",
-      "Condition": "GenerateSslCertificate",
+      "Condition": "GenerateApplicationSslCertificate",
       "Properties": {
         "DomainName": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
         "SubjectAlternativeNames": [ { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] } ],
@@ -456,7 +469,29 @@
           }
         ],
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedSslCertificate" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedApplicationSslCertificate" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "GeneratedDirectorSslCertificate": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Condition": "GenerateDirectorSslCertificate",
+      "Properties": {
+        "DomainName": { "Fn::Join": [ ".", [ "director", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
+        "SubjectAlternativeNames": [ { "Fn::Join": [ ".", [ "bosh", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] } ],
+        "DomainValidationOptions": [
+          {
+            "DomainName": { "Fn::Join": [ ".", [ "director", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
+            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
+          },
+          {
+            "DomainName": { "Fn::Join": [ ".", [ "bosh", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
+            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
+          }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedDirectorSslCertificate" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -481,13 +516,27 @@
             "InstancePort": { "Ref": "DirectorElbInstancePort2" },
             "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol2" },
             "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort2" },
-            "Protocol": { "Ref": "DirectorElbProtocol2" }
+            "Protocol": { "Ref": "DirectorElbProtocol2" },
+            "SSLCertificateId": {
+              "Fn::If": [
+                "GenerateDirectorSslCertificate",
+                { "Ref": "GeneratedDirectorSslCertificate" },
+                { "Ref": "ExistingDirectorSslCertificate" }
+              ]
+            }
           },
           {
             "InstancePort": { "Ref": "DirectorElbInstancePort3" },
             "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol3" },
             "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort3" },
-            "Protocol": { "Ref": "DirectorElbProtocol3" }
+            "Protocol": { "Ref": "DirectorElbProtocol3" },
+            "SSLCertificateId": {
+              "Fn::If": [
+                "GenerateDirectorSslCertificate",
+                { "Ref": "GeneratedDirectorSslCertificate" },
+                { "Ref": "ExistingDirectorSslCertificate" }
+              ]
+            }
           }
         ],
         "Scheme": { "Ref": "DirectorElbScheme" },
@@ -538,7 +587,7 @@
       }
     },
 
-    "ExternalElb": {
+    "ApplicationElb": {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Condition": "DeployElb",
       "Properties": {
@@ -552,7 +601,7 @@
         ],
         "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ExternalElb" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElb" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -608,22 +657,22 @@
             "TargetGroupArn": { "Ref": "ElbTargetGroup80" }
           }
         ],
-        "LoadBalancerArn": { "Ref": "ExternalElb" },
+        "LoadBalancerArn": { "Ref": "ApplicationElb" },
         "Port": "80",
         "Protocol": "HTTP"
       }
     },
     "ElbListener443": {
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
-      "Condition": "SslElb",
+      "Condition": "ApplicationSslElb",
       "Properties": {
         "Certificates": [
           {
             "CertificateArn": {
               "Fn::If": [
-                "GenerateSslCertificate",
-                { "Ref": "GeneratedSslCertificate" },
-                { "Ref": "ExistingSslCertificate" }
+                "GenerateApplicationSslCertificate",
+                { "Ref": "GeneratedApplicationSslCertificate" },
+                { "Ref": "ExistingApplicationSslCertificate" }
               ]
             }
           }
@@ -634,7 +683,7 @@
             "TargetGroupArn": { "Ref": "ElbTargetGroup443" }
           }
         ],
-        "LoadBalancerArn": { "Ref": "ExternalElb" },
+        "LoadBalancerArn": { "Ref": "ApplicationElb" },
         "Port": "443",
         "Protocol": "HTTPS"
       }
