@@ -142,27 +142,62 @@
   },
 
   "Resources": {
-    "StackProtection": {
-      "Type": "AWS::CloudFormation::Stack",
+    "PreventStackDeletion": {
+      "Type": "AWS::IAM::Policy",
+      "Condition": "StackProtection",
       "Properties": {
-        "Parameters": {
-          "StackArn": { "Ref": "AWS::StackId" },
-          "StackProtectionGroup": { "Ref": "StackProtectionGroup" },
-          "StackDeleteAllowDeny": { "Ref": "StackDeleteAllowDeny" },
-          "StackUpdateAllowDeny": { "Ref": "StackUpdateAllowDeny" }
-        },
-        "TemplateURL": {
+        "PolicyName": {
           "Fn::Join": [
-            "/", [
-	      { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
-              "Templates",
-              "Stack-Protection.json"
+            "-", [
+              { "Ref": "DeploymentName" },
+              "PreventStackDeletion"
             ]
+          ]
+        },
+        "Groups": [ { "Ref": "StackProtectionGroup" } ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "StackDeleteAllowDeny" },
+              "Action": [
+		"Delete:*",
+		"cloudformation:DeleteStack"
+              ],
+              "Resource": { "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${DeploymentName}-*" }
+            }
           ]
         }
       }
     },
-
+    "PreventStackUpdate": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": {
+          "Fn::Join": [
+            "-", [
+              { "Ref": "DeploymentName" },
+              "PreventStackUpdate"
+            ]
+          ]
+        },
+        "Groups": [ { "Ref": "StackProtectionGroup" } ],
+        "PolicyDocument": {
+          "Version":"2012-10-17",
+          "Statement": [
+            {
+              "Effect": { "Ref": "StackUpdateAllowDeny" },
+              "Action": [
+		"Update:*",
+		"cloudformation:UpdateStack"
+              ],
+              "Resource": { "Fn::Sub": "arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/${DeploymentName}-*" }
+            }
+          ]
+        }
+      }
+    },
+    
     "DeploymentIamGroup": {
       "Type": "AWS::IAM::Group",
       "Properties": {

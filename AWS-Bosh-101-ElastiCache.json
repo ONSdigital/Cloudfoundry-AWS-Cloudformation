@@ -80,27 +80,6 @@
   },
 
   "Resources": {
-    "StackProtection": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Properties": {
-        "Parameters": {
-          "StackArn": { "Ref": "AWS::StackId" },
-          "StackProtectionGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } },
-          "StackDeleteAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } },
-          "StackUpdateAllowDeny": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
-        },
-        "TemplateURL": {
-          "Fn::Join": [
-            "/", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
-              "Templates",
-              "Stack-Protection.json"
-            ]
-          ]
-        }
-      }
-    },
-
     "ElastiCacheAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "CreateElasticCacheInfrastructure",
