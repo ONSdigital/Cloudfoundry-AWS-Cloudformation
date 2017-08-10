@@ -316,6 +316,18 @@
   },
 
   "Outputs": {
+    "DirectorElb": {
+      "Description": "Director External ELB",
+      "Condition": "DeployElb",
+      "Value": { "Ref": "DirectorElb" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElb" } }
+    },
+    "DirectorElbDnsName": {
+      "Description": "Director ELB DNS Name",
+      "Condition": "DeployElb",
+      "Value": { "Fn::GetAtt": [ "DirectorElb","DNSName" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElbDnsName" } }
+    },
     "SshElb": {
       "Description": "SSH External ELB",
       "Condition": "DeployElb",

@@ -14,7 +14,7 @@
 
     "AllocateLbIp": {
       "Type": "String",
-      "Default": "true",
+      "Default": "false",
       "Description": "Allocate External IP (eg for HA Proxy)",
       "AllowedValues": [ "true", "false" ]
     },
@@ -32,7 +32,7 @@
     },
     "AllocateBoshPublicIp": {
       "Type": "String",
-      "Default": "true",
+      "Default": "false",
       "Description": "Allocate Public Bosh IP",
       "AllowedValues": [ "true", "false" ]
     }
