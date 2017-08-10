@@ -39,12 +39,170 @@
       "Description": "Application ELB: Internet facing or internal load balancer",
       "AllowedValues": [ "internet-facing", "internal" ]
     },
-    "SshElbTimeout": {
+    "DirectorElbTarget": {
+      "Type": "String",
+      "Default": "HTTPS:25555/info",
+      "Description": "Director ELB Port Check",
+      "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
+    },
+    "DirectorElbProtocol1": {
+      "Type": "String",
+      "Default": "TCP",
+      "Description": "Director ELB Instance Protocol 1",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
+    },
+    "DirectorElbProtocol2": {
+      "Type": "String",
+      "Default": "HTTPS",
+      "Description": "Director ELB Instance Protocol 2",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
+    },
+    "DirectorElbProtocol3": {
+      "Type": "String",
+      "Default": "HTTPS",
+      "Description": "Director ELB Instance Protocol 3",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
+    },
+    "DirectorElbInstancePort1": {
       "Type": "Number",
-      "Default": "30",
-      "Description": "SSH ELB Timeout",
+      "Default": "22",
+      "Description": "Director ELB Instance Port 1",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "DirectorElbInstancePort2": {
+      "Type": "Number",
+      "Default": "6868",
+      "Description": "Director ELB Instance Port 2",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "DirectorElbInstancePort3": {
+      "Type": "Number",
+      "Default": "25555",
+      "Description": "Director ELB Instance Port 3",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "DirectorElbInstanceProtocol1": {
+      "Type": "String",
+      "Default": "TCP",
+      "Description": "Director ELB Instance Protocol 1",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
+    },
+    "DirectorElbInstanceProtocol2": {
+      "Type": "String",
+      "Default": "HTTPS",
+      "Description": "Director ELB Instance Protocol 2",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
+    },
+    "DirectorElbInstanceProtocol3": {
+      "Type": "String",
+      "Default": "HTTPS",
+      "Description": "Director ELB Instance Protocol 3",
+      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
+      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
+    },
+    "DirectorElbLoadbalancerPort1": {
+      "Type": "Number",
+      "Default": "22",
+      "Description": "Director ELB Instance Port 1",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "DirectorElbLoadbalancerPort2": {
+      "Type": "Number",
+      "Default": "6868",
+      "Description": "Director ELB Instance Port 2",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "DirectorElbLoadbalancerPort3": {
+      "Type": "Number",
+      "Default": "25555",
+      "Description": "Director ELB Instance Port 3",
+      "MinValue": "1",
+      "MaxValue": "65535"
+    },
+    "DirectorElbHealthyThreshold": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "Director ELB Healthy Threshold",
       "MinValue": "1",
       "MaxValue": "999"
+    },
+    "DirectorElbUnhealthyThreshold": {
+      "Type": "Number",
+      "Default": "2",
+      "Description": "Director ELB Unhealth Threshold",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+    "DirectorElbHealthCheckInternal": {
+      "Type": "Number",
+      "Default": "30",
+      "Description": "Director ELB Health Check Interval",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+    "DirectorElbHealthCheckTimeout": {
+      "Type": "Number",
+      "Default": "10",
+      "Description": "Director ELB Health Check Timeout",
+      "MinValue": "1",
+      "MaxValue": "999"
+    },
+    "DirectorElbScheme": {
+      "Type": "String",
+      "Default": "internet-facing",
+      "Description": "Application ELB: Internet facing or internal load balancer",
+      "AllowedValues": [ "internet-facing", "internal" ]
+    },
+
+    "GenerateSslCertificate": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
+      "AllowedValues": [ "true", "false" ]
+    },
+
+    "GenerateSslCertificate": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Generate AWS SSL certificate - requires manual intervention to validate request email",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "ExistingSslCertificate": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Existing SSL certificate ARN",
+      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "SslValidationDomain": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Domain to send the SSL validation emails to. Should be empty, or a the parent domain of HostedZone",
+      "AllowedPattern": "^((([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,})?$",
+      "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/ or empty"
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
     },
     "SshElbTarget": {
       "Type": "String",
@@ -52,13 +210,6 @@
       "Description": "SSH ELB Port Check",
       "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
-    },
-    "SshElbPort": {
-      "Type": "Number",
-      "Default": "2",
-      "Description": "SSH ELB Port",
-      "MinValue": "1",
-      "MaxValue": "65535"
     },
     "SshElbProtocol": {
       "Type": "String",
@@ -69,7 +220,7 @@
     },
     "SshElbInstancePort": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "22",
       "Description": "SSH ELB Instance Port",
       "MinValue": "1",
       "MaxValue": "65535"
@@ -83,7 +234,7 @@
     },
     "SshElbLoadbalancerPort": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "22",
       "Description": "SSH ELB Instance Port",
       "MinValue": "1",
       "MaxValue": "65535"
@@ -109,7 +260,7 @@
       "MinValue": "1",
       "MaxValue": "999"
     },
-    "SshlbHealthCheckTimeout": {
+    "SshElbHealthCheckTimeout": {
       "Type": "Number",
       "Default": "10",
       "Description": "SSH ELB Health Check Timeout",
@@ -299,6 +450,50 @@
       }
     },
 
+    "DirectorElb": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "DeployElb",
+      "Properties": {
+        "Subnets": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+        ],
+        "Listeners": [
+          {
+            "InstancePort": { "Ref": "DirectorElbInstancePort1" },
+            "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol1" },
+            "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort1" },
+            "Protocol": { "Ref": "DirectorElbProtocol1" }
+          },
+          {
+            "InstancePort": { "Ref": "DirectorElbInstancePort2" },
+            "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol2" },
+            "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort2" },
+            "Protocol": { "Ref": "DirectorElbProtocol2" }
+          },
+          {
+            "InstancePort": { "Ref": "DirectorElbInstancePort3" },
+            "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol3" },
+            "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort3" },
+            "Protocol": { "Ref": "DirectorElbProtocol3" }
+          }
+        ],
+        "Scheme": { "Ref": "DirectorElbScheme" },
+        "HealthCheck": {
+          "HealthyThreshold": { "Ref": "DirectorElbHealthyThreshold" },
+          "Interval": { "Ref": "DirectorElbHealthCheckInternal" },
+          "Target": { "Ref": "DirectorElbTarget" },
+          "Timeout": { "Ref": "DirectorElbHealthCheckTimeout" },
+          "UnhealthyThreshold": { "Ref": "DirectorElbUnhealthyThreshold" }
+        },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ],
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } } ]
+      }
+    },
+
     "SshElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Condition": "DeployElb",
@@ -320,11 +515,11 @@
           "HealthyThreshold": { "Ref": "SshElbHealthyThreshold" },
           "Interval": { "Ref": "SshElbHealthCheckInternal" },
           "Target": { "Ref": "SshElbTarget" },
-          "Timeout": { "Ref": "SshlbHealthCheckTimeout" },
+          "Timeout": { "Ref": "SshElbHealthCheckTimeout" },
           "UnhealthyThreshold": { "Ref": "SshElbUnhealthyThreshold" }
         },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedSslCertificate" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:SshElb" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ],
         "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } } ]
