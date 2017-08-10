@@ -39,10 +39,10 @@
       "Description": "Application ELB: Internet facing or internal load balancer",
       "AllowedValues": [ "internet-facing", "internal" ]
     },
-    "DirectorElbTarget": {
+    "DirectorElbHealthCheckTarget": {
       "Type": "String",
       "Default": "HTTPS:25555/info",
-      "Description": "Director ELB Port Check",
+      "Description": "Director ELB health check target",
       "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
     },
@@ -55,14 +55,14 @@
     },
     "DirectorElbProtocol2": {
       "Type": "String",
-      "Default": "HTTPS",
+      "Default": "TCP",
       "Description": "Director ELB Instance Protocol 2",
       "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
     },
     "DirectorElbProtocol3": {
       "Type": "String",
-      "Default": "HTTPS",
+      "Default": "TCP",
       "Description": "Director ELB Instance Protocol 3",
       "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
@@ -178,19 +178,6 @@
       "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
       "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
     },
-    "GenerateDirectorSslCertificate": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Generate Director AWS SSL certificate - requires manual intervention to validate request email",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "ExistingDirectorSslCertificate": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Existing Director SSL certificate ARN",
-      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
-      "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
-    },
 
     "MultiAz": {
       "Type": "String",
@@ -211,10 +198,10 @@
       "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
     },
-    "SshElbTarget": {
+    "SshElbHealthCheckTarget": {
       "Type": "String",
       "Default": "HTTP:2223/",
-      "Description": "SSH ELB Port Check",
+      "Description": "SSH ELB Health Check Target",
       "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
     },
@@ -375,13 +362,6 @@
 	{ "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
       ]
     },
-    "GenerateDirectorSslCertificate": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "GenerateDirectorSslCertificate" }, "true" ] },
-	{ "Fn::Equals": [ { "Ref": "ExistingDirectorSslCertificate" }, "" ] }
-      ]
-    },
 
     "ApplicationSslElb": {
       "Fn::And": [
@@ -399,24 +379,6 @@
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "false" ] },
         { "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
-      ]
-    },
-    "DirectorSslElb": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-        {
-          "Fn::Or": [
-            { "Fn::Equals": [ { "Ref": "GenerateDirectorSslCertificate" }, "true" ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExistingDirectorSslCertificate" }, "" ] } ] }
-          ]
-        }
-      ]
-    },
-    "DirectorPlainTextElb": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "GenerateDirectorSslCertificate" }, "false" ] },
-        { "Fn::Equals": [ { "Ref": "ExistingDirectorSslCertificate" }, "" ] }
       ]
     },
 
@@ -474,28 +436,6 @@
         ]
       }
     },
-    "GeneratedDirectorSslCertificate": {
-      "Type": "AWS::CertificateManager::Certificate",
-      "Condition": "GenerateDirectorSslCertificate",
-      "Properties": {
-        "DomainName": { "Fn::Join": [ ".", [ "director", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
-        "SubjectAlternativeNames": [ { "Fn::Join": [ ".", [ "bosh", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] } ],
-        "DomainValidationOptions": [
-          {
-            "DomainName": { "Fn::Join": [ ".", [ "director", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
-            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
-          },
-          {
-            "DomainName": { "Fn::Join": [ ".", [ "bosh", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
-            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
-          }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedDirectorSslCertificate" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
 
     "DirectorElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
@@ -510,40 +450,26 @@
             "InstancePort": { "Ref": "DirectorElbInstancePort1" },
             "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol1" },
             "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort1" },
-            "Protocol": { "Ref": "DirectorElbProtocol1" }
+            "Protocol": "TCP"
           },
           {
             "InstancePort": { "Ref": "DirectorElbInstancePort2" },
             "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol2" },
             "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort2" },
-            "Protocol": { "Ref": "DirectorElbProtocol2" },
-            "SSLCertificateId": {
-              "Fn::If": [
-                "GenerateDirectorSslCertificate",
-                { "Ref": "GeneratedDirectorSslCertificate" },
-                { "Ref": "ExistingDirectorSslCertificate" }
-              ]
-            }
+            "Protocol": "TCP"
           },
           {
             "InstancePort": { "Ref": "DirectorElbInstancePort3" },
             "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol3" },
             "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort3" },
-            "Protocol": { "Ref": "DirectorElbProtocol3" },
-            "SSLCertificateId": {
-              "Fn::If": [
-                "GenerateDirectorSslCertificate",
-                { "Ref": "GeneratedDirectorSslCertificate" },
-                { "Ref": "ExistingDirectorSslCertificate" }
-              ]
-            }
+            "Protocol": "TCP"
           }
         ],
         "Scheme": { "Ref": "DirectorElbScheme" },
         "HealthCheck": {
           "HealthyThreshold": { "Ref": "DirectorElbHealthyThreshold" },
           "Interval": { "Ref": "DirectorElbHealthCheckInternal" },
-          "Target": { "Ref": "DirectorElbTarget" },
+          "Target": { "Ref": "DirectorElbHealthCheckTarget" },
           "Timeout": { "Ref": "DirectorElbHealthCheckTimeout" },
           "UnhealthyThreshold": { "Ref": "DirectorElbUnhealthyThreshold" }
         },
@@ -575,7 +501,7 @@
         "HealthCheck": {
           "HealthyThreshold": { "Ref": "SshElbHealthyThreshold" },
           "Interval": { "Ref": "SshElbHealthCheckInternal" },
-          "Target": { "Ref": "SshElbTarget" },
+          "Target": { "Ref": "SshElbHealthCheckTarget" },
           "Timeout": { "Ref": "SshElbHealthCheckTimeout" },
           "UnhealthyThreshold": { "Ref": "SshElbUnhealthyThreshold" }
         },
