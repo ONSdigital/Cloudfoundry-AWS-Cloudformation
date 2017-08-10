@@ -18,13 +18,6 @@
       "Description": "VPC CIDR",
       "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$",
       "ConstraintDescription": "Valid CIDR"
-    },
-    "DnsIp": {
-      "Type": "String",
-      "Default": "169.152.169.253",
-      "Description": "DNS IP (defaults to AWS DNS, but may not work in Windows)",
-      "AllowedPattern": "^([0-9]{1,3}\\.){3}[0-9]{1,3}$",
-      "ConstraintDescription": "Valid IP address"
     }
   },
 
@@ -38,10 +31,6 @@
       "Description": "VPC CIDR",
       "Value": { "Ref": "VpcCidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }
-    },
-    "DnsIp": {
-      "Description": "VPC DNS IP - http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_DHCP_Options.html#AmazonDNS",
-      "Value": { "Ref": "DnsIp" }
     },
     "InternetGateway": {
       "Description": "InternetGateway ID",
