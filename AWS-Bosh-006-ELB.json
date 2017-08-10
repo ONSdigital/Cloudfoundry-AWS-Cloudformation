@@ -88,27 +88,6 @@
       "MinValue": "1",
       "MaxValue": "65535"
     },
-    "DirectorElbInstanceProtocol1": {
-      "Type": "String",
-      "Default": "TCP",
-      "Description": "Director ELB Instance Protocol 1",
-      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
-    },
-    "DirectorElbInstanceProtocol2": {
-      "Type": "String",
-      "Default": "HTTPS",
-      "Description": "Director ELB Instance Protocol 2",
-      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
-    },
-    "DirectorElbInstanceProtocol3": {
-      "Type": "String",
-      "Default": "HTTPS",
-      "Description": "Director ELB Instance Protocol 3",
-      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
-    },
     "DirectorElbLoadbalancerPort1": {
       "Type": "Number",
       "Default": "22",
@@ -427,19 +406,19 @@
         "Listeners": [
           {
             "InstancePort": { "Ref": "DirectorElbInstancePort1" },
-            "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol1" },
+            "InstanceProtocol": "TCP",
             "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort1" },
             "Protocol": "TCP"
           },
           {
             "InstancePort": { "Ref": "DirectorElbInstancePort2" },
-            "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol2" },
+            "InstanceProtocol": "TCP",
             "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort2" },
             "Protocol": "TCP"
           },
           {
             "InstancePort": { "Ref": "DirectorElbInstancePort3" },
-            "InstanceProtocol": { "Ref": "DirectorElbInstanceProtocol3" },
+            "InstanceProtocol": "TCP",
             "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort3" },
             "Protocol": "TCP"
           }
