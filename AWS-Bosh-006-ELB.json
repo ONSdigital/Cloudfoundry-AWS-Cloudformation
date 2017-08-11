@@ -177,70 +177,70 @@
       "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
     },
-    "SshElbHealthCheckTarget": {
+    "CfSshElbHealthCheckTarget": {
       "Type": "String",
       "Default": "HTTP:2223/",
-      "Description": "SSH ELB Health Check Target",
+      "Description": "Cloudfoundry SSH ELB Health Check Target",
       "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
     },
-    "SshElbProtocol": {
+    "CfSshElbProtocol": {
       "Type": "String",
       "Default": "TCP",
-      "Description": "SSH ELB Instance Protocol",
+      "Description": "Cloudfoundry SSH ELB Instance Protocol",
       "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
     },
-    "SshElbInstancePort": {
+    "CfSshElbInstancePort": {
       "Type": "Number",
       "Default": "2222",
-      "Description": "SSH ELB Instance Port",
+      "Description": "Cloudfoundry SSH ELB Instance Port",
       "MinValue": "1",
       "MaxValue": "65535"
     },
-    "SshElbInstanceProtocol": {
+    "CfSshElbInstanceProtocol": {
       "Type": "String",
       "Default": "TCP",
-      "Description": "SSH ELB Instance Protocol",
+      "Description": "Cloudfoundry SSH ELB Instance Protocol",
       "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
     },
-    "SshElbLoadbalancerPort": {
+    "CfSshElbLoadbalancerPort": {
       "Type": "Number",
       "Default": "2222",
-      "Description": "SSH ELB Instance Port",
+      "Description": "Cloudfoundry SSH ELB Instance Port",
       "MinValue": "1",
       "MaxValue": "65535"
     },
-    "SshElbHealthyThreshold": {
+    "CfSshElbHealthyThreshold": {
       "Type": "Number",
       "Default": "2",
-      "Description": "SSH ELB Healthy Threshold",
+      "Description": "Cloudfoundry SSH ELB Healthy Threshold",
       "MinValue": "1",
       "MaxValue": "999"
     },
-    "SshElbUnhealthyThreshold": {
+    "CfSshElbUnhealthyThreshold": {
       "Type": "Number",
       "Default": "2",
-      "Description": "SSH ELB Unhealth Threshold",
+      "Description": "Cloudfoundry SSH ELB Unhealth Threshold",
       "MinValue": "1",
       "MaxValue": "999"
     },
-    "SshElbHealthCheckInternal": {
+    "CfSshElbHealthCheckInternal": {
       "Type": "Number",
       "Default": "30",
-      "Description": "SSH ELB Health Check Interval",
+      "Description": "Cloudfoundry SSH ELB Health Check Interval",
       "MinValue": "1",
       "MaxValue": "999"
     },
-    "SshElbHealthCheckTimeout": {
+    "CfSshElbHealthCheckTimeout": {
       "Type": "Number",
       "Default": "10",
-      "Description": "SSH ELB Health Check Timeout",
+      "Description": "Cloudfoundry SSH ELB Health Check Timeout",
       "MinValue": "1",
       "MaxValue": "999"
     },
-    "SshElbScheme": {
+    "CfSshElbScheme": {
       "Type": "String",
       "Default": "internet-facing",
       "Description": "Application ELB: Internet facing or internal load balancer",
@@ -281,17 +281,17 @@
       "Value": { "Fn::GetAtt": [ "DirectorElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElbDnsName" } }
     },
-    "SshElb": {
-      "Description": "SSH External ELB",
+    "CfSshElb": {
+      "Description": "Cloudfoundry SSH External ELB",
       "Condition": "DeployElb",
-      "Value": { "Ref": "SshElb" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElb" } }
+      "Value": { "Ref": "CfSshElb" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElb" } }
     },
-    "SshElbDnsName": {
-      "Description": "SSH ELB DNS Name",
+    "CfSshElbDnsName": {
+      "Description": "Cloudfoundry SSH ELB DNS Name",
       "Condition": "DeployElb",
-      "Value": { "Fn::GetAtt": [ "SshElb","DNSName" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElbDnsName" } }
+      "Value": { "Fn::GetAtt": [ "CfSshElb","DNSName" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElbDnsName" } }
     },
     "ApplicationElb": {
       "Description": "External ELB",
@@ -433,7 +433,7 @@
       }
     },
 
-    "SshElb": {
+    "CfSshElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Condition": "DeployElb",
       "Properties": {
@@ -443,25 +443,25 @@
         ],
         "Listeners": [
           {
-            "InstancePort": { "Ref": "SshElbInstancePort" },
-            "InstanceProtocol": { "Ref": "SshElbInstanceProtocol" },
-            "LoadBalancerPort": { "Ref": "SshElbLoadbalancerPort" },
-            "Protocol": { "Ref": "SshElbProtocol" }
+            "InstancePort": { "Ref": "CfSshElbInstancePort" },
+            "InstanceProtocol": { "Ref": "CfSshElbInstanceProtocol" },
+            "LoadBalancerPort": { "Ref": "CfSshElbLoadbalancerPort" },
+            "Protocol": { "Ref": "CfSshElbProtocol" }
           }
         ],
-        "Scheme": { "Ref": "SshElbScheme" },
+        "Scheme": { "Ref": "CfSshElbScheme" },
         "HealthCheck": {
-          "HealthyThreshold": { "Ref": "SshElbHealthyThreshold" },
-          "Interval": { "Ref": "SshElbHealthCheckInternal" },
-          "Target": { "Ref": "SshElbHealthCheckTarget" },
-          "Timeout": { "Ref": "SshElbHealthCheckTimeout" },
-          "UnhealthyThreshold": { "Ref": "SshElbUnhealthyThreshold" }
+          "HealthyThreshold": { "Ref": "CfSshElbHealthyThreshold" },
+          "Interval": { "Ref": "CfSshElbHealthCheckInternal" },
+          "Target": { "Ref": "CfSshElbHealthCheckTarget" },
+          "Timeout": { "Ref": "CfSshElbHealthCheckTimeout" },
+          "UnhealthyThreshold": { "Ref": "CfSshElbUnhealthyThreshold" }
         },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:SshElb" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshElb" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ],
-        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } } ]
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } } ]
       }
     },
 

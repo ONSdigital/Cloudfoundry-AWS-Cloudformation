@@ -10,6 +10,13 @@
       "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "CfSshElbSecurityGroup": {
+      "Type": "String",
+      "Default": "",
+      "Description": "SSH ELB Security Group",
+      "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
+      "ConstraintDescription": "Valid security group"
+    },
     "DirectorSecurityGroup": {
       "Type": "String",
       "Description": "Director Security Group",
@@ -23,55 +30,43 @@
       "Default": "",
       "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
       "ConstraintDescription": "Valid security group"
-    },
-    "SshElbSecurityGroup": {
-      "Type": "String",
-      "Default": "",
-      "Description": "SSH ELB Security Group",
-      "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
-      "ConstraintDescription": "Valid security group"
-    },
-
-    "AllowCfSshAccess": {
-      "Type": "String",
-      "Default": "false",
-      "Description": "Allow CF SSH access (true/false)",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "AllowDirectorAccess": {
-      "Type": "String",
-      "Default": "false",
-      "Description": "Allow Director access (true/false)",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
  "Conditions": {
     "AllowCfSshAccess": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] },
-        { "Fn::Equals": [ { "Ref": "SshElbSecurityGroup" }, "" ] }
-      ]
-    },
-    "AllowCfElbSshAccess": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "AllowCfSshAccess" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "SshElbSecurityGroup" }, "" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "CfSshSecurityGroup" }, "" ] } ] }
       ]
     },
     "AllowDirectorAccess": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "AllowDirectorAccess" }, "true" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "DirectorSecurityGroup" }, "" ] } ] }
       ]
     },
-    "AllowLbAccess": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] }
+    "AllowLbAccess": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "LbSecurityGroup" }, "" ] } ] }
+      ]
+    }
   },
 
   "Resources": {
+    "CfSsh2222AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "AllowCfSshAccess",
+      "Properties": {
+        "GroupId": { "Ref": "CfSshSecurityGroup" },
+        "CidrIp": { "Ref": "WhitelistedCidr" },
+        "FromPort": "2222",
+        "ToPort": "2222" ,
+        "IpProtocol": "tcp"
+      }
+    },
+
     "Director22AccessIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "AllowDirectorAccess",
@@ -106,18 +101,6 @@
       }
     },
 
-    "ELb2222AccessIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "AllowCfElbSshAccess",
-      "Properties": {
-        "GroupId": { "Ref": "SshElbSecurityGroup" },
-        "CidrIp": { "Ref": "WhitelistedCidr" },
-        "FromPort": "2222",
-        "ToPort": "2222" ,
-        "IpProtocol": "tcp"
-      }
-    },
-
     "Lb80AccessIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "AllowLbAccess",
@@ -137,17 +120,6 @@
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "443",
         "ToPort": "443" ,
-        "IpProtocol": "tcp"
-      }
-    },
-    "Lb2222AccessIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "AllowCfSshAccess",
-      "Properties": {
-        "GroupId": { "Ref": "LbSecurityGroup" },
-        "CidrIp": { "Ref": "WhitelistedCidr" },
-        "FromPort": "2222",
-        "ToPort": "2222" ,
         "IpProtocol": "tcp"
       }
     }

@@ -138,11 +138,11 @@
         "IpProtocol": "-1"
       }
     },
-   "ScanSourceToSshElbSecurityGroupIngress": {
+   "ScanSourceToCfSshSecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "WhitelistScanSourceAndDeployElb",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
         "IpProtocol": "-1"
       }
