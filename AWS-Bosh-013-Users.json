@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "AWS User",
+  "Description": "Cloudfoundry Users",
 
   "Parameters": {
     "DeploymentName": {
@@ -25,6 +25,11 @@
     "BoshAwsUserName": {
       "Description": "ElastiCache Broker User Name",
       "Value": { "Ref": "BoshAwsUser" }
+    },
+    "DeploymentIamGroup": {
+      "Description": "Deployment IAM Group",
+      "Value": { "Ref": "DeploymentIamGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
     }
   },
 
