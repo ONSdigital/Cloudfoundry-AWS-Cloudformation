@@ -142,7 +142,7 @@
           "Fn::Join": [
             "-", [
               { "Ref": "DeploymentName" },
-              "PreventStackDeletion"
+              "StackDeletionPolicy"
             ]
           ]
         },
@@ -169,7 +169,7 @@
           "Fn::Join": [
             "-", [
               { "Ref": "DeploymentName" },
-              "PreventStackUpdate"
+              "StackUpdatePolicy"
             ]
           ]
         },
