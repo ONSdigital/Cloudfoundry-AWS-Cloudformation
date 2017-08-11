@@ -36,8 +36,6 @@
           ]
         },
         "RouteTableIds": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },

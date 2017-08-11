@@ -29,11 +29,19 @@
   },
 
   "Resources": {
+    "DeploymentIamGroup": {
+      "Type": "AWS::IAM::Group",
+      "Properties": {
+        "GroupName": { "Ref": "DeploymentName" },
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" }
+      }
+    },
+
     "BoshAwsUser": {
       "Type": "AWS::IAM::User",
       "Properties": {
         "Groups": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
+          { "Ref": "DeploymentIamGroup" }
         ],
         "Policies": [
           {

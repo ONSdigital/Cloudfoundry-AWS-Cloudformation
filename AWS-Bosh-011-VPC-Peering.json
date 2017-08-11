@@ -270,16 +270,7 @@
       }
     },
 
-    "VpcPeer1DmzRoute": {
-      "Type": "AWS::EC2::Route",
-      "Condition": "Peer1Vpc",
-      "Properties": {
-        "DestinationCidrBlock": { "Ref": "Peer1VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
-        "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
-      }
-    },
-    "VpcPeer1PrivateAz1Route": {
+    "VpcPeer1NatAz1Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer1Vpc",
       "Properties": {
@@ -288,7 +279,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
       }
     },
-    "VpcPeer1PrivateAz2Route": {
+    "VpcPeer1NatAz2Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAzAndPeer1Vpc",
       "Properties": {
@@ -297,7 +288,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
       }
     },
-    "VpcPeer1PrivateAz3Route": {
+    "VpcPeer1NatAz3Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAzAndPeer1Vpc",
       "Properties": {
@@ -325,16 +316,7 @@
       }
     },
 
-    "VpcPeer2DmzRoute": {
-      "Type": "AWS::EC2::Route",
-      "Condition": "Peer2Vpc",
-      "Properties": {
-        "DestinationCidrBlock": { "Ref": "Peer2VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
-        "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
-      }
-    },
-    "VpcPeer2PrivateAz1Route": {
+    "VpcPeer2NatAz1Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer2Vpc",
       "Properties": {
@@ -343,7 +325,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
       }
     },
-    "VpcPeer2PrivateAz2Route": {
+    "VpcPeer2NatAz2Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAzAndPeer2Vpc",
       "Properties": {
@@ -352,7 +334,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
       }
     },
-    "VpcPeer2PrivateAz3Route": {
+    "VpcPeer2NatAz3Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAzAndPeer2Vpc",
       "Properties": {
@@ -380,15 +362,6 @@
       }
     },
 
-    "VpcPeer3DmzRoute": {
-      "Type": "AWS::EC2::Route",
-      "Condition": "Peer3Vpc",
-      "Properties": {
-        "DestinationCidrBlock": { "Ref": "Peer3VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
-        "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
-      }
-    },
     "VpcPeer3PeeringOnlyRoute": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer3Vpc",
@@ -398,7 +371,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
       }
     },
-    "VpcPeer3PrivateAz1Route": {
+    "VpcPeer3NatAz1Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer3Vpc",
       "Properties": {
@@ -407,7 +380,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
       }
     },
-    "VpcPeer3PrivateAz2Route": {
+    "VpcPeer3NatAz2Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAzAndPeer3Vpc",
       "Properties": {
@@ -416,7 +389,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
       }
     },
-    "VpcPeer3PrivateAz3Route": {
+    "VpcPeer3NatAz3Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAzAndPeer3Vpc",
       "Properties": {
@@ -435,15 +408,6 @@
       }
     },
 
-    "VpcPeer4DmzRoute": {
-      "Type": "AWS::EC2::Route",
-      "Condition": "Peer4Vpc",
-      "Properties": {
-        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } },
-        "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
-      }
-    },
     "VpcPeer4VpcPeeringOnlyRoute": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer4Vpc",
@@ -453,7 +417,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
       }
     },
-    "VpcPeer4PrivateAz1Route": {
+    "VpcPeer4NatAz1Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer4Vpc",
       "Properties": {
@@ -462,7 +426,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
       }
     },
-    "VpcPeer4PrivateAz2Route": {
+    "VpcPeer4NatAz2Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAzAndPeer4Vpc",
       "Properties": {
@@ -471,7 +435,7 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
       }
     },
-    "VpcPeer4PrivateAz3Route": {
+    "VpcPeer4NatAz3Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "MultiAzAndPeer4Vpc",
       "Properties": {

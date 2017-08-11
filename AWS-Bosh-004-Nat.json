@@ -37,6 +37,12 @@
       "Default": "true",
       "Description": "Deploy multiple AZs",
       "AllowedValues": [ "true", "false" ]
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -48,7 +54,7 @@
     },
     "NatAz2RouteTable": {
       "Description": "NAT AZ2 RouteTable",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Value": { "Ref": "NatAz2RouteTable" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } }
     },
@@ -61,7 +67,13 @@
   },
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAzOrElb": {
+      "Fn::Or": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
+      ]
+    }
   },
 
   "Resources": {
@@ -80,7 +92,7 @@
     },
     "NatAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
         "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } },
         "CidrBlock": { "Ref": "NatAz2Cidr" },
@@ -116,7 +128,7 @@
     },
     "NatAz2Gateway": {
       "Type": "AWS::EC2::NatGateway",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
         "AllocationId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip-AllocationId" } },
         "SubnetId": { "Ref": "NatAz2Subnet" }
@@ -143,7 +155,7 @@
     },
     "NatAz2RouteTable": {
       "Type": "AWS::EC2::RouteTable",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
@@ -173,7 +185,7 @@
     },
     "NatAz2SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "NatAz2Subnet" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
@@ -197,7 +209,7 @@
     },
     "NatAz2InternetRoute": {
       "Type": "AWS::EC2::Route",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
         "NatGatewayId": { "Ref": "NatAz2Gateway" },

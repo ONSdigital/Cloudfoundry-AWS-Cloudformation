@@ -63,10 +63,10 @@
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } }
     },
 
-    "DmzRouteTable": {
-      "Description": "DMZ Route Table",
-      "Value": { "Ref": "DmzRouteTable" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzRouteTable" } }
+    "DirectorSecurityGroup": {
+      "Description": "Director Security Group",
+      "Value": { "Ref": "DirectorSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } }
     },
     "DmzSecurityGroup": {
       "Description": "DMZ Security Groups",
@@ -80,13 +80,8 @@
     },
     "SshElbSecurityGroup": {
       "Description": "SSH ELB Security Groups",
-      "Value": {
-        "Fn::If": [
-          "DeployElb",
-          { "Ref": "SshElbSecurityGroup" },
-          ""
-        ]
-      },
+      "Condition": "DeployElb",
+      "Value": { "Ref": "SshElbSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SshElbSecurityGroup" } }
     }
   },
@@ -132,22 +127,11 @@
       }
     },
 
-    "DmzRouteTable": {
-      "Type": "AWS::EC2::RouteTable",
-      "Properties": {
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzRouteTable" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-
     "DmzAz1SubnetRouteTableAssociation": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz1Subnet" },
-        "RouteTableId": { "Ref": "DmzRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
     "DmzAz2SubnetRouteTableAssociation": {
@@ -155,19 +139,28 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz2Subnet" },
-        "RouteTableId": { "Ref": "DmzRouteTable" }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
 
-    "DmzInternetRoute": {
-      "Type": "AWS::EC2::Route",
+    "DirectorSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "GatewayId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetGateway" } },
-        "RouteTableId": { "Ref": "DmzRouteTable" }
+        "GroupDescription": "Director Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
+          { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
       }
     },
-
     "DmzSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {

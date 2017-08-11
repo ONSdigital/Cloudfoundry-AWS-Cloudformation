@@ -41,7 +41,7 @@
     },
     "DirectorElbHealthCheckTarget": {
       "Type": "String",
-      "Default": "HTTPS:25555/info",
+      "Default": "TCP:22",
       "Description": "Director ELB health check target",
       "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
@@ -193,7 +193,7 @@
     },
     "SshElbInstancePort": {
       "Type": "Number",
-      "Default": "22",
+      "Default": "2222",
       "Description": "SSH ELB Instance Port",
       "MinValue": "1",
       "MaxValue": "65535"
@@ -207,7 +207,7 @@
     },
     "SshElbLoadbalancerPort": {
       "Type": "Number",
-      "Default": "22",
+      "Default": "2222",
       "Description": "SSH ELB Instance Port",
       "MinValue": "1",
       "MaxValue": "65535"
@@ -362,13 +362,7 @@
     },
 
     "UseHostedZone": { "Fn::Equals": [ { "Ref": "SslValidationDomain" }, "" ] },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-    "MultiAzOrElb": {
-      "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
-      ]
-    }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
   },
 
   "Resources": {

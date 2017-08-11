@@ -101,23 +101,19 @@
     },
     "MultiAz": {
       "Description": "Multi AZ?",
-      "Value": { "Ref": "MultiAz" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-MultiAz" } }
+      "Value": { "Ref": "MultiAz" }
     },
     "StackProtectionGroup": {
       "Description": "Stack Protection Group",
-      "Value": { "Ref": "StackProtectionGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackProtectionGroup" } }
+      "Value": { "Ref": "StackProtectionGroup" }
     },
     "StackDeleteAllowDeny": {
       "Description": "Stack Delete Allow/Deny",
-      "Value": { "Ref": "StackDeleteAllowDeny" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackDeleteAllowDeny" } }
+      "Value": { "Ref": "StackDeleteAllowDeny" }
     },
     "StackUpdateAllowDeny": {
       "Description": "Stack Update Allow/Deny",
-      "Value": { "Ref": "StackUpdateAllowDeny" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-StackUpdateAllowDeny" } }
+      "Value": { "Ref": "StackUpdateAllowDeny" }
     },
 
     "HostedZone": {
@@ -129,11 +125,6 @@
       "Description": "Main DNS Name",
       "Value": { "Fn::Sub": "${DeploymentName}.${HostedZone}" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DomainName" } }
-    },
-    "DeploymentIamGroup": {
-      "Description": "IAM Group",
-      "Value": { "Ref": "DeploymentIamGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
     }
   },
 
@@ -197,15 +188,6 @@
           ]
         }
       }
-    },
-    
-    "DeploymentIamGroup": {
-      "Type": "AWS::IAM::Group",
-      "Properties": {
-        "GroupName": { "Ref": "DeploymentName" },
-        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" }
-      }
     }
-
   }
 }
