@@ -140,7 +140,7 @@
     "DirectorElbScheme": {
       "Type": "String",
       "Default": "internet-facing",
-      "Description": "Application ELB: Internet facing or internal load balancer",
+      "Description": "Director ELB: Internet facing or internal load balancer",
       "AllowedValues": [ "internet-facing", "internal" ]
     },
 
@@ -243,7 +243,7 @@
     "CfSshElbScheme": {
       "Type": "String",
       "Default": "internet-facing",
-      "Description": "Application ELB: Internet facing or internal load balancer",
+      "Description": "CF SSH ELB: Internet facing or internal load balancer",
       "AllowedValues": [ "internet-facing", "internal" ]
     },
 
