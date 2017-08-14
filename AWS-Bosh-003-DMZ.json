@@ -133,7 +133,7 @@
         "RouteTableId": {
           "Fn::If": [
             "DeployElb",
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3RouteTable" } },
+            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
             { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
           ]
         }
@@ -147,7 +147,7 @@
         "RouteTableId": {
           "Fn::If": [
             "DeployElb",
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3RouteTable" } },
+            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
             { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
           ]
         }
