@@ -1,0 +1,235 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "DMZ Subnet(s)",
+
+  "Parameters": {
+    "DeploymentName": {
+      "Type": "String",
+      "Description": "Deployment Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+    "CreateElasticCacheInfrastructure": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Create ElastiCache Networks",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "CreateRabbitmqNetworks": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Create RabbitMQ network(s)",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "DeployRdsAppsInstance": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy Apps RDS Instance",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "DeployRdsCfInstance": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy Cf RDS Instance",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy multiple AZs",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
+    }
+  },
+
+  "Outputs": {
+    "CfSshSecurityGroup": {
+      "Description": "CF SSH Security Groups",
+      "Value": { "Ref": "CfSshSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } }
+    },
+    "DmzSecurityGroup": {
+      "Description": "DMZ Security Groups",
+      "Value": { "Ref": "DmzSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } }
+    },
+    "ElastiCacheSecurityGroup": {
+      "Description": "ElastiCache Broker Security Group",
+      "Condition": "CreateElasticCacheInfrastructure",
+      "Value": { "Ref": "ElastiCacheSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElastiCacheSecurityGroup" } }
+    },
+    "LbSecurityGroup": {
+      "Description": "Load Balancer Security Group",
+      "Value": { "Ref": "LbSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } }
+    },
+    "PrivateSecurityGroup": {
+      "Description": "Private Security Groups",
+      "Value": { "Ref": "PrivateSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }
+    },
+    "RabbitmqSecurityGroup": {
+      "Description": "RabbitMQ Security Groups",
+      "Condition": "CreateRabbitmqNetworks",
+      "Value": { "Ref": "RabbitmqSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }
+    },
+    "RdsSecurityGroup": {
+      "Description": "RDS Database Security Group",
+      "Condition": "CreateRdsInfrastructure",
+      "Value": { "Ref": "RdsSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } }
+    }
+  },
+
+  "Conditions": {
+    "CreateElasticCacheInfrastructure": { "Fn::Equals": [ { "Ref": "CreateElasticCacheInfrastructure" }, "true" ] },
+    "CreateRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] },
+    "CreateRdsInfrastructure": {
+      "Fn::Or": [
+        { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] }
+      ]
+    },
+    "MultiAzOrElb": {
+      "Fn::Or": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "CfSshSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "SSH Load Balancer Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "DmzSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "DMZ In Out",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "ElastiCacheSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "CreateElasticCacheInfrastructure",
+      "Properties": {
+        "GroupDescription": "ElastiCache Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "LbSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Load Balancer Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
+          { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "PrivateSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Private In Out",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "RabbitmqSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupDescription": "RabbitMQ In Out",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "RdsSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "CreateRdsInfrastructure",
+      "Properties": {
+        "GroupDescription": "RDS Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
+        ],
+        "SecurityGroupIngress": [
+          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    }
+  }
+}

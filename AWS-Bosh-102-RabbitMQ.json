@@ -68,13 +68,6 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqAz2Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } }
-    },
-
-    "RabbitmqSecurityGroup": {
-      "Description": "RabbitMQ Security Groups",
-      "Condition": "CreateRabbitmqNetworks",
-      "Value": { "Ref": "RabbitmqSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }
     }
   },
 
@@ -130,25 +123,6 @@
       "Properties": {
         "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
-      }
-    },
-
-    "RabbitmqSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "GroupDescription": "RabbitMQ In Out",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
       }
     }
   }

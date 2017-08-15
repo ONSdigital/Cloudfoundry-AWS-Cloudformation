@@ -61,34 +61,10 @@
       "Condition": "MultiAzOrElb",
       "Value": { "Ref": "DmzAz2Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } }
-    },
-
-    "CfSshSecurityGroup": {
-      "Description": "Cloudfoundry SSH Security Groups",
-      "Value": { "Ref": "CfSshSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } }
-    },
-    "DirectorSecurityGroup": {
-      "Description": "Director Security Group",
-      "Value": { "Ref": "DirectorSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } }
-    },
-    "DmzSecurityGroup": {
-      "Description": "DMZ Security Groups",
-      "Value": { "Ref": "DmzSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } }
-    },
-    "LbSecurityGroup": {
-      "Description": "LB Security Groups",
-      "Value": { "Ref": "LbSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } }
     }
   },
 
   "Conditions": {
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
@@ -130,13 +106,7 @@
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz1Subnet" },
-        "RouteTableId": {
-          "Fn::If": [
-            "DeployElb",
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
-          ]
-        }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
     "DmzAz2SubnetRouteTableAssociation": {
@@ -144,92 +114,14 @@
       "Condition": "MultiAzOrElb",
       "Properties": {
         "SubnetId": { "Ref": "DmzAz2Subnet" },
-        "RouteTableId": {
-          "Fn::If": [
-            "DeployElb",
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
-          ]
-        }
-      }
-    },
-
-    "CfSshSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "SSH Load Balancer Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "DirectorSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "Director Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
-          { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "DmzSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "DMZ In Out",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-
-    "LbSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "Load Balancer Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
-          { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
       }
     },
 
     "DmzNatAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
         "CidrIp": {
           "Fn::Join": [
             "", [
@@ -245,9 +137,9 @@
     },
     "DmzNatAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
         "CidrIp": {
           "Fn::Join": [
             "", [
@@ -263,9 +155,9 @@
     },
     "DmzNatAz3SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
-        "GroupId": { "Ref": "DmzSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
         "CidrIp": {
           "Fn::Join": [
             "", [
@@ -283,7 +175,7 @@
     "LbNatAz1SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
-        "GroupId": { "Ref": "LbSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "CidrIp": {
           "Fn::Join": [
             "", [
@@ -299,9 +191,9 @@
     },
     "LbNatAz2SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
-        "GroupId": { "Ref": "LbSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "CidrIp": {
           "Fn::Join": [
             "", [
@@ -317,9 +209,9 @@
     },
     "LbNatAz3SecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Properties": {
-        "GroupId": { "Ref": "LbSecurityGroup" },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "CidrIp": {
           "Fn::Join": [
             "", [

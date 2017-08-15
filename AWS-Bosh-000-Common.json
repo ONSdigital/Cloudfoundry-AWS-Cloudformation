@@ -164,6 +164,7 @@
     },
     "PreventStackUpdate": {
       "Type": "AWS::IAM::Policy",
+      "Condition": "StackProtection",
       "Properties": {
         "PolicyName": {
           "Fn::Join": [

@@ -156,7 +156,7 @@
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbDnsName" } }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbDnsName" } }
         ]
       }
     },
@@ -289,7 +289,7 @@
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElbDnsName" } }
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbDnsName" } }
         ]
       }
     },

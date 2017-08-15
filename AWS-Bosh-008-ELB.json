@@ -299,35 +299,35 @@
       "Value": { "Ref": "ApplicationElb" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElb" } }
     },
-    "ElbDnsName": {
+    "ApplicationElbDnsName": {
       "Description": "ELB DNS Name",
       "Condition": "DeployElb",
       "Value": { "Fn::GetAtt": [ "ApplicationElb","DNSName" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbDnsName" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbDnsName" } }
     },
-    "ElbTargetGroup80": {
+    "ApplicationElbTargetGroup80": {
       "Description": "ELB DNS Name",
       "Condition": "DeployElb",
-      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ElbTargetGroup80", "TargetGroupFullName" ] } ] } ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup80" } }
+      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroup80", "TargetGroupFullName" ] } ] } ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80" } }
     },
-    "ElbTargetGroup443": {
+    "ApplicationElbTargetGroup443": {
       "Description": "ELB DNS Name",
       "Condition": "ApplicationSslElb",
-      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ElbTargetGroup443", "TargetGroupFullName" ] } ] } ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443" } }
+      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroup443", "TargetGroupFullName" ] } ] } ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443" } }
     },
-    "ElbTargetGroup80Arn": {
+    "ApplicationElbTargetGroup80Arn": {
       "Description": "ELB DNS Name",
       "Condition": "DeployElb",
-      "Value": { "Ref": "ElbTargetGroup80" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup80Arn" } }
+      "Value": { "Ref": "ApplicationElbTargetGroup80" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80Arn" } }
     },
-    "ElbTargetGroup443Arn": {
+    "ApplicationElbTargetGroup443Arn": {
       "Description": "ELB DNS Name",
       "Condition": "DeployElb",
-      "Value": { "Ref": "ElbTargetGroup443" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElbTargetGroup443Arn" } }
+      "Value": { "Ref": "ApplicationElbTargetGroup443" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443Arn" } }
     }
   },
 
@@ -389,6 +389,37 @@
       }
     },
 
+    "CfSshElb": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Condition": "DeployElb",
+      "Properties": {
+        "Subnets": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+        ],
+        "Listeners": [
+          {
+            "InstancePort": { "Ref": "CfSshElbInstancePort" },
+            "InstanceProtocol": { "Ref": "CfSshElbInstanceProtocol" },
+            "LoadBalancerPort": { "Ref": "CfSshElbLoadbalancerPort" },
+            "Protocol": { "Ref": "CfSshElbProtocol" }
+          }
+        ],
+        "Scheme": { "Ref": "CfSshElbScheme" },
+        "HealthCheck": {
+          "HealthyThreshold": { "Ref": "CfSshElbHealthyThreshold" },
+          "Interval": { "Ref": "CfSshElbHealthCheckInternal" },
+          "Target": { "Ref": "CfSshElbHealthCheckTarget" },
+          "Timeout": { "Ref": "CfSshElbHealthCheckTimeout" },
+          "UnhealthyThreshold": { "Ref": "CfSshElbUnhealthyThreshold" }
+        },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshElb" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ],
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } } ]
+      }
+    },
     "DirectorElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Condition": "DeployElb",
@@ -433,37 +464,6 @@
       }
     },
 
-    "CfSshElb": {
-      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
-      "Condition": "DeployElb",
-      "Properties": {
-        "Subnets": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
-        ],
-        "Listeners": [
-          {
-            "InstancePort": { "Ref": "CfSshElbInstancePort" },
-            "InstanceProtocol": { "Ref": "CfSshElbInstanceProtocol" },
-            "LoadBalancerPort": { "Ref": "CfSshElbLoadbalancerPort" },
-            "Protocol": { "Ref": "CfSshElbProtocol" }
-          }
-        ],
-        "Scheme": { "Ref": "CfSshElbScheme" },
-        "HealthCheck": {
-          "HealthyThreshold": { "Ref": "CfSshElbHealthyThreshold" },
-          "Interval": { "Ref": "CfSshElbHealthCheckInternal" },
-          "Target": { "Ref": "CfSshElbHealthCheckTarget" },
-          "Timeout": { "Ref": "CfSshElbHealthCheckTimeout" },
-          "UnhealthyThreshold": { "Ref": "CfSshElbUnhealthyThreshold" }
-        },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshElb" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ],
-        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } } ]
-      }
-    },
 
     "ApplicationElb": {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
@@ -485,7 +485,7 @@
       }
     },
 
-    "ElbTargetGroup80": {
+    "ApplicationElbTargetGroup80": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
       "Condition": "DeployElb",
       "Properties": {
@@ -499,12 +499,12 @@
         "Targets": [],
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElbTargetGroup80" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElbTargetGroup80" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
-    "ElbTargetGroup443": {
+    "ApplicationElbTargetGroup443": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
       "Condition": "DeployElb",
       "Properties": {
@@ -518,19 +518,19 @@
         "Targets": [],
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElbTargetGroup443" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElbTargetGroup443" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
 
-    "ElbListener80": {
+    "ApplicationElbListener80": {
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
       "Properties": {
         "DefaultActions": [
           {
             "Type": "forward",
-            "TargetGroupArn": { "Ref": "ElbTargetGroup80" }
+            "TargetGroupArn": { "Ref": "ApplicationElbTargetGroup80" }
           }
         ],
         "LoadBalancerArn": { "Ref": "ApplicationElb" },
@@ -538,7 +538,7 @@
         "Protocol": "HTTP"
       }
     },
-    "ElbListener443": {
+    "ApplicationElbListener443": {
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
       "Condition": "ApplicationSslElb",
       "Properties": {
@@ -556,12 +556,66 @@
         "DefaultActions": [
           {
             "Type": "forward",
-            "TargetGroupArn": { "Ref": "ElbTargetGroup443" }
+            "TargetGroupArn": { "Ref": "ApplicationElbTargetGroup443" }
           }
         ],
         "LoadBalancerArn": { "Ref": "ApplicationElb" },
         "Port": "443",
         "Protocol": "HTTPS"
+      }
+    },
+
+    "LbNatAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+              "/32"
+            ]
+          ]
+        },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+    "LbNatAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+              "/32"
+            ]
+          ]
+        },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+    "LbNatAz3SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+              "/32"
+            ]
+          ]
+        },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
       }
     }
   }

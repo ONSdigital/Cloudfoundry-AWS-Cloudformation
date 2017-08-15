@@ -60,11 +60,6 @@
       "Description": "ElastiCache Broker User Name",
       "Condition": "CreateElasticCacheInfrastructure",
       "Value": { "Ref": "ElastiCacheBrokerUser" }
-    },
-    "ElastiCacheSecurityGroup": {
-      "Description": "ElastiCache Broker Security Group",
-      "Condition": "CreateElasticCacheInfrastructure",
-      "Value": { "Ref": "ElastiCacheSecurityGroup" }
     }
   },
 
@@ -119,25 +114,6 @@
           { "Ref": "ElastiCacheAz2Subnet" }
         ] 
       } 
-    },
-
-    "ElastiCacheSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "CreateElasticCacheInfrastructure",
-      "Properties": {
-        "GroupDescription": "ElastiCache Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
     },
 
     "ElastiCacheBrokerUser": {

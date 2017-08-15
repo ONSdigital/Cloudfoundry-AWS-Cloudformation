@@ -100,29 +100,25 @@
   },
 
   "Conditions": {
+    "AllocateBoshPublicIp": { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] },
     "AllocateLbIp": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     },
-
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-
-    "AllocateBoshPublicIp": { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] },
-
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-    "MultiAzOrElb": {
-      "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
-      ]
-    },
     "MultiAzAndAllocateLbIp": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
+      ]
+    },
+    "MultiAzOrElb": {
+      "Fn::Or": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
       ]
     }
   },

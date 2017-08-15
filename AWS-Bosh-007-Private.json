@@ -75,12 +75,6 @@
       "Condition": "MultiAz",
       "Value": { "Ref": "PrivateAz3Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-PrivateAz3Cidr" } }
-    },
-
-    "PrivateSecurityGroup": {
-      "Description": "Private Security Groups",
-      "Value": { "Ref": "PrivateSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }
     }
   },
 
@@ -151,24 +145,6 @@
       "Properties": {
         "SubnetId": { "Ref": "PrivateAz3Subnet" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } }
-      }
-    },
-
-    "PrivateSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "Private In Out",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
       }
     }
   }

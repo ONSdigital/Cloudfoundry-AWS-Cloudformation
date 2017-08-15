@@ -257,11 +257,6 @@
       "Condition": "CreateRdsInfrastructure",
       "Value": { "Ref": "RdsSubnetGroup" }
     },
-    "RdsSecurityGroup": {
-      "Description": "RDS Database Security Group",
-      "Condition": "CreateRdsInfrastructure",
-      "Value": { "Ref": "RdsSecurityGroup" }
-    },
     "RdsAppsInstanceAddress": {
       "Description": "Applications  RDS Access Address",
       "Condition": "DeployRdsAppsInstance",
@@ -398,25 +393,6 @@
       }
     },
 
-    "RdsSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "CreateRdsInfrastructure",
-      "Properties": {
-        "GroupDescription": "RDS Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "0", "ToPort": "65535", "IpProtocol": "-1" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-
     "RdsSubnetGroup": {
       "Type": "AWS::RDS::DBSubnetGroup",
       "Condition": "CreateRdsInfrastructure",
@@ -450,7 +426,7 @@
         "MasterUserPassword": { "Ref": "RdsAppsInstancePassword" },
         "PreferredBackupWindow": { "Ref": "RdsAppsInstancePreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "RdsAppsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
+        "VPCSecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsAppsInstance" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -474,7 +450,7 @@
         "MultiAZ": "true",
         "PreferredBackupWindow": { "Ref": "RdsAppsInstancePreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "RdsAppsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
+        "VPCSecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsAppsInstance" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -498,7 +474,7 @@
         "MasterUserPassword": { "Ref": "RdsCfInstancePassword" },
         "PreferredBackupWindow": { "Ref": "RdsCfPreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "RdsCfInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
+        "VPCSecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsCfInstance" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -522,7 +498,7 @@
         "MultiAZ": "true",
         "PreferredBackupWindow": { "Ref": "RdsCfInstancePreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "RdsCfInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
+        "VPCSecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsCfInstance" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
