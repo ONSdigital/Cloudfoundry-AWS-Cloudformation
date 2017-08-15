@@ -165,12 +165,18 @@
   },
 
   "Resources": {
-    "DirectorWhitelistCidr1": {
+    "FullAccessWhitelistCidr1": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr1",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
+          "DirectorSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
+            ]
+          },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
         },
@@ -187,12 +193,18 @@
         }
       }
     },
-    "DirectorWhitelistCidr2": {
+    "FullAccessWhitelistCidr2": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr2",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
+          "DirectorSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
+            ]
+          },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
         },
@@ -209,12 +221,19 @@
         }
       }
     },
-    "DirectorWhitelistCidr3": {
+    "FullAccessWhitelistCidr3": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr3",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
+          "DirectorSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
+            ]
+          },
+
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
         },
@@ -231,12 +250,18 @@
         }
       }
     },
-    "DirectorWhitelistCidr4": {
+    "FullAccessWhitelistCidr4": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr4",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
+          "DirectorSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
+            ]
+          },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
         },
@@ -253,12 +278,18 @@
         }
       }
     },
-    "DirectorWhitelistCidr5": {
+    "FullAccessWhitelistCidr5": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr5",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
+          "DirectorSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
+            ]
+          },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
         },
@@ -275,150 +306,18 @@
         }
       }
     },
-    "DirectorWhitelistCidr6": {
+    "FullAccessWhitelistCidr6": {
       "Type": "AWS::CloudFormation::Stack",
       "Condition": "PermitFullAccessCidr6",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
-        },
-        "TemplateURL": {
-          "Fn::Join": [
-            "/", [
-	      {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
-              "Templates",
-              "External-Access-Whitelist.json"
+          "DirectorSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
             ]
-          ]
-        }
-      }
-    },
-    "WhitelistLbAccessCidr1": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitFullAccessCidr1",
-      "Properties": {
-        "Parameters": {
-          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
-        },
-        "TemplateURL": {
-          "Fn::Join": [
-            "/", [
-	      {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
-              "Templates",
-              "External-Access-Whitelist.json"
-            ]
-          ]
-        }
-      }
-    },
-    "WhitelistLbAccessCidr2": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitFullAccessCidr2",
-      "Properties": {
-        "Parameters": {
-          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
-        },
-        "TemplateURL": {
-          "Fn::Join": [
-            "/", [
-	      {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
-              "Templates",
-              "External-Access-Whitelist.json"
-            ]
-          ]
-        }
-      }
-    },
-    "WhitelistLbAccessCidr3": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitFullAccessCidr3",
-      "Properties": {
-        "Parameters": {
-          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
-        },
-        "TemplateURL": {
-          "Fn::Join": [
-            "/", [
-	      {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
-              "Templates",
-              "External-Access-Whitelist.json"
-            ]
-          ]
-        }
-      }
-    },
-    "WhitelistLbAccessCidr4": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitFullAccessCidr4",
-      "Properties": {
-        "Parameters": {
-          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
-        },
-        "TemplateURL": {
-          "Fn::Join": [
-            "/", [
-	      {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
-              "Templates",
-              "External-Access-Whitelist.json"
-            ]
-          ]
-        }
-      }
-    },
-    "WhitelistLbAccessCidr5": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitFullAccessCidr5",
-      "Properties": {
-        "Parameters": {
-          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
-        },
-        "TemplateURL": {
-          "Fn::Join": [
-            "/", [
-	      {
-                "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" }
-              },
-              "Templates",
-              "External-Access-Whitelist.json"
-            ]
-          ]
-        }
-      }
-    },
-    "WhitelistLbAccessCidr6": {
-      "Type": "AWS::CloudFormation::Stack",
-      "Condition": "PermitFullAccessCidr6",
-      "Properties": {
-        "Parameters": {
-          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
+          },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
         },
@@ -440,8 +339,6 @@
       "Condition": "PermitHttpAccessCidr1",
       "Properties": {
         "Parameters": {
-          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr1" }
         },
@@ -463,7 +360,6 @@
       "Condition": "PermitHttpAccessCidr2",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr2" }
         },
@@ -485,7 +381,6 @@
       "Condition": "PermitHttpAccessCidr3",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr3" }
         },
@@ -507,7 +402,6 @@
       "Condition": "PermitHttpAccessCidr4",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr4" }
         },
@@ -529,7 +423,6 @@
       "Condition": "PermitHttpAccessCidr5",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr5" }
         },
@@ -551,7 +444,6 @@
       "Condition": "PermitHttpAccessCidr6",
       "Properties": {
         "Parameters": {
-          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } },
           "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr6" }
         },

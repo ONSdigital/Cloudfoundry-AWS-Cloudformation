@@ -461,7 +461,7 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorElb" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ],
-        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } } ]
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } } ]
       }
     },
 

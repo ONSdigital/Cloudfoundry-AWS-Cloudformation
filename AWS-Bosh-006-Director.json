@@ -61,15 +61,11 @@
       "Condition": "MultiAzOrElb",
       "Value": { "Ref": "DirectorAz2Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } }
-    },
-    "DirectorSecurityGroup": {
-      "Description": "Director Security Group",
-      "Value": { "Ref": "DirectorSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorSecurityGroup" } }
     }
   },
 
   "Conditions": {
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
@@ -123,22 +119,137 @@
       }
     },
 
-    "DirectorSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
+    "DirectorAz1DirectorElb22AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployElb",
       "Properties": {
-        "GroupDescription": "Director Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "80", "ToPort": "80", "IpProtocol": "tcp" },
-          { "CidrIp": "0.0.0.0/0", "FromPort": "443", "ToPort": "443", "IpProtocol": "tcp" }
-        ],
-        "SecurityGroupIngress": [
-          { "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcCidr" } }, "FromPort": "0", "ToPort": "65535" , "IpProtocol": "-1" }
-        ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorAz2DirectorElb22AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorAz1DirectorElb6868AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "FromPort": "6868",
+        "ToPort": "6868" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorAz2DirectorElb6868AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "FromPort": "6868",
+        "ToPort": "6868" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorAz1DirectorElb25555AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "FromPort": "25555",
+        "ToPort": "25555" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorAz2DirectorElb25555AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "FromPort": "25555",
+        "ToPort": "25555" ,
+        "IpProtocol": "tcp"
+      }
+    },
+
+    "DmzAz1DirectorInstance22AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DmzAz2DirectorInstance22AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DmzAz1DirectorInstance6868AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
+        "FromPort": "6868",
+        "ToPort": "6868" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DmzAz2DirectorInstance6868AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
+        "FromPort": "6868",
+        "ToPort": "6868" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DmzAz1DirectorInstance25555AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Cidr" } },
+        "FromPort": "25555",
+        "ToPort": "25555" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DmzAz2DirectorInstance25555AccessIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Cidr" } },
+        "FromPort": "25555",
+        "ToPort": "25555" ,
+        "IpProtocol": "tcp"
       }
     }
   }
