@@ -95,6 +95,12 @@
       "Description": "Whitelisted HTTP(S) Access CIDR 6",
       "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
       "ConstraintDescription": "Valid CIDR"
+    },
+    "DeployElb": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy External ELB",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -102,6 +108,7 @@
   },
 
   "Conditions": {
+    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
     "PermitFullAccessCidr1": {
       "Fn::Not": [
         { "Fn::Equals": [ { "Ref": "FullAccessCidr1" }, "" ] }
