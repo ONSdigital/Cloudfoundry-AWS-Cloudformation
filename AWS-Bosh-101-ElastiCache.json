@@ -12,7 +12,7 @@
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
 
-    "CreateElasticCacheInfrastructure": {
+    "CreateElastiCacheInfrastructure": {
       "Type": "String",
       "Default": "true",
       "Description": "Create ElastiCache Networks",
@@ -43,33 +43,33 @@
   "Outputs": {
     "ElastiCacheBrokerAccessKeyId": {
       "Description": "ElastiCache Broker Access Key Id",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Value": { "Ref": "ElastiCacheBrokerAccessKey" }
     },
     "ElastiCacheBrokerSecretAccessKey": {
       "Description": "ElastiCache Broker Access Key",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Value": { "Fn::GetAtt": [ "ElastiCacheBrokerAccessKey", "SecretAccessKey" ] }
     },
     "ElastiCacheSubnetGroup": {
       "Description": "ElastiCache Subnet Group",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Value": { "Ref": "ElastiCacheSubnetGroup" }
     },
     "ElastiCacheBrokerUserName": {
       "Description": "ElastiCache Broker User Name",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Value": { "Ref": "ElastiCacheBrokerUser" }
     }
   },
 
   "Conditions": {
-    "CreateElasticCacheInfrastructure": { "Fn::Equals": [ { "Ref": "CreateElasticCacheInfrastructure" }, "true" ] },
+    "CreateElastiCacheInfrastructure": { "Fn::Equals": [ { "Ref": "CreateElastiCacheInfrastructure" }, "true" ] },
 
-    "MultiAzAndCreateElasticCacheInfrastructure": {
+    "MultiAzAndCreateElastiCacheInfrastructure": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "CreateElasticCacheInfrastructure" }, "true" ] }
+        { "Fn::Equals": [ { "Ref": "CreateElastiCacheInfrastructure" }, "true" ] }
       ]
     }
   },
@@ -77,7 +77,7 @@
   "Resources": {
     "ElastiCacheAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Properties": {
         "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
         "CidrBlock": { "Ref": "ElastiCacheAz1Cidr" },
@@ -91,7 +91,7 @@
     },
     "ElastiCacheAz2Subnet": {
       "Type": "AWS::EC2::Subnet",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Properties": {
         "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } },
         "CidrBlock": { "Ref": "ElastiCacheAz2Cidr" },
@@ -106,7 +106,7 @@
 
     "ElastiCacheSubnetGroup": {
       "Type": "AWS::ElastiCache::SubnetGroup",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Properties": {
         "Description": "ElastiCache Subnet Group",
         "SubnetIds": [
@@ -116,9 +116,24 @@
       } 
     },
 
+    "ElastiCacheAz1SubnetRouteTableAssociaion": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "ElastiCacheAz1Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } }
+      }
+    },
+    "ElastiCacheAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "ElastiCacheAz2Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } }
+      }
+    },
+
     "ElastiCacheBrokerUser": {
       "Type": "AWS::IAM::User",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Properties": {
         "Groups": [
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
@@ -157,7 +172,7 @@
     },
     "ElastiCacheBrokerAccessKey": {
       "Type": "AWS::IAM::AccessKey",
-      "Condition": "CreateElasticCacheInfrastructure",
+      "Condition": "CreateElastiCacheInfrastructure",
       "Properties": {
         "UserName": { "Ref": "ElastiCacheBrokerUser" }
       }

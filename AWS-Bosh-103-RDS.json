@@ -409,6 +409,21 @@
       }
     },
 
+    "RdsAz1SubnetRouteTableAssociaion": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "RdsAz1Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } }
+      }
+    },
+    "RdsAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "RdsAz2Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } }
+      }
+    },
+
     "RdsAppsInstance": {
       "Type": "AWS::RDS::DBInstance",
       "Condition": "SingleAzAndDeployRdsAppsInstance",
