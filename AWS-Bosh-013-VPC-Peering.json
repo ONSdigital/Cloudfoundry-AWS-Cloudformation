@@ -158,14 +158,6 @@
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
       ]
     },
-    "Peer3Vpc": {
-      "Fn::And": [
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3OwnerId" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RoleArn" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
-      ]
-    },
     "Peer4Vpc": {
       "Fn::And": [
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcId" }, "" ] } ] },

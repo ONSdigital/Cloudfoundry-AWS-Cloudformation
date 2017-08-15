@@ -428,6 +428,7 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
+        "CrossZone": "true",
         "Listeners": [
           {
             "InstancePort": { "Ref": "DirectorElbInstancePort1" },
