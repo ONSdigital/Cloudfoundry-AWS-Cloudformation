@@ -124,7 +124,7 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "CidrIp": { "Ref": "DirectorAz1Cidr" },
         "FromPort": "22",
         "ToPort": "22" ,
         "IpProtocol": "tcp"
@@ -135,7 +135,7 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "CidrIp": { "Ref": "DirectorAz2Cidr" },
         "FromPort": "22",
         "ToPort": "22" ,
         "IpProtocol": "tcp"
@@ -146,7 +146,7 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "CidrIp": { "Ref": "DirectorAz1Cidr" },
         "FromPort": "6868",
         "ToPort": "6868" ,
         "IpProtocol": "tcp"
@@ -157,7 +157,7 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "CidrIp": { "Ref": "DirectorAz2Cidr" },
         "FromPort": "6868",
         "ToPort": "6868" ,
         "IpProtocol": "tcp"
@@ -168,7 +168,7 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "CidrIp": { "Ref": "DirectorAz1Cidr" },
         "FromPort": "25555",
         "ToPort": "25555" ,
         "IpProtocol": "tcp"
@@ -179,7 +179,7 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "CidrIp": { "Ref": "DirectorAz2Cidr" },
         "FromPort": "25555",
         "ToPort": "25555" ,
         "IpProtocol": "tcp"
