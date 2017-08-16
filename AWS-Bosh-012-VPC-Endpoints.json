@@ -13,13 +13,7 @@
     }
   },
 
-  "Outputs": {
-    "S3VpcEndpoint": {
-      "Description": "S3 VPC Endpoiint",
-      "Value": { "Ref": "S3VpcEndpoint" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3VpcEndpoint" } }
-    }
-  },
+  "Outputs": {},
 
   "Conditions": {},
 

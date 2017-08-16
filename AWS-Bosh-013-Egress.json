@@ -137,27 +137,82 @@
     "WhitelistExternalSyslogAz3Cidr": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogAz3Cidr" }, "" ] } ] }
   },
 
+  "Mappings": {
+    "PrefixLists": {
+      "eu-west-1": {
+        "s3": "pl-6da54004"
+      },
+      "eu-west-2": {
+        "s3": "pl-7ca54015"
+      },
+      "eu-central-1": {
+        "s3": "pl-6ea54007"
+      }
+    }
+  },
+
   "Resources": {
-    "DirectorS3PrefixList80SecurityGroupEgress": {
+    "DirectorToS3PrefixList80SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }, 
-        "DestinationPrefixListId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3VpcEndpoint" } },
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
         "FromPort": "80",
         "ToPort": "80",
         "IpProtocol": "tcp" 
       } 
     },
-    "DirectorS3PrefixList443SecurityGroupEgress": {
+    "DirectorS3ToPrefixList443SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }, 
-        "DestinationPrefixListId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3VpcEndpoint" } },
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp" 
       } 
     },
+    "PrivateS3ToPrefixList80SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivatecurityGroup" } }, 
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
+        "FromPort": "80",
+        "ToPort": "80",
+        "IpProtocol": "tcp" 
+      } 
+    },
+    "PrivateS3ToPrefixList443SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp" 
+      } 
+    },
+    "RabbitmqS3ToPrefixList80SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqcurityGroup" } }, 
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
+        "FromPort": "80",
+        "ToPort": "80",
+        "IpProtocol": "tcp" 
+      } 
+    },
+    "RabbitmqS3ToPrefixList443SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }, 
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp" 
+      } 
+    },
+
 
     "PrivateToExternalRdsAz1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
