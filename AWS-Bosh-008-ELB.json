@@ -564,60 +564,6 @@
         "Port": "443",
         "Protocol": "HTTPS"
       }
-    },
-
-    "LbNatAz1SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": {
-          "Fn::Join": [
-            "", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
-              "/32"
-            ]
-          ]
-        },
-        "FromPort": "443",
-        "ToPort": "443",
-        "IpProtocol": "tcp"
-      }
-    },
-    "LbNatAz2SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": {
-          "Fn::Join": [
-            "", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
-              "/32"
-            ]
-          ]
-        },
-        "FromPort": "443",
-        "ToPort": "443",
-        "IpProtocol": "tcp"
-      }
-    },
-    "LbNatAz3SecurityGroupIngress": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": {
-          "Fn::Join": [
-            "", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
-              "/32"
-            ]
-          ]
-        },
-        "FromPort": "443",
-        "ToPort": "443",
-        "IpProtocol": "tcp"
-      }
     }
   }
 }

@@ -36,13 +36,13 @@
       "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
     },
-    "DeployRdsAppsInstance": {
+    "DeployAppsRdsInstance": {
       "Type": "String",
       "Default": "true",
       "Description": "Deploy Apps RDS Instance",
       "AllowedValues": [ "true", "false" ]
     },
-    "DeployRdsCfInstance": {
+    "DeployCfRdsInstance": {
       "Type": "String",
       "Default": "true",
       "Description": "Deploy Cf RDS Instance",
@@ -58,6 +58,10 @@
 
   "Conditions": {
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+    "CreateElasticCacheInfrastructure": { "Fn::Equals": [ { "Ref": "CreateElasticCacheInfrastructure" }, "true" ] },
+    "CreateRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] },
+    "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
+    "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
     "WhitelistScanSource": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ScanSourceCidr" }, "" ] } ] },
     "WhitelistScanSourceAndDeployElb": {
       "Fn::And": [
@@ -77,15 +81,16 @@
         { "Fn::Equals": [ { "Ref": "CreateElasticCacheInfrastructure" }, "true" ] }
       ]
     },
-    "WhitelistScanSourceAndCreateRdsInfrastructure": {
+    "WhitelistScanSourceAndDeployAppsRdsInstance": {
       "Fn::And": [
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ScanSourceCidr" }, "" ] } ] },
-        {
-          "Fn::Or": [
-            { "Fn::Equals": [ { "Ref": "DeployRdsAppsInstance" }, "true" ] },
-            { "Fn::Equals": [ { "Ref": "DeployRdsCfInstance" }, "true" ] }
-          ]
-        }
+        { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] }
+      ]
+    },
+    "WhitelistScanSourceAndDeployCfRdsInstance": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ScanSourceCidr" }, "" ] } ] },
+        { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] }
       ]
     }
   },
@@ -268,6 +273,73 @@
       }
     },
 
+    "PrivateToRabbitmqAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRabbitmqInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "RdsAz1Cidr" } },
+        "FromPort": "5671",
+        "ToPort": "5672",
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToRabbitmqAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployRabbitmqInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "RdsAz1Cidr" } },
+        "FromPort": "5671",
+        "ToPort": "5672",
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToAppsRdsAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployAppsRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "RdsAz1Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployAppsRdsInstance" },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployAppsRdsInstance" },
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToAppsRdsAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployAppsRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "RdsAz1Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployAppsRdsInstance" },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployAppsRdsInstance" },
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToCfRdsAz1SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployAppsRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "RdsAz1Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployCfRdsInstance" },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployCfRdsInstance" },
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToCfRdsAz2SecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployAppsRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "RdsAz1Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployCfRdsInstance" },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeployCfRdsInstance" },
+        "IpProtocol": "tcp"
+      }
+    },
+
     "ScanSourceToCfSshSecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "WhitelistScanSourceAndDeployElb",
@@ -331,9 +403,18 @@
         "IpProtocol": "-1"
       }
     },
-    "ScanSourceToRdsSecurityGroupIngress": {
+    "ScanSourceToAppsRdsSecurityGroupIngress": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "WhitelistScanSourceAndCreateRdsInfrastructure",
+      "Condition": "WhitelistScanSourceAndDeployAppsRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } },
+        "CidrIp": { "Ref": "ScanSourceCidr" },
+        "IpProtocol": "-1"
+      }
+    },
+    "ScanSourceToCfRdsSecurityGroupIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "WhitelistScanSourceAndDeployCfRdsInstance",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },

@@ -286,6 +286,60 @@
         "IpProtocol": "tcp"
       }
     },
+    
+    "PrivateAz1Director22AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz1Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateAz2Director22AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz2Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateAz3Director22AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz3Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqAz1Director22AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqAz2Director22AccessEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
 
     "PrivateToExternalRdsAz1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
