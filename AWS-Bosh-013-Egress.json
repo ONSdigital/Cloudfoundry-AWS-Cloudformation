@@ -138,33 +138,57 @@
   },
 
   "Resources": {
-   "PrivateToExternalRdsAz1SecurityGroupEgress": {
+    "DirectorS3PrefixList80SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }, 
+        "DestinationPrefixListId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3VpcEndpoint" } },
+        "FromPort": "80",
+        "ToPort": "80",
+        "IpProtocol": "tcp" 
+      } 
+    },
+    "DirectorS3PrefixList443SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }, 
+        "DestinationPrefixListId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3VpcEndpoint" } },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp" 
+      } 
+    },
+
+    "PrivateToExternalRdsAz1SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRdsAz1Cidr",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRdsAz1Cidr" },
-        "Port": { "Ref": "ExternalRdsPort" },
+        "FromPort": { "Ref": "ExternalRdsPort" },
+        "ToPort": { "Ref": "ExternalRdsPort" },
         "IpProtocol": "tcp" 
       } 
     },
-   "PrivateToExternalRdsAz2SecurityGroupEgress": {
+    "PrivateToExternalRdsAz2SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRdsAz2Cidr",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRdsAz2Cidr" },
-        "Port": { "Ref": "ExternalRdsPort" },
+        "FromPort": { "Ref": "ExternalRdsPort" },
+        "ToPort": { "Ref": "ExternalRdsPort" },
         "IpProtocol": "tcp" 
       } 
     },
-   "PrivateToExternalRdsAz3SecurityGroupEgress": {
+    "PrivateToExternalRdsAz3SecurityGroupEgress": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRdsAz3Cidr",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRdsAz3Cidr" },
-        "Port": { "Ref": "ExternalRdsPort" },
+        "FromPort": { "Ref": "ExternalRdsPort" },
+        "ToPort": { "Ref": "ExternalRdsPort" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -174,7 +198,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRabbitmqAz1Cidr" },
-        "Port": { "Ref": "ExternalRabbitmqPort1" },
+        "FromPort": { "Ref": "ExternalRabbitmqPort1" },
+        "ToPort": { "Ref": "ExternalRabbitmqPort1" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -184,7 +209,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRabbitmqAz2Cidr" },
-        "Port": { "Ref": "ExternalRabbitmqPort1" },
+        "FromPort": { "Ref": "ExternalRabbitmqPort1" },
+        "ToPort": { "Ref": "ExternalRabbitmqPort1" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -194,7 +220,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRabbitmqAz3Cidr" },
-        "Port": { "Ref": "ExternalRabbitmqPort1" },
+        "FromPort": { "Ref": "ExternalRabbitmqPort1" },
+        "ToPort": { "Ref": "ExternalRabbitmqPort1" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -205,7 +232,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRabbitmqAz1Cidr" },
-        "Port": { "Ref": "ExternalRabbitmqPort2" },
+        "FromPort": { "Ref": "ExternalRabbitmqPort2" },
+        "ToPort": { "Ref": "ExternalRabbitmqPort2" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -215,7 +243,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRabbitmqAz2Cidr" },
-        "Port": { "Ref": "ExternalRabbitmqPort2" },
+        "FromPort": { "Ref": "ExternalRabbitmqPort2" },
+        "ToPort": { "Ref": "ExternalRabbitmqPort2" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -225,7 +254,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalRabbitmqAz3Cidr" },
-        "Port": { "Ref": "ExternalRabbitmqPort2" },
+        "FromPort": { "Ref": "ExternalRabbitmqPort2" },
+        "ToPort": { "Ref": "ExternalRabbitmqPort2" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -236,7 +266,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalSyslogAz1Cidr" },
-        "Port": { "Ref": "ExternalSyslogPort" },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -246,7 +277,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalSyslogAz2Cidr" },
-        "Port": { "Ref": "ExternalSyslogPort" },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
         "IpProtocol": "tcp" 
       } 
     },
@@ -256,7 +288,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }, 
         "CidrIp": { "Ref": "ExternalSyslogAz3Cidr" },
-        "Port": { "Ref": "ExternalSyslogPort" },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
         "IpProtocol": "tcp" 
       } 
     }

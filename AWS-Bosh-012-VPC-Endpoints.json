@@ -13,6 +13,14 @@
     }
   },
 
+  "Outputs": {
+    "S3VpcEndpoint": {
+      "Description": "S3 VPC Endpoiint",
+      "Value": { "Ref": "S3VpcEndpoint" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-S3VpcEndpoint" } }
+    }
+  },
+
   "Conditions": {},
 
   "Resources": {
@@ -36,6 +44,7 @@
           ]
         },
         "RouteTableIds": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3RouteTable" } },
