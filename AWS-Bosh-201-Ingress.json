@@ -151,27 +151,6 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorInstanceAz2ToPrivatePort25777": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
-        "FromPort": "25777",
-        "ToPort": "25777" ,
-        "IpProtocol": "tcp"
-      }
-    },
-    "DirectorInstanceAz2ToPrivatePort25777": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
-        "FromPort": "25777",
-        "ToPort": "25777" ,
-        "IpProtocol": "tcp"
-      }
-    },
     "DirectorInstanceAz1ToRabbitmqPort22": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
@@ -216,29 +195,6 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorInstanceAz1ToRabbitmqPort25777": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
-        "FromPort": "25777",
-        "ToPort": "25777" ,
-        "IpProtocol": "tcp"
-      }
-    },
-    "DirectorInstanceAz2ToRabbitmqPort25777": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzAndCreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
-        "FromPort": "25777",
-        "ToPort": "25777" ,
-        "IpProtocol": "tcp"
-      }
-    },
-
 
     "DmzAz1ToDirectorInstancePort22": {
       "Type": "AWS::EC2::SecurityGroupIngress",
@@ -306,6 +262,42 @@
         "IpProtocol": "tcp"
       }
     },
+
+    "PrivateAz1toDirectorInstancePort25777": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz1Cidr" } },
+        "FromPort": "25777",
+        "ToPort": "25777" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateAz2toDirectorInstancePort25777": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz2Cidr" } },
+        "FromPort": "25777",
+        "ToPort": "25777" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateAz3toDirectorInstancePort25777": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz3Cidr" } },
+        "FromPort": "25777",
+        "ToPort": "25777" ,
+        "IpProtocol": "tcp"
+      }
+    },
+
+
+
 
     "PrivateAz1ToElastiCachePort6379": {
       "Type": "AWS::EC2::SecurityGroupIngress",
@@ -548,6 +540,29 @@
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz3Cidr" } },
         "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
         "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "IpProtocol": "tcp"
+      }
+    },
+
+    "RabbitmqAz1ToDirectorInstancePort25777": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1Cidr" } },
+        "FromPort": "25777",
+        "ToPort": "25777" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqAz2ToDirectorInstancePort25777": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
+        "FromPort": "25777",
+        "ToPort": "25777" ,
         "IpProtocol": "tcp"
       }
     },
