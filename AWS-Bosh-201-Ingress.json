@@ -109,7 +109,7 @@
   },
 
   "Resources": {
-    "DirectorInstanceAz2ToPrivatePort22": {
+    "DirectorInstanceAz1ToPrivatePort22": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
@@ -130,7 +130,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorInstanceAz2ToPrivatePort6868": {
+    "DirectorInstanceAz1ToPrivatePort6868": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
