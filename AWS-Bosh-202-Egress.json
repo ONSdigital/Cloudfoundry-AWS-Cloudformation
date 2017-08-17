@@ -107,11 +107,18 @@
       "Default": "true",
       "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
+    },
+    "MultiAz": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "MultiAz",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
   "Conditions": {
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "WhitelistExternalRdsAz1Cidr": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsAz1Cidr" }, "" ] } ] },
     "WhitelistExternalRdsAz2Cidr": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsAz2Cidr" }, "" ] } ] },
     "WhitelistExternalRdsAz3Cidr": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsAz3Cidr" }, "" ] } ] },
@@ -159,7 +166,7 @@
   },
 
   "Resources": {
-    "DirectorToS3PrefixList80SecurityGroupEgress": {
+    "DirectorToS3PrefixListPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
@@ -169,7 +176,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorS3ToPrefixList443SecurityGroupEgress": {
+    "DirectorToS3PrefixListPort443": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
@@ -179,7 +186,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateS3ToPrefixList80SecurityGroupEgress": {
+    "PrivateToS3PrefixListPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
@@ -189,7 +196,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateS3ToPrefixList443SecurityGroupEgress": {
+    "PrivateToS3PrefixListPort443": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
@@ -199,7 +206,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "RabbitmqS3ToPrefixList80SecurityGroupEgress": {
+    "RabbitmqToS3PrefixListPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
@@ -209,7 +216,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "RabbitmqS3ToPrefixList443SecurityGroupEgress": {
+    "RabbitmqToS3PrefixListPort443": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
@@ -220,7 +227,7 @@
       }
     },
 
-    "DirectorAz1DirectorElb22AccessEgress": {
+    "DirectorElbToDirectorAz1Port22": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "DeployElb",
       "Properties": {
@@ -231,7 +238,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorAz2DirectorElb22AccessEgress": {
+    "DirectorElbToDirectorAz2Port22": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "DeployElb",
       "Properties": {
@@ -242,7 +249,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorAz1DirectorElb6868AccessEgress": {
+    "DirectorElbToDirectorAz1Port6868": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "DeployElb",
       "Properties": {
@@ -253,7 +260,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorAz2DirectorElb6868AccessEgress": {
+    "DirectorElbToDirectorAz2Port6868": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "DeployElb",
       "Properties": {
@@ -264,7 +271,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorAz1DirectorElb25555AccessEgress": {
+    "DirectorElbToDirectorAz1Port25555": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "DeployElb",
       "Properties": {
@@ -275,7 +282,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorAz2DirectorElb25555AccessEgress": {
+    "DirectorElbToDirectorAz2Port25555": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "DeployElb",
       "Properties": {
@@ -287,7 +294,7 @@
       }
     },
     
-    "PrivateAz1Director22AccessEgress": {
+    "DirectorInstanceToPrivateAz1Port22": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
@@ -297,7 +304,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateAz2Director22AccessEgress": {
+    "DirectorInstanceToPrivateAz2Port22": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAz",
       "Properties": {
@@ -308,7 +315,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateAz3Director22AccessEgress": {
+    "DirectorInstanceToPrivateAz3Port22": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAz",
       "Properties": {
@@ -319,7 +326,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "RabbitmqAz1Director22AccessEgress": {
+    "DirectorInstanceToRabbitmqAz1Port22": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
@@ -329,7 +336,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "RabbitmqAz2Director22AccessEgress": {
+    "DirectorInstanceToRabbitmqAz2Port22": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAz",
       "Properties": {
@@ -341,7 +348,7 @@
       }
     },
 
-    "PrivateToExternalRdsAz1SecurityGroupEgress": {
+    "PrivateToExternalRdsAz1Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRdsAz1Cidr",
       "Properties": {
@@ -352,7 +359,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalRdsAz2SecurityGroupEgress": {
+    "PrivateToExternalRdsAz2Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRdsAz2Cidr",
       "Properties": {
@@ -363,7 +370,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalRdsAz3SecurityGroupEgress": {
+    "PrivateToExternalRdsAz3Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRdsAz3Cidr",
       "Properties": {
@@ -374,7 +381,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalRabbitmqPort1Az1SecurityGroupEgress": {
+    "PrivateToExternalRabbitmqAz1Port1": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRabbitmqAz1Cidr",
       "Properties": {
@@ -385,7 +392,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalRabbitmqPort1Az2SecurityGroupEgress": {
+    "PrivateToExternalRabbitmqAz2Port1": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRabbitmqAz2Cidr",
       "Properties": {
@@ -396,7 +403,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalRabbitmqPort1Az3SecurityGroupEgress": {
+    "PrivateToExternalRabbitmqAz3Port1": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRabbitmqAz3Cidr",
       "Properties": {
@@ -408,7 +415,7 @@
       }
     },
 
-    "PrivateToExternalRabbitmqPort2Az1SecurityGroupEgress": {
+    "PrivateToExternalRabbitmqAz1Port2": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRabbitmqAz1CidrPort2",
       "Properties": {
@@ -419,7 +426,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalRabbitmqPort2Az2SecurityGroupEgress": {
+    "PrivateToExternalRabbitmqAz2Port2": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRabbitmqAz2CidrPort2",
       "Properties": {
@@ -430,7 +437,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalRabbitmqPort3Az3SecurityGroupEgress": {
+    "PrivateToExternalRabbitmqAz3Port3": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRabbitmqAz3CidrPort2",
       "Properties": {
@@ -442,7 +449,7 @@
       }
     },
 
-    "PrivateToExternalSyslogPortAz1SecurityGroupEgress": {
+    "PrivateToExternalSyslogAz1Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalSyslogAz1Cidr",
       "Properties": {
@@ -453,7 +460,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalSyslogPortAz2SecurityGroupEgress": {
+    "PrivateToExternalSyslogAz2Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalSyslogAz2Cidr",
       "Properties": {
@@ -464,7 +471,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToExternalSyslogPort3Az3SecurityGroupEgress": {
+    "PrivateToExternalSyslogAz3Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalSyslogAz3Cidr",
       "Properties": {

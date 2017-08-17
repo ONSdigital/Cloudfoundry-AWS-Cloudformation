@@ -68,6 +68,12 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqAz2Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } }
+    },
+    "RabbitmqSecurityGroup": {
+      "Description": "RabbitMQ Security Groups",
+      "Condition": "CreateRabbitmqNetworks",
+      "Value": { "Ref": "RabbitmqSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }
     }
   },
 
@@ -110,19 +116,16 @@
         ]
       }
     },
-
-    "RabbitmqAz1SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    "RabbitmqSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "CreateRabbitmqNetworks",
       "Properties": {
-        "SubnetId": { "Ref": "RabbitmqAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
-      }
-    },
-    "RabbitmqAz2SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Properties": {
-        "SubnetId": { "Ref": "RabbitmqAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
+        "GroupDescription": "RabbitMQ In Out",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
       }
     }
   }

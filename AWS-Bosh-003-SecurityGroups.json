@@ -11,30 +11,6 @@
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
-    "CreateElasticCacheInfrastructure": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Create ElastiCache Networks",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "CreateRabbitmqNetworks": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Create RabbitMQ network(s)",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "DeployAppsRdsInstance": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy Apps RDS Instance",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "DeployCfRdsInstance": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy Cf RDS Instance",
-      "AllowedValues": [ "true", "false" ]
-    },
     "MultiAz": {
       "Type": "String",
       "Default": "true",
@@ -50,17 +26,6 @@
   },
 
   "Outputs": {
-    "CfSshSecurityGroup": {
-      "Description": "CF SSH Security Groups",
-      "Value": { "Ref": "CfSshSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } }
-    },
-    "DirectorElbSecurityGroup": {
-      "Description": "Director ELB Security Group",
-      "Condition": "DeployElb",
-      "Value": { "Ref": "DirectorElbSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } }
-    },
     "DirectorInstanceSecurityGroup": {
       "Description": "Director Instance Security Group",
       "Value": { "Ref": "DirectorInstanceSecurityGroup" },
@@ -71,12 +36,6 @@
       "Value": { "Ref": "DmzSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } }
     },
-    "ElastiCacheSecurityGroup": {
-      "Description": "ElastiCache Broker Security Group",
-      "Condition": "CreateElasticCacheInfrastructure",
-      "Value": { "Ref": "ElastiCacheSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElastiCacheSecurityGroup" } }
-    },
     "LbSecurityGroup": {
       "Description": "Load Balancer Security Group",
       "Value": { "Ref": "LbSecurityGroup" },
@@ -86,32 +45,10 @@
       "Description": "Private Security Groups",
       "Value": { "Ref": "PrivateSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }
-    },
-    "RabbitmqSecurityGroup": {
-      "Description": "RabbitMQ Security Groups",
-      "Condition": "CreateRabbitmqNetworks",
-      "Value": { "Ref": "RabbitmqSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }
-    },
-    "AppsRdsSecurityGroup": {
-      "Description": "Apps Database Security Group",
-      "Condition": "DeployAppsRdsInstance",
-      "Value": { "Ref": "RdsSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } }
-    },
-    "CfRdsSecurityGroup": {
-      "Description": "CF RDS Database Security Group",
-      "Condition": "DeployCfRdsInstance",
-      "Value": { "Ref": "RdsSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } }
     }
   },
 
   "Conditions": {
-    "CreateElasticCacheInfrastructure": { "Fn::Equals": [ { "Ref": "CreateElasticCacheInfrastructure" }, "true" ] },
-    "CreateRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] },
-    "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
-    "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
@@ -122,29 +59,6 @@
   },
 
   "Resources": {
-    "CfSshSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "SSH Load Balancer Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "DirectorElbSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployElb",
-      "Properties": {
-        "GroupDescription": "Director Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorElbSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
     "DirectorInstanceSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -163,18 +77,6 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "ElastiCacheSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "CreateElasticCacheInfrastructure",
-      "Properties": {
-        "GroupDescription": "ElastiCache Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ElastiCacheSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -200,41 +102,6 @@
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
-    },
-    "RabbitmqSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "GroupDescription": "RabbitMQ In Out",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RabbitmqSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "AppsRdsSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployAppsRdsInstance",
-      "Properties": {
-        "GroupDescription": "Apps RDS Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "CfRdsSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployCfRdsInstance",
-      "Properties": {
-        "GroupDescription": "Apps RDS Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
+    }
   }
 }

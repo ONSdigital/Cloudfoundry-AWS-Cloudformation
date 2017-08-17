@@ -199,118 +199,6 @@
       "AllowedPattern": "^[^\"@]+$",
       "ConstraintDescription": "Can be any printable ASCII character except \"/\", \"\"\", or \"@\""
     },
-    "Peer1VpcId": {
-      "Type": "String",
-      "Default": "",
-      "Description": "VPC Peer ID 1",
-      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
-      "ConstraintDescription": "Valid VPC ID or empty"
-    },
-    "Peer2VpcId": {
-      "Type": "String",
-      "Default": "",
-      "Description": "VPC Peer ID 2",
-      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
-      "ConstraintDescription": "Valid VPC ID or empty"
-    },
-    "Peer3VpcId": {
-      "Type": "String",
-      "Default": "",
-      "Description": "VPC Peer ID 3",
-      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
-      "ConstraintDescription": "Valid VPC ID or empty"
-    },
-    "Peer4VpcId": {
-      "Type": "String",
-      "Default": "",
-      "Description": "VPC Peer ID 4",
-      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
-      "ConstraintDescription": "Valid VPC ID or empty"
-    },
-    "Peer1OwnerId": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Peer 1 Owner Account Id",
-      "AllowedPattern": "^[0-9]*$",
-      "ConstraintDescription": "Peer Owner Id or empty"
-    },
-    "Peer2OwnerId": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Peer 2 Owner Account Id",
-      "AllowedPattern": "^[0-9]*$",
-      "ConstraintDescription": "Valid CIDR or empty"
-    },
-    "Peer3OwnerId": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Peer 3 Owner Account Id",
-      "AllowedPattern": "^[0-9]*$",
-      "ConstraintDescription": "Valid CIDR or empty"
-    },
-    "Peer4OwnerId": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Peer 4 Owner Account Id",
-      "AllowedPattern": "^[0-9]*$",
-      "ConstraintDescription": "Valid CIDR or empty"
-    },
-    "Peer1RoleArn": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Peer 1 Role ARN",
-      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
-      "ConstraintDescription": "Peer 1 ARN or empty"
-    },
-    "Peer2RoleArn": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Peer 2 Role ARN",
-      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
-      "ConstraintDescription": "Peer 2 ARN or empty"
-    },
-    "Peer3RoleArn": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Peer 3 Role ARN",
-      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
-      "ConstraintDescription": "Peer 3 ARN or empty"
-    },
-    "Peer4RoleArn": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Peer 4 Role ARN",
-      "AllowedPattern": "^(arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9-]+)?$",
-      "ConstraintDescription": "Peer 4 ARN or empty"
-    },
-    "Peer1VpcCidr": {
-      "Type": "String",
-      "Default": "",
-      "Description": "VPC Peer CIDR 1",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
-      "ConstraintDescription": "Valid CIDR or empty"
-    },
-    "Peer2VpcCidr": {
-      "Type": "String",
-      "Default": "",
-      "Description": "VPC Peer CIDR 2",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
-      "ConstraintDescription": "Valid CIDR or empty"
-    },
-    "Peer3VpcCidr": {
-      "Type": "String",
-      "Default": "",
-      "Description": "VPC Peer CIDR 3",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
-      "ConstraintDescription": "Valid CIDR or empty"
-    },
-    "Peer4VpcCidr": {
-      "Type": "String",
-      "Default": "",
-      "Description": "VPC Peer CIDR 4",
-      "AllowedPattern": "^(([0-9]{1,4}\\.){4}[0-9]{1,4}/[0-9]{1,2})?$",
-      "ConstraintDescription": "Valid CIDR or empty"
-    },
     "MultiAz": {
       "Type": "String",
       "Default": "true",
@@ -369,30 +257,46 @@
       "Value": { "Ref": "RdsSubnetGroup" }
     },
     "AppsRdsInstanceAddress": {
-      "Description": "Applications  RDS Access Address",
+      "Description": "Applications RDS Access Address",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Endpoint.Address" ] }
     },
+    "AppsRdsInstanceDns": {
+      "Description": "RDS Apps Instance DNS Name",
+      "Condition": "DeployAppsRdsInstance",
+      "Value": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
+    },
     "AppsRdsInstancePort": {
-      "Description": "Applications  RDS Port",
+      "Description": "Applications RDS Port",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Endpoint.Port" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeployAppsRdsInstance" } }
     },
     "AppsRdsInstanceUsername": {
-      "Description": "Cloudfoundry RDS Username",
+      "Description": "Applications RDS Username",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Ref": "AppsRdsInstanceUsername" }
     },
     "AppsRdsInstancePassword": {
-      "Description": "Cloudfoundry RDS Password",
+      "Description": "Applications RDS Password",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Ref": "AppsRdsInstancePassword" }
+    },
+    "AppsRdsSecurityGroup": {
+      "Description": "Applicationis RDS Password",
+      "Condition": "DeployAppsRdsInstance",
+      "Value": { "Ref": "AppsRdsSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } }
     },
     "CfRdsInstanceAddress": {
       "Description": "Cloudfoundry RDS Access Address",
       "Condition": "DeployCfRdsInstance",
       "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Endpoint.Address" ] }
+    },
+    "CfRdsInstanceDns": {
+      "Description": "RDS CF Instance DNS Name",
+      "Condition": "DeployCfRdsInstance",
+      "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
     },
     "CfRdsInstancePort": {
       "Description": "Cloudfoundry RDS Port",
@@ -410,6 +314,12 @@
       "Condition": "DeployCfRdsInstance",
       "Value": { "Ref": "CfRdsInstancePassword" }
     },
+    "CfRdsSecurityGroup": {
+      "Description": "Cloudfoundry RDS Security Group",
+      "Condition": "DeployAppsRdsInstance",
+      "Value": { "Ref": "AppsRdsSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } }
+    },
     "RdsBrokerAccessKeyId": {
       "Description": "RDS Broker Access Key Id",
       "Condition": "DeployAppsRdsInstance",
@@ -424,17 +334,6 @@
       "Description": "RDS Broker User Name",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Ref": "RdsBrokerUser" }
-    },
-
-    "AppsRdsInstanceDns": {
-      "Description": "RDS Apps Instance DNS Name",
-      "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
-    },
-    "CfRdsInstanceDns": {
-      "Description": "RDS CF Instance DNS Name",
-      "Condition": "DeployCfRdsInstance",
-      "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
     }
   },
 
@@ -472,42 +371,6 @@
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] }
-      ]
-    },
-    "PeerVpc": {
-      "Fn::Or": [
-        {
-          "Fn::And": [
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcId" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1OwnerId" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1RoleArn" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcCidr" }, "" ] } ] }
-          ]
-        },
-        {
-          "Fn::And": [
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcId" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2OwnerId" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2RoleArn" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcCidr" }, "" ] } ] }
-          ]
-        },
-        {
-          "Fn::And": [
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3OwnerId" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RoleArn" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
-          ]
-        },
-        {
-          "Fn::And": [
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcId" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4OwnerId" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4RoleArn" }, "" ] } ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcCidr" }, "" ] } ] }
-          ]
-        }
       ]
     }
   },
@@ -558,23 +421,6 @@
       }
     },
 
-    "RdsAz1SubnetRouteTableAssociaion": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "PeerVpc",
-      "Properties": {
-        "SubnetId": { "Ref": "RdsAz1Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } }
-      }
-    },
-    "RdsAz2SubnetRouteTableAssociation": {
-      "Type": "AWS::EC2::SubnetRouteTableAssociation",
-      "Condition": "PeerVpc",
-      "Properties": {
-        "SubnetId": { "Ref": "RdsAz2Subnet" },
-        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } }
-      }
-    },
-
     "AppsRdsInstance": {
       "Type": "AWS::RDS::DBInstance",
       "Condition": "SingleAzAndDeployAppsRdsInstance",
@@ -592,7 +438,7 @@
         "MasterUserPassword": { "Ref": "AppsRdsInstancePassword" },
         "PreferredBackupWindow": { "Ref": "AppsRdsInstancePreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "AppsRdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } } ],
+        "VPCSecurityGroups": [ { "Ref": "AppsRdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:AppsRdsInstance" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -616,7 +462,7 @@
         "MultiAZ": "true",
         "PreferredBackupWindow": { "Ref": "AppsRdsInstancePreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "AppsRdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } } ],
+        "VPCSecurityGroups": [ { "Ref": "AppsRdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:AppsRdsInstance" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -640,7 +486,7 @@
         "MasterUserPassword": { "Ref": "CfRdsInstancePassword" },
         "PreferredBackupWindow": { "Ref": "CfRdsPreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "CfRdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } } ],
+        "VPCSecurityGroups": [ { "Ref": "CfRdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfRdsInstance" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -664,7 +510,7 @@
         "MultiAZ": "true",
         "PreferredBackupWindow": { "Ref": "CfRdsInstancePreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "CfRdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } } ],
+        "VPCSecurityGroups": [ { "Ref": "CfRdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfRdsInstance" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
@@ -743,6 +589,30 @@
         "Type": "CNAME",
         "ResourceRecords": [
           { "Fn::GetAtt": [ "CfRdsInstance", "Endpoint.Address" ] }
+        ]
+      }
+    },
+    "AppsRdsSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployAppsRdsInstance",
+      "Properties": {
+        "GroupDescription": "Apps RDS Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "CfRdsSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployCfRdsInstance",
+      "Properties": {
+        "GroupDescription": "Apps RDS Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     }
