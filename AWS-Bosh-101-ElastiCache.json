@@ -51,6 +51,18 @@
       "Condition": "CreateElastiCacheInfrastructure",
       "Value": { "Fn::GetAtt": [ "ElastiCacheBrokerAccessKey", "SecretAccessKey" ] }
     },
+    "ElastiCacheAz1Cidr": {
+      "Description": "ElastiCache AZ1 CIDR",
+      "Condition": "CreateElastiCacheInfrastructure",
+      "Value": { "Ref": "ElastiCacheAz1Cidr" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElastiCacheAz1Cidr" } }
+    },
+    "ElastiCacheAz2Cidr": {
+      "Description": "ElastiCache AZ1 CIDR",
+      "Condition": "CreateElastiCacheInfrastructure",
+      "Value": { "Ref": "ElastiCacheAz2Cidr" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElastiCacheAz2Cidr" } }
+    },
     "ElastiCacheAz1Subnet": {
       "Description": "ElastiCache AZ1 Subnet",
       "Condition": "CreateElastiCacheInfrastructure",
