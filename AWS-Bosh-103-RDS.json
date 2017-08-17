@@ -270,7 +270,7 @@
       "Description": "Applications RDS Port",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Endpoint.Port" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeployAppsRdsInstance" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } }
     },
     "AppsRdsInstanceUsername": {
       "Description": "Applications RDS Username",
@@ -302,7 +302,7 @@
       "Description": "Cloudfoundry RDS Port",
       "Condition": "DeployCfRdsInstance",
       "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Endpoint.Port" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeployCfRdsInstance" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } }
     },
     "CfRdsInstanceUsername": {
       "Description": "Cloudfoundry RDS Username",
@@ -317,8 +317,8 @@
     "CfRdsSecurityGroup": {
       "Description": "Cloudfoundry RDS Security Group",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Ref": "AppsRdsSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } }
+      "Value": { "Ref": "CfRdsSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } }
     },
     "RdsBrokerAccessKeyId": {
       "Description": "RDS Broker Access Key Id",
