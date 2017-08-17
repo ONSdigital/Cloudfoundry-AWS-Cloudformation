@@ -701,16 +701,6 @@
       }
     },
 
-    "ScanSourceToCfSsh": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistScanSourceAndDeployElb",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-        "CidrIp": { "Ref": "ScanSourceCidr" },
-        "IpProtocol": "-1"
-      }
-   },
-
     "PrivateToExternalRdsAz1Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalRdsAz1Cidr",
