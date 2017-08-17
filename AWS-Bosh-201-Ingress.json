@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Ingress Security Rules",
+  "Description": "Ingress Security Rules: inter-Cloudfoundry & services networking",
 
   "Parameters": {
     "DeploymentName": {

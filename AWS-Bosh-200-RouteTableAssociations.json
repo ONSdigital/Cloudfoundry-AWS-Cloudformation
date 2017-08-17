@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Egress Security Rules",
+  "Description": "Route Table Associations",
 
   "Parameters": {
     "DeploymentName": {

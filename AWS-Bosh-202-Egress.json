@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Egress Security Rules",
+  "Description": "Egress Security Rules: inter-Cloudfoundry & services networking",
 
   "Parameters": {
     "DeploymentName": {
@@ -183,6 +183,16 @@
         "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
         "FromPort": "443",
         "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorToPort80": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "80",
+        "ToPort": "80",
         "IpProtocol": "tcp"
       }
     },

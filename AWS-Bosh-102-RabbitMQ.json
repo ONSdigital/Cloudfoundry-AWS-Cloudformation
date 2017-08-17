@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "RabbitMQ",
+  "Description": "RabbitMQ Infrastructure",
 
   "Parameters": {
     "DeploymentName": {

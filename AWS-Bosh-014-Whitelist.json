@@ -1,5 +1,5 @@
 { "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Security Group Whitelists",
+  "Description": "Security Group Whitelists: inbound access to Director and Load Balancer(s)",
 
   "Parameters": {
     "DeploymentName": {

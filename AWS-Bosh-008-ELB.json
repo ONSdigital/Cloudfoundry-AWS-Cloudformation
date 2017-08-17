@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Elastic Load Balancer v2",
+  "Description": "Elastic Load Balancers: Director, CF SSH & HTTP/HTTPS",
 
   "Parameters": {
     "DeploymentName": {

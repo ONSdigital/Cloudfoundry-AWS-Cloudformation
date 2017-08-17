@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "RDS CF and Application Instances",
+  "Description": "Application & CF RDS Instances",
 
   "Parameters": {
     "DeploymentName": {

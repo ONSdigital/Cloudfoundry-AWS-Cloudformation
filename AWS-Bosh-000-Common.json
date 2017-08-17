@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Common Values",
+  "Description": "Stack protection and common export values",
 
   "Parameters": {
     "DeploymentName": {

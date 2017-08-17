@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Cloudfoundry Users",
+  "Description": "Bosh AWS User & Groups",
 
   "Parameters": {
     "DeploymentName": {
