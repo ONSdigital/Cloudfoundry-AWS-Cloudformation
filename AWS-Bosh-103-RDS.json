@@ -260,13 +260,13 @@
       "Description": "RDS AZ1 Subnet",
       "Condition": "",
       "Value": { "Ref": "RdsAz1Subnet" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName-RdsAz1Subnet}" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz1Subnet" } }
     },
     "RdsAz2Subnet": {
       "Description": "RDS AZ2 Subnet",
       "Condition": "",
       "Value": { "Ref": "RdsAz2Subnet" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName-RdsAz2Subnet}" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2Subnet" } }
     },
     "AppsRdsInstanceAddress": {
       "Description": "Applications RDS Access Address",
