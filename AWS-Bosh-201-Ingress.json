@@ -366,6 +366,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz2Cidr" } },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -375,6 +377,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz3Cidr" } },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -708,6 +712,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1Cidr" } },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -717,6 +723,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -727,6 +735,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
    },
@@ -736,6 +746,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -745,6 +757,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -754,6 +768,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -763,6 +779,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElastiCacheSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -772,6 +790,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -781,6 +801,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -790,6 +812,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     },
@@ -799,6 +823,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsSecurityGroup" } },
         "CidrIp": { "Ref": "ScanSourceCidr" },
+        "FromPort": "-1",
+        "ToPort": "-1",
         "IpProtocol": "-1"
       }
     }
