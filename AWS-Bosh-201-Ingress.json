@@ -406,7 +406,6 @@
         "IpProtocol": "tcp"
       }
     },
-
     "PrivateAz3toRabbitmqPort8301": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
@@ -686,6 +685,29 @@
       }
     },
 
+    "RabbitmqAz1ToPrivatePort4222": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1Cidr" } },
+        "FromPort": "4222",
+        "ToPort": "4222" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqAz2ToPrivatePort4222": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
+        "FromPort": "4222",
+        "ToPort": "4222" ,
+        "IpProtocol": "tcp"
+      }
+    },
+
     "RabbitmqAz1ToPrivatePort8301": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
@@ -708,6 +730,7 @@
         "IpProtocol": "tcp"
       }
     },
+
     "RabbitmqAz1ToRabbitmq": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
