@@ -371,7 +371,6 @@
     },
     "PrivateAz3toPrivate": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzAndCreatePrivateNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz3Cidr" } },
