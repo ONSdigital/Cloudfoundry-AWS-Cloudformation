@@ -357,7 +357,9 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz1Cidr" } },
-        "IpProtocol": "tcp"
+        "FromPort": "-1",
+        "ToPort": "-1",
+        "IpProtocol": "-1"
       }
     },
     "PrivateAz2toPrivate": {
