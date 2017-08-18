@@ -201,7 +201,14 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+              "32"
+            ]
+          ]
+        },
         "FromPort": "80",
         "ToPort": "80",
         "IpProtocol": "tcp"
@@ -212,7 +219,14 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+              "32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
@@ -223,7 +237,14 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+              "32"
+            ]
+          ]
+        },
         "FromPort": "80",
         "ToPort": "80",
         "IpProtocol": "tcp"
@@ -234,7 +255,14 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+              "32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
@@ -245,7 +273,14 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+              "32"
+            ]
+          ]
+        },
         "FromPort": "80",
         "ToPort": "80",
         "IpProtocol": "tcp"
@@ -256,7 +291,14 @@
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+              "32"
+            ]
+          ]
+        },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
