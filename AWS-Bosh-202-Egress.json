@@ -478,7 +478,27 @@
       }
     },
 
-    "PrivateToDirectorInstanceAz1Port4222": {
+    "PrivateToPort80": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "80",
+        "ToPort": "80",
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToPort443": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "CidrIp": "0.0.0.0/0",
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToPrivateInstanceAz1Port4222": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
