@@ -461,7 +461,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "DestinationGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "FromPort": "80",
         "ToPort": "80" ,
         "IpProtocol": "tcp"
@@ -471,7 +471,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "DestinationGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "FromPort": "443",
         "ToPort": "443" ,
         "IpProtocol": "tcp"
