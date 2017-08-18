@@ -580,7 +580,7 @@
       }
     },
 
-    "PrivateToRabbitmqAz1Port8300": {
+    "PrivateToRabbitmqAz1TcpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -591,7 +591,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToRabbitmqAz2Port8300": {
+    "PrivateToRabbitmqAz2TcpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
@@ -603,7 +603,7 @@
       }
     },
 
-    "PrivateToRabbitmqAz1Port8300": {
+    "PrivateToRabbitmqAz1UdpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -614,7 +614,7 @@
         "IpProtocol": "udp"
       }
     },
-    "PrivateToRabbitmqAz2Port8300": {
+    "PrivateToRabbitmqAz2UdpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
@@ -962,7 +962,7 @@
       }
     },
 
-    "RabbitmqToPrivateAz1Port8300": {
+    "RabbitmqToPrivateAz1TcpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -973,7 +973,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "RabbitmqToAz2Private8300": {
+    "RabbitmqToPrivateAz2TcpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
@@ -984,7 +984,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "RabbitmqToPrivateAz3Port8300": {
+    "RabbitmqToPrivateAz3TcpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
@@ -995,7 +995,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "RabbitmqToPrivateAz1Port8300": {
+    "RabbitmqToPrivateAz1UdpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -1006,7 +1006,7 @@
         "IpProtocol": "udp"
       }
     },
-    "RabbitmqToPrivateAz2Port8300": {
+    "RabbitmqToPrivateAz2UdpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
@@ -1017,7 +1017,7 @@
         "IpProtocol": "udp"
       }
     },
-    "RabbitmqToPrivateAz3Port8300": {
+    "RabbitmqToPrivateAz3UdpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
