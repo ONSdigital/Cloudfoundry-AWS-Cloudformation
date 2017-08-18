@@ -45,6 +45,11 @@
       "Description": "Private Security Groups",
       "Value": { "Ref": "PrivateSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } }
+    },
+    "RouterSecurityGroup": {
+      "Description": "Router Security Groups",
+      "Value": { "Ref": "RouterSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } }
     }
   },
 
@@ -99,6 +104,17 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "RouterSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Router In Out",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RouterSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }

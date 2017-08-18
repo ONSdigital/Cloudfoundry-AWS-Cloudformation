@@ -457,6 +457,27 @@
       }
     },
 
+    "ApplicationLbSecurityToRouterSecurityGroupPort80": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "DestinationGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "FromPort": "80",
+        "ToPort": "80" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "ApplicationLbSecurityToRouterSecurityGroupPort443": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "DestinationGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "FromPort": "443",
+        "ToPort": "443" ,
+        "IpProtocol": "tcp"
+      }
+    },
+
     "PrivateToDirectorInstanceAz1Port4222": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {

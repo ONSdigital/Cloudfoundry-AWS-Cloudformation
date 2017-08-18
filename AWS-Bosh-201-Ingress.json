@@ -263,6 +263,29 @@
       }
     },
 
+    "LbSecurityGroupToRouterGroupPort80": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "FromPort": "80",
+        "ToPort": "80" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "LbSecurityGroupToRouterGroupPort443": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "FromPort": "443",
+        "ToPort": "443" ,
+        "IpProtocol": "tcp"
+      }
+    },
+
     "PrivateAz1toDirectorInstancePort4222": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
