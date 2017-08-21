@@ -196,27 +196,8 @@
       }
     },
 
-    "NatAz1ToDirectorInstancePort80": {
+    "NatAz1IpToLbSecurityGroup443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployElb",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "80",
-        "ToPort": "80",
-        "IpProtocol": "tcp"
-      }
-    },
-    "NatAz1ToDirectorInstancePort443": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "CidrIp": {
@@ -232,27 +213,9 @@
         "IpProtocol": "tcp"
       }
     },
-    "NatAz2ToDirectorInstancePort80": {
+    "NatAz2IpToLbSecurityGroup443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployElb",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "80",
-        "ToPort": "80",
-        "IpProtocol": "tcp"
-      }
-    },
-    "NatAz2ToDirectorInstancePort443": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployElb",
+      "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "CidrIp": {
@@ -268,27 +231,9 @@
         "IpProtocol": "tcp"
       }
     },
-    "NatAz3ToDirectorInstancePort80": {
+    "NatAz3IpToLbSecurityGroup443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployElb",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "CidrIp": {
-          "Fn::Join": [
-            "/", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
-              "32"
-            ]
-          ]
-        },
-        "FromPort": "80",
-        "ToPort": "80",
-        "IpProtocol": "tcp"
-      }
-    },
-    "NatAz3ToDirectorInstancePort443": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "DeployElb",
+      "Condition": "MultiAz",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "CidrIp": {
