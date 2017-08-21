@@ -177,6 +177,13 @@
       "Condition": "PermitFullAccessCidr1",
       "Properties": {
         "Parameters": {
+          "CfSshSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
+            ]
+          },
           "DirectorSecurityGroup": {
             "Fn::If": [
               "DeployElb", 
@@ -205,6 +212,13 @@
       "Condition": "PermitFullAccessCidr2",
       "Properties": {
         "Parameters": {
+          "CfSshSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
+            ]
+          },
           "DirectorSecurityGroup": {
             "Fn::If": [
               "DeployElb", 
@@ -233,6 +247,13 @@
       "Condition": "PermitFullAccessCidr3",
       "Properties": {
         "Parameters": {
+          "CfSshSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
+            ]
+          },
           "DirectorSecurityGroup": {
             "Fn::If": [
               "DeployElb", 
@@ -262,6 +283,13 @@
       "Condition": "PermitFullAccessCidr4",
       "Properties": {
         "Parameters": {
+          "CfSshSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
+            ]
+          },
           "DirectorSecurityGroup": {
             "Fn::If": [
               "DeployElb", 
@@ -290,6 +318,13 @@
       "Condition": "PermitFullAccessCidr5",
       "Properties": {
         "Parameters": {
+          "CfSshSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
+            ]
+          },
           "DirectorSecurityGroup": {
             "Fn::If": [
               "DeployElb", 
@@ -318,6 +353,13 @@
       "Condition": "PermitFullAccessCidr6",
       "Properties": {
         "Parameters": {
+          "CfSshSecurityGroup": {
+            "Fn::If": [
+              "DeployElb", 
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
+            ]
+          },
           "DirectorSecurityGroup": {
             "Fn::If": [
               "DeployElb", 

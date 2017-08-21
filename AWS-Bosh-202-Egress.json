@@ -457,7 +457,7 @@
       }
     },
 
-    "ApplicationLbSecurityToRouterSecurityGroupPort80": {
+    "ApplicationLbSecurityGroupToRouterSecurityGroupPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
@@ -467,7 +467,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "ApplicationLbSecurityToRouterSecurityGroupPort443": {
+    "ApplicationLbSecurityGroupToRouterSecurityGroupPort443": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
@@ -477,6 +477,17 @@
         "IpProtocol": "tcp"
       }
     },
+   "CfSshElbSecurityGroupToCfSshInstanceSecurityGroup": {
+     "Type": "AWS::EC2::SecurityGroupEgress",
+     "Condition": "DeployElb",
+     "Properties": {
+       "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+       "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } },
+       "FromPort": "2222",
+       "ToPort": "2223",
+       "IpProtocol": "tcp"
+     }
+   },
 
     "PrivateToPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",

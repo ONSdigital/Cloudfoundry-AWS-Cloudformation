@@ -188,6 +188,20 @@
         ]
       }
     },
+    "CfSshDnsRr": {
+      "Type": "AWS::Route53::RecordSet",
+      "Condition": "DeployElb",
+      "Properties": {
+        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
+        "Name": { "Fn::Join": [ ".", [ "ssh.system", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+        "TTL": "3600",
+        "Type": "CNAME",
+        "ResourceRecords": [
+          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbDnsName" } }
+        ]
+      }
+    },
+
     "DirectorDnsRr": {
       "Type": "AWS::Route53::RecordSet",
       "Condition": "DeployElbOrAllocateBoshIp",

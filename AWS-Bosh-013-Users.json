@@ -124,7 +124,8 @@
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketRwAccessRole" } },
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CcBucketAccessRole" } },
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CompileNodesBucketAccessRole" } },
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorBucketAccessRole" } }
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorBucketAccessRole" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstorePostgreSqlBucketRwAccessRole" } }
                   ]
                 }
               ]

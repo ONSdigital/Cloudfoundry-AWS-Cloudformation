@@ -109,6 +109,17 @@
   },
 
   "Resources": {
+   "CfSshElbSecurityGroupToCfSshInstanceSecurityGroup": {
+     "Type": "AWS::EC2::SecurityGroupIngress",
+     "Condition": "DeployElb",
+     "Properties": {
+       "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } },
+       "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+       "FromPort": "2222",
+       "ToPort": "2223",
+       "IpProtocol": "tcp"
+     }
+   },
     "DirectorInstanceAz1ToPrivatePort22": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -887,16 +898,16 @@
       }
     },
 
-    "ScanSourceToCfSsh": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "WhitelistScanSourceAndDeployElb",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } },
-        "CidrIp": { "Ref": "ScanSourceCidr" },
-        "FromPort": "-1",
-        "ToPort": "-1",
-        "IpProtocol": "-1"
-      }
+   "ScanSourceToCfSsh": {
+     "Type": "AWS::EC2::SecurityGroupIngress",
+     "Condition": "WhitelistScanSourceAndDeployElb",
+     "Properties": {
+       "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+       "CidrIp": { "Ref": "ScanSourceCidr" },
+       "FromPort": "-1",
+       "ToPort": "-1",
+       "IpProtocol": "-1"
+     }
    },
    "ScanSourceToDirectorElb": {
       "Type": "AWS::EC2::SecurityGroupIngress",

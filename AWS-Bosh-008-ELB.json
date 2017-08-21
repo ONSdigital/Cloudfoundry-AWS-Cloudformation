@@ -317,11 +317,17 @@
       "Value": { "Fn::GetAtt": [ "CfSshElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElbDnsName" } }
     },
-    "CfSshSecurityGroup": {
+    "CfSshElbSecurityGroup": {
       "Description": "CF SSH ELB Security Group",
       "Condition": "DeployElb",
-      "Value": { "Ref": "CfSshSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshSecurityGroup" } }
+      "Value": { "Ref": "CfSshElbSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } }
+    },
+    "CfSshInstanceSecurityGroup": {
+      "Description": "CF SSH Instance Security Group",
+      "Condition": "DeployElb",
+      "Value": { "Ref": "CfSshInstanceSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
     },
     "DirectorElb": {
       "Description": "Director External ELB",
@@ -409,6 +415,7 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
         ],
+        "CrossZone": "true",
         "Listeners": [
           {
             "InstancePort": { "Ref": "CfSshElbInstancePort" },
@@ -429,7 +436,7 @@
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshElb" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ],
-        "SecurityGroups": [ { "Ref": "CfSshSecurityGroup" } ]
+        "SecurityGroups": [ { "Ref": "CfSshElbSecurityGroup" } ]
       }
     },
     "DirectorElb": {
@@ -578,14 +585,26 @@
       }
     },
 
-    "CfSshSecurityGroup": {
+    "CfSshElbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "DeployElb",
       "Properties": {
-        "GroupDescription": "SSH Load Balancer Security Group",
+        "GroupDescription": "CF SSH ELB Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshSecurityGroup" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshElbSecurityGroup" } },
+          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "CfSshInstanceSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Condition": "DeployElb",
+      "Properties": {
+        "GroupDescription": "CF SSH Instance Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshInstanceSecurityGroup" } },
           { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -594,7 +613,7 @@
       "Type": "AWS::EC2::SecurityGroup",
       "Condition": "DeployElb",
       "Properties": {
-        "GroupDescription": "Director Security Group",
+        "GroupDescription": "Director ELB Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorElbSecurityGroup" } },
