@@ -1,75 +1,35 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Versioned & Replicated S3 Backup Bucket: Destination Bucket and Role - to be added to destination region",
+  "Description": "Versioned & Replicated S3 Backup Bucket: Replica Bucket - to be added to destination region",
 
   "Parameters": {
-    "DestinationBucketExpirationInDays": {
+    "ReplicaBucketExpirationInDays": {
       "Type": "Number",
       "Default": "180",
       "MinValue": "1",
-      "Description": "Destination Bucket Expiration in Days"
+      "Description": "Replica Bucket Expiration in Days"
     }
   },
 
   "Outputs": {
-    "DestinationBucket": {
-      "Description": "Destination Bucket",
-      "Value": { "Ref": "DestinationBucket" }
+    "ReplicaBucket": {
+      "Description": "Replica Bucket",
+      "Value": { "Ref": "ReplicaBucket" }
     },
-    "DestinationBucketArn": {
-      "Description": "Destination Bucket ARN",
-      "Value": { "Fn::GetAtt": [ "DestinationBucket", "Arn" ] }
-    },
-    "DestinationRole": {
-      "Description": "Destination Role",
-      "Value": { "Fn::GetAtt": [ "DestinationRole", "Arn" ] }
+    "ReplicaBucketArn": {
+      "Description": "Replica Bucket ARN",
+      "Value": { "Fn::GetAtt": [ "ReplicaBucket", "Arn" ] }
     }
   },
 
   "Resources": {
-    "DestinationRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [ "ec2.amazonaws.com" ]
-              },
-              "Action": [ "sts:AssumeRole" ]
-            }
-          ]
-        },
-        "Policies": [
-          {
-            "PolicyName": "DestinationRoleAccess",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "s3:GetObject",
-                    "s3:GetObjectVersion",
-                    "s3:PutObject"
-                  ],
-                  "Resource": { "Fn::Sub": "arn:aws:s3:::${DestinationBucket}/*" }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-    "DestinationBucket": {
+    "ReplicaBucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
         "LifecycleConfiguration": {
           "Rules": [
             {
-              "ExpirationInDays": { "Ref": "DestinationBucketExpirationInDays" },
+              "ExpirationInDays": { "Ref": "ReplicaBucketExpirationInDays" },
               "Status": "Enabled"
             }
           ]

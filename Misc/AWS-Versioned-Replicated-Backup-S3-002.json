@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Versioned & Replicated S3 Backup Bucket: Source Bucket and Destination Configuration - to be added to source region",
+  "Description": "Versioned & Replicated S3 Backup Bucket: Source Bucket and Replica Configuration - to be added to source region",
 
   "Parameters": {
     "SourceBucketExpirationInDays": {
@@ -9,17 +9,11 @@
       "MinValue": "1",
       "Description": "Source Bucket Expiration in Days"
     },
-    "DestinationRoleArn": {
+    "ReplicaBucketArn": {
       "Type": "String",
-      "Description": "Destination Bucket Replication Role ARN",
-      "AllowedPattern": "^arn:aws:iam::[0-9]+:[a-z]*/[A-Za-z0-9/-]+$",
-      "ConstraintDescription": "Destination Bucket Replication Role ARN"
-    },
-    "DestinationBucketArn": {
-      "Type": "String",
-      "Description": "Destination Bucket Bucket ARN",
+      "Description": "Replica Bucket Bucket ARN",
       "AllowedPattern": "^arn:aws:s3::[0-9]*:[A-Za-z0-9/-]+$",
-      "ConstraintDescription": "Destination Bucket ARN"
+      "ConstraintDescription": "Replica Bucket ARN"
     }
   },
 
@@ -31,6 +25,66 @@
   },
 
   "Resources": {
+    "ReplicaRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "s3.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ]
+            }
+          ]
+        }
+      }
+    },
+
+    "BucketReplicationPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "Roles": [
+          { "Ref": "ReplicaRole" }
+        ],
+        "PolicyName": "ReplicaRoleAccess",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetReplicationConfiguration",
+                "s3:ListBucket"
+              ],
+              "Resource": { "Fn::Sub": "${BackupBucket.Arn}" }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:GetObjectVersion",
+                "s3:GetObjectVersionAcl",
+                "s3:GetObjectVersionTagging"
+              ],
+              "Resource": { "Fn::Sub": "${BackupBucket.Arn}/*" }
+            },
+            {
+              "Effect": "Allow",
+              "Action": [
+                "s3:ReplicateObject",
+                "s3:ReplicateDelete",
+                "s3:ReplicateTags",
+                "s3:GetObjectVersionTagging"
+              ],
+              "Resource": { "Fn::Sub": "${ReplicaBucketArn}/*" }
+            }
+          ] 
+        }
+      }
+    },
+
     "BackupBucket": {
       "Type": "AWS::S3::Bucket",
       "Properties": {
@@ -43,11 +97,11 @@
           ]
         },
         "ReplicationConfiguration": {
-          "Role": { "Ref": "DestinationRoleArn" },
+          "Role": { "Fn::GetAtt": [ "ReplicaRole", "Arn" ] },
           "Rules": [
             {
               "Destination": {
-                "Bucket": { "Ref": "DestinationBucketArn" }
+                "Bucket": { "Ref": "ReplicaBucketArn" }
               },
               "Prefix": "",
               "Status": "Enabled"
