@@ -1,0 +1,53 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Versioned & Replicated S3 Backup Bucket: Source Bucket and Destination Configuration",
+
+  "Parameters": {
+    "BackupName": {
+      "Type": "String",
+      "Description": "Backup Name",
+      "MinLength": "1",
+      "MaxLength": "64",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid name matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+    "SourceBucketExpirationInDays": {
+      "Type": "Number",
+      "Default": "90",
+      "Min": "1",
+      "Description": "Source Bucket Expiration in Days"
+    }
+  },
+
+  "Outputs": {
+    "BackupBucket": {
+      "Description": "Backup Bucket",
+      "Value": { "Ref": "BackupBucket" }
+    }
+  },
+
+  "Resources": {
+    "BackupBucket": {
+      "Type": "AWS::S3::Bucket",
+      "LifecycleConfiguration": {
+        "Rules": [
+          {
+            "ExpirationInDays": { "Ref": "SourceBucketExpirationInDays" },
+            "Status": "Enabled"
+          }
+        ]
+      },
+      "DestinationConfiguration": {
+        "Role": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DestinationRole" } },
+        "Rules": [
+          {
+            "Destination": {
+              "Bucket": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DestinationBucket" } }
+            },
+            "Status": "Enabled"
+          }
+        ]
+      }
+    }
+  }
+}

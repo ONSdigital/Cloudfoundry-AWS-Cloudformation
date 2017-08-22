@@ -1,0 +1,73 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Version & Replicated S3 Backup Bucket: Destination Bucket and Role",
+
+  "Parameters": {
+    "BackupName": {
+      "Type": "String",
+      "Description": "Backup Name",
+      "MinLength": "1",
+      "MaxLength": "64",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid name matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+    "DestinationBucketExpirationInDays": {
+      "Type": "Number",
+      "Default": "180",
+      "Min": "1",
+      "Description": "Destination Bucket Expiration in Days"
+    }
+  },
+
+  "Outputs": {
+    "DestinationBucket": {
+      "Description": "Destination Bucket",
+      "Value": { "Ref": "DestinationBucket" },
+      "Export": { "Name": { "Fn::Sub": "${BackupName}-DestinationBucket" } }
+    },
+    "DestinationRole": {
+      "Description": "Destination Role",
+      "Value": { "Ref": "DestinationRole" },
+      "Export": { "Name": { "Fn::Sub": "${BackupName}-DestinationRole" } }
+    }
+  },
+
+  "Resources": {
+    "DestinationRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${BackupName}/" },
+        "Policies": [
+          {
+            "PolicyName": "DestinationRoleAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:PutObject"
+                  ],
+                  "Resource": { "Fn::Sub": "arn:aws:s3:::${DestinationBucket}/*" }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "DestinationBucket": {
+      "Type": "AWS::S3::Bucket",
+      "LifecycleConfiguration": {
+        "Rules": [
+          {
+            "ExpirationInDays": { "Ref": "DestinationBucketExpirationInDays" },
+            "Status": "Enabled"
+          }
+        ]
+      }
+    }
+  }
+}
