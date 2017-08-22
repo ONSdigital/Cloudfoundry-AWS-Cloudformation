@@ -104,12 +104,11 @@
                   ],
                   "Effect": "Allow",
                   "Resource": [
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketRoAccessRole" } },
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketRwAccessRole" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstoreBackupBucketAccessRole" } },
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketAccessRole" } },
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CcBucketAccessRole" } },
                     { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CompileNodesBucketAccessRole" } },
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorBucketAccessRole" } },
-                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstorePostgreSqlBucketRwAccessRole" } }
+                    { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorBucketAccessRole" } }
                   ]
                 }
               ]

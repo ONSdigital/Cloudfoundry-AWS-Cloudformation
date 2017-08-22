@@ -18,13 +18,9 @@
       "Description": "Blobstore & Backup S3 Bucket Access Instance Profile",
       "Value": { "Ref": "BlobstoreBackupBucketAccessInstanceProfile" }
     },
-    "BlobstoreBucketRoAccessInstanceProfile": {
-      "Description": "Blobstore S3 Bucket Readonly Access Instance Profile",
-      "Value": { "Ref": "BlobstoreBucketRoAccessInstanceProfile" }
-    },
-    "BlobstoreBucketRwAccessInstanceProfile": {
-      "Description": "Blobstore S3 Bucket Read/Write Access Instance Profile",
-      "Value": { "Ref": "BlobstoreBucketRwAccessInstanceProfile" }
+    "BlobstoreBucketAccessInstanceProfile": {
+      "Description": "Blobstore S3 Bucket Access Instance Profile",
+      "Value": { "Ref": "BlobstoreBucketAccessInstanceProfile" }
     },
     "CcBucketAccessInstanceProfile": {
       "Description": "Cloudcontroller S3 Bucket Access Instance Profile",
@@ -110,15 +106,10 @@
       "Value": { "Fn::GetAtt": [ "BlobstoreBackupBucketAccessRole", "Arn" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BlobstoreBackupBucketAccessRole" } }
     },
-    "BlobstoreBucketRoAccessRole": {
-      "Description": "Blobstore Bucket Readonly Access Role",
-      "Value": { "Fn::GetAtt": [ "BlobstoreBucketRoAccessRole", "Arn" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketRoAccessRole" } }
-    },
-    "BlobstoreBucketRwAccessRole": {
-      "Description": "Blobstore Bucket Read/Write Access Role",
-      "Value": { "Fn::GetAtt": [ "BlobstoreBucketRwAccessRole", "Arn" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketRwAccessRole" } }
+    "BlobstoreBucketAccessRole": {
+      "Description": "Blobstore Bucket Access Role",
+      "Value": { "Fn::GetAtt": [ "BlobstoreBucketAccessRole", "Arn" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketAccessRole" } }
     },
     "CompileNodesBucketAccessRole": {
       "Description": "Compile Nodes Bucket Access Role",
@@ -163,42 +154,6 @@
       "Type": "AWS::S3::Bucket"
     },
 
-    "BlobstoreBucketRoAccessRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": [ "ec2.amazonaws.com" ]
-              },
-              "Action": [ "sts:AssumeRole" ]
-            }
-          ]
-        },
-        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
-        "Policies": [
-          {
-            "PolicyName": "BlobstoreBucketRoAccess",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "s3:GetObject",
-                    "s3:GetObjectVersion"
-                  ],
-                  "Resource": { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
     "BlobstoreBucketAccessRole": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -226,7 +181,8 @@
                   "Action": [
                     "s3:GetObject",
                     "s3:GetObjectVersion",
-                    "s3:PutObject"
+                    "s3:PutObject",
+                    "s3:PutObjectVersion"
                   ],
                   "Resource": { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
                 }
@@ -401,14 +357,6 @@
       }
     },
 
-    "BlobstoreBucketRoAccessInstanceProfile": {
-      "Type": "AWS::IAM::InstanceProfile",
-      "Properties": {
-        "Roles": [
-          { "Ref": "BlobstoreBucketRoAccessRole" }
-        ]
-      }
-    },
     "BlobstoreBucketAccessInstanceProfile": {
       "Type": "AWS::IAM::InstanceProfile",
       "Properties": {
