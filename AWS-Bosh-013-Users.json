@@ -25,29 +25,13 @@
     "BoshAwsUserName": {
       "Description": "ElastiCache Broker User Name",
       "Value": { "Ref": "BoshAwsUser" }
-    },
-    "DeploymentIamGroup": {
-      "Description": "Deployment IAM Group",
-      "Value": { "Ref": "DeploymentIamGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
     }
   },
 
   "Resources": {
-    "DeploymentIamGroup": {
-      "Type": "AWS::IAM::Group",
-      "Properties": {
-        "GroupName": { "Ref": "DeploymentName" },
-        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" }
-      }
-    },
-
     "BoshAwsUser": {
       "Type": "AWS::IAM::User",
       "Properties": {
-        "Groups": [
-          { "Ref": "DeploymentIamGroup" }
-        ],
         "Policies": [
           {
             "PolicyName": { "Fn::Sub": "${DeploymentName}-CfBoshAwsEc2Permissions" },

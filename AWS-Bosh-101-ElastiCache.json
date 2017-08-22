@@ -156,9 +156,6 @@
       "Type": "AWS::IAM::User",
       "Condition": "CreateElastiCacheInfrastructure",
       "Properties": {
-        "Groups": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
-        ],
         "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
         "Policies": [
           {

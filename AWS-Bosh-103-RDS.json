@@ -535,9 +535,6 @@
       "Condition": "DeployAppsRdsInstance",
       "Properties": {
         "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
-        "Groups": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DeploymentIamGroup" } }
-        ],
         "Policies": [
           {
             "PolicyName": { "Fn::Sub": "${DeploymentName}-CfRdsPolicy" },
