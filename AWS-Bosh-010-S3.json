@@ -110,7 +110,7 @@
       "Value": { "Fn::GetAtt": [ "BlobstoreBackupBucketAccessRole", "Arn" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BlobstoreBackupBucketAccessRole" } }
     },
-    "BlobstoreBucketRoAccessRole": {,
+    "BlobstoreBucketRoAccessRole": {
       "Description": "Blobstore Bucket Readonly Access Role",
       "Value": { "Fn::GetAtt": [ "BlobstoreBucketRoAccessRole", "Arn" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketRoAccessRole" } }
