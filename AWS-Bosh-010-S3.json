@@ -88,7 +88,23 @@
         ]
       }
     },
-
+    "S3BucketResourceNames": {
+      "Description": "S3 Resource Bucket Names - used backup & restore",
+      "Value": {
+        "Fn::Join": [
+          ",", [
+            "BackupBucket",
+            "BlobstoreBucket",
+            "CompiledPackageCacheBucket",
+            "DirectorBackupBucket",
+            "BuildpackBucket",
+            "DropletBucket",
+            "PackageBucket",
+            "ResourceBucket"
+          ]
+        ]
+      }
+    },
     "BlobstoreBackupBucketAccessRole": {
       "Description": "Blobstore & Backup Bucket Access Role",
       "Value": { "Fn::GetAtt": [ "BlobstoreBackupBucketAccessRole", "Arn" ] },
