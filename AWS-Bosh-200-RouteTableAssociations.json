@@ -311,13 +311,7 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "SubnetId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz1Subnet" } },
-        "RouteTableId": {
-          "Fn::If": [
-            "PeerVpc",
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } },
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } } 
-          ]
-        }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
       }
     },
     "RabbitmqAz2SubnetRouteTableAssociation": {
@@ -325,13 +319,7 @@
       "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "SubnetId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Subnet" } },
-        "RouteTableId": {
-          "Fn::If": [
-            "PeerVpc",
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } },
-            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
-          ]
-        }
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } }
       }
     },
     "RdsAz1SubnetRouteTableAssociaion": {
