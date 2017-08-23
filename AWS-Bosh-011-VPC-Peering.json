@@ -305,6 +305,15 @@
       }
     },
 
+    "VpcPeer1InternetRouteTable": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer1VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer1" }
+      }
+    },
     "VpcPeer1NatAz1Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer1Vpc",
@@ -351,6 +360,15 @@
       }
     },
 
+    "VpcPeer2InternetRouteTable": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer2VpcCidr" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer2" }
+      }
+    },
     "VpcPeer2NatAz1Route": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer2Vpc",
@@ -397,12 +415,12 @@
       }
     },
 
-    "VpcPeer3PeeringOnlyRoute": {
+    "VpcPeer3InternetRouteTable": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer3Vpc",
       "Properties": {
         "DestinationCidrBlock": { "Ref": "Peer3VpcCidr" },
-        "RouteTableId": { "Ref": "VpcPeeringOnlyRouteTable" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } },
         "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
       }
     },
@@ -442,13 +460,22 @@
         "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
       }
     },
+    "VpcPeer3VpcPeeringOnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer3VpcCidr" },
+        "RouteTableId": { "Ref": "VpcPeeringOnlyRouteTable" },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer3" }
+      }
+    },
 
-    "VpcPeer4VpcPeeringOnlyRoute": {
+    "VpcPeer4InternetRouteTable": {
       "Type": "AWS::EC2::Route",
       "Condition": "Peer4Vpc",
       "Properties": {
         "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
-        "RouteTableId": { "Ref": "VpcPeeringOnlyRouteTable" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } },
         "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
       }
     },
@@ -485,6 +512,15 @@
       "Properties": {
         "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
         "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-S3OnlyRouteTable" } },
+        "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
+      }
+    },
+    "VpcPeer4VpcPeeringOnlyRoute": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer4Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
+        "RouteTableId": { "Ref": "VpcPeeringOnlyRouteTable" },
         "VpcPeeringConnectionId": { "Ref": "VpcPeer4" }
       }
     },
