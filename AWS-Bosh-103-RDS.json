@@ -406,7 +406,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsAz1Subnet" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -420,7 +420,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsAz2Subnet" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -436,7 +436,7 @@
         ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSubnetGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -461,7 +461,7 @@
         "VPCSecurityGroups": [ { "Ref": "AppsRdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:AppsRdsInstance" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -485,7 +485,7 @@
         "VPCSecurityGroups": [ { "Ref": "AppsRdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:AppsRdsInstance" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -509,7 +509,7 @@
         "VPCSecurityGroups": [ { "Ref": "CfRdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfRdsInstance" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -533,7 +533,7 @@
         "VPCSecurityGroups": [ { "Ref": "CfRdsSecurityGroup" } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfRdsInstance" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -617,7 +617,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -629,7 +629,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     }

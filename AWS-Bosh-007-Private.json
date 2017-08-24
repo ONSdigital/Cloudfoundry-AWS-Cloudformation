@@ -92,7 +92,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateAz1Subnet" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -106,7 +106,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateAz2Subnet" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -120,7 +120,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:PrivateAz3Subnet" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },

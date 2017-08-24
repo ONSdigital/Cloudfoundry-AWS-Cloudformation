@@ -389,7 +389,7 @@
         ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedApplicationSslCertificate" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -421,7 +421,7 @@
         },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshElb" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ],
         "SecurityGroups": [ { "Ref": "CfSshElbSecurityGroup" } ]
       }
@@ -465,7 +465,7 @@
         },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorElb" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ],
         "SecurityGroups": [ { "Ref": "DirectorElbSecurityGroup" } ]
       }
@@ -487,7 +487,7 @@
         "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElb" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -507,7 +507,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElbTargetGroup80" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -526,7 +526,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElbTargetGroup443" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -580,7 +580,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshElbSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -592,7 +592,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfSshInstanceSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -604,7 +604,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorElbSecurityGroup" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ] 
       } 
     }

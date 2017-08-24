@@ -258,7 +258,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer1" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -272,7 +272,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer2" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -286,7 +286,7 @@
         "PeerRoleArn": { "Ref": "Peer3RoleArn" },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer3" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -300,7 +300,7 @@
         "PeerRoleArn": { "Ref": "Peer4RoleArn" },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeer4" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -532,7 +532,7 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:VpcPeeringOnlyRouteTable" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     }

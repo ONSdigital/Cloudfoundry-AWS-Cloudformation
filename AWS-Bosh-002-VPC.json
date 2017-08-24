@@ -66,7 +66,7 @@
         "InstanceTenancy": "default",
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CloudFoundryVpc" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -76,7 +76,7 @@
       "Properties": {
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:InternetGateway" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -95,7 +95,7 @@
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:InternetRouteTable" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
@@ -105,7 +105,7 @@
         "VpcId": { "Ref": "CloudFoundryVpc" },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:S3OnlyRouteTable" } },
-          { "Key": "Deployment", "Value": { "Ref": "DeploymentName" } }
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
     },
