@@ -74,6 +74,10 @@
       "Condition": "CreateRabbitmqNetworks",
       "Value": { "Ref": "RabbitmqSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } }
+    },
+    "CreateRabbitmqNetworks": {
+      "Description": "Created RabbitMQ Network(s)",
+      "Value": { "Ref": "CreateRabbitmqNetworks" }
     }
   },
 

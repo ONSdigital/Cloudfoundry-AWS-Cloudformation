@@ -251,6 +251,14 @@
         ]
       }
     },
+    "DeployAppsRdsInstance": {
+      "Description": "Deploy Apps RDS Database Instance",
+      "Value": { "Ref": "DeployAppsRdsInstance" }
+    },
+    "DeployCfRdsInstance": {
+      "Description": "Deploy CF RDS Database Instance",
+      "Value": { "Ref": "DeployCfRdsInstance" }
+    },
     "RdsSubnetGroup": {
       "Description": "RDS Database Subnet Group",
       "Condition": "CreateRdsInfrastructure",

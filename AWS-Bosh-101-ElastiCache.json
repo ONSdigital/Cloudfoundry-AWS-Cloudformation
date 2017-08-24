@@ -90,7 +90,10 @@
       "Condition": "CreateElastiCacheInfrastructure",
       "Value": { "Ref": "ElastiCacheSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ElastiCacheSecurityGroup" } }
-    }
+    },
+    "CreateElastiCacheInfrastructure": {
+      "Description": "Created ElastiCache Broker Infrastructure",
+      "Value": { "Ref": "CreateElastiCacheInfrastructure" }
   },
 
   "Conditions": {
