@@ -94,6 +94,7 @@
     "CreateElastiCacheInfrastructure": {
       "Description": "Created ElastiCache Broker Infrastructure",
       "Value": { "Ref": "CreateElastiCacheInfrastructure" }
+    }
   },
 
   "Conditions": {
