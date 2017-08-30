@@ -1,0 +1,163 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "VPC Peering",
+
+  "Parameters": {
+    "Peer1VpcId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer ID 1",
+      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
+      "ConstraintDescription": "Valid VPC ID or empty"
+    },
+    "Peer2VpcId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer ID 2",
+      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
+      "ConstraintDescription": "Valid VPC ID or empty"
+    },
+    "Peer3VpcId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer ID 3",
+      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
+      "ConstraintDescription": "Valid VPC ID or empty"
+    },
+    "Peer4VpcId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer ID 4",
+      "AllowedPattern": "^(vpc-[a-f0-9]{8})?$",
+      "ConstraintDescription": "Valid VPC ID or empty"
+    },
+    "Peer1VpcCidr": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer CIDR 1",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
+      "ConstraintDescription": "Valid CIDR or empty"
+    },
+    "Peer2VpcCidr": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer CIDR 2",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
+      "ConstraintDescription": "Valid CIDR or empty"
+    },
+    "Peer3VpcCidr": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer CIDR 3",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
+      "ConstraintDescription": "Valid CIDR or empty"
+    },
+    "Peer4VpcCidr": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer CIDR 4",
+      "AllowedPattern": "^(([0-9]{1,4}\\.){4}[0-9]{1,4}/[0-9]{1,2})?$",
+      "ConstraintDescription": "Valid CIDR or empty"
+    },
+    "Peer1RouteTableId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer Route Table ID 1",
+      "AllowedPattern": "^(rtb-[0-9a-f]{8})?$",
+      "ConstraintDescription": "Valid Route Table ID"
+    },
+    "Peer2RouteTableId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer Route Table ID 2",
+      "AllowedPattern": "^(rtb-[0-9a-f]{8})?$",
+      "ConstraintDescription": "Valid Route Table ID"
+    },
+    "Peer3RouteTableId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer Route Table ID 3",
+      "AllowedPattern": "^(rtb-[0-9a-f]{8})?$",
+      "ConstraintDescription": "Valid Route Table ID"
+    },
+    "Peer4RouteTableId": {
+      "Type": "String",
+      "Default": "",
+      "Description": "VPC Peer Route Table ID 4",
+      "AllowedPattern": "^(rtb-[0-9a-f]{8})?$",
+      "ConstraintDescription": "Valid Route Table ID"
+    }
+  },
+
+  "Outputs": {},
+
+  "Conditions": {
+    "Peer1Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1RouteTableId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcCidr" }, "" ] } ] }
+      ]
+    },
+    "Peer2Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2RouteTableId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcCidr" }, "" ] } ] }
+      ]
+    },
+    "Peer3Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RouteTableId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcCidr" }, "" ] } ] }
+      ]
+    },
+    "Peer4Vpc": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4RouteTableId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcCidr" }, "" ] } ] }
+      ]
+    }
+  },
+
+  "Resources": {
+    "VpcPeer1Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer1Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer1VpcCidr" },
+        "RouteTableId": { "Ref": "Peer1VpcRouteTableId" },
+        "VpcPeeringConnectionId": { "Ref": "Peer1VpcId" }
+      }
+    },
+    "VpcPeer2Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer2Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer2VpcCidr" },
+        "RouteTableId": { "Ref": "Peer2VpcRouteTableId" },
+        "VpcPeeringConnectionId": { "Ref": "Peer2VpcId" }
+      }
+    },
+    "VpcPeer3Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer3Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer3VpcCidr" },
+        "RouteTableId": { "Ref": "Peer3VpcRouteTableId" },
+        "VpcPeeringConnectionId": { "Ref": "Peer3VpcId" }
+      }
+    },
+    "VpcPeer4Route": {
+      "Type": "AWS::EC2::Route",
+      "Condition": "Peer4Vpc",
+      "Properties": {
+        "DestinationCidrBlock": { "Ref": "Peer4VpcCidr" },
+        "RouteTableId": { "Ref": "Peer4VpcRouteTableId" },
+        "VpcPeeringConnectionId": { "Ref": "Peer4VpcId" }
+      }
+    }
+  }
+}
