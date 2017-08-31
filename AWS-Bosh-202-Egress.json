@@ -147,6 +147,12 @@
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAzAndDeployElb": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
+      ]
+    },
     "MultiAzAndCreateRabbitmqNetworks": {
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
@@ -474,6 +480,17 @@
         "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "FromPort": "443",
         "ToPort": "443" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "LbSecurityGroupToRouterGroupPort8080": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAzAndDeployElb",
+      "Properties": {
+        "SecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "DestinationGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "FromPort": "8080",
+        "ToPort": "8080" ,
         "IpProtocol": "tcp"
       }
     },
