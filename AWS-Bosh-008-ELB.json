@@ -21,14 +21,14 @@
     },
     "ApplicationElbHealthCheckInternal": {
       "Type": "Number",
-      "Default": "30",
+      "Default": "40",
       "Description": "Application ELB Health Check Interval",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "ApplicationElbHealthCheckTimeout": {
       "Type": "Number",
-      "Default": "10",
+      "Default": "20",
       "Description": "Application ELB Health Check Timeout",
       "MinValue": "1",
       "MaxValue": "999"
@@ -111,28 +111,28 @@
     },
     "DirectorElbHealthyThreshold": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "4",
       "Description": "Director ELB Healthy Threshold",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "DirectorElbUnhealthyThreshold": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "4",
       "Description": "Director ELB Unhealth Threshold",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "DirectorElbHealthCheckInternal": {
       "Type": "Number",
-      "Default": "30",
+      "Default": "40",
       "Description": "Director ELB Health Check Interval",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "DirectorElbHealthCheckTimeout": {
       "Type": "Number",
-      "Default": "10",
+      "Default": "20",
       "Description": "Director ELB Health Check Timeout",
       "MinValue": "1",
       "MaxValue": "999"
@@ -208,28 +208,28 @@
     },
     "CfSshElbHealthyThreshold": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "4",
       "Description": "Cloudfoundry SSH ELB Healthy Threshold",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "CfSshElbUnhealthyThreshold": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "4",
       "Description": "Cloudfoundry SSH ELB Unhealth Threshold",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "CfSshElbHealthCheckInternal": {
       "Type": "Number",
-      "Default": "30",
+      "Default": "40",
       "Description": "Cloudfoundry SSH ELB Health Check Interval",
       "MinValue": "1",
       "MaxValue": "999"
     },
     "CfSshElbHealthCheckTimeout": {
       "Type": "Number",
-      "Default": "10",
+      "Default": "20",
       "Description": "Cloudfoundry SSH ELB Health Check Timeout",
       "MinValue": "1",
       "MaxValue": "999"
