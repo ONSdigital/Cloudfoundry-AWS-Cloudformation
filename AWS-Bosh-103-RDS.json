@@ -54,7 +54,7 @@
     "AppsRdsInstanceBackupRetentionPeriod": {
       "Type": "Number",
       "Description": "RDS Apps Instance Backup Retention Period",
-      "Default": "14",
+      "Default": "28",
       "MinValue": "5",
       "MaxValue": "3650"
     },
@@ -135,7 +135,7 @@
     "CfRdsInstanceBackupRetentionPeriod": {
       "Type": "Number",
       "Description": "RDS CF Instance Backup Retention Period",
-      "Default": "14",
+      "Default": "28",
       "MinValue": "5",
       "MaxValue": "3650"
     },
