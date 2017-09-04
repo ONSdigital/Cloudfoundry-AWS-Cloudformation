@@ -179,14 +179,19 @@
                 {
                   "Effect": "Allow",
                   "Action": [
-                    "s3:GetObject",
-                    "s3:GetObjectVersion",
-                    "s3:PutObject",
-                    "s3:PutObjectVersion",
                     "s3:ListBucket",
                     "s3:ListBucketVersions"
                   ],
-                  "Resource": { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
+                  "Resource": { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" }
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:PutObject",
+                    "s3:PutObjectVersion"
+                  ],
                   "Resource": { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
                 }
               ]
@@ -220,18 +225,31 @@
                 {
                   "Effect": "Allow",
                   "Action": [
-                    "s3:*"
+                    "s3:ListBucket",
+                    "s3:ListBucketVersions",
+                    "s3:ListBucketMultipartUploads"
                   ],
                   "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${BuildpackBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${BuildpackBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${DropletBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${DropletBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${PackageBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${ResourceBucket}" }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:PutObject",
+                    "s3:PutObjectVersion"
+                  ],
+                  "Resource": [
+                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${BuildpackBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${DropletBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${PackageBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${ResourceBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${ResourceBucket}/*" }
                   ]
                 }
@@ -265,11 +283,26 @@
               "Statement": [
                 {
                   "Effect": "Allow",
-                  "Action": "s3:*",
+                  "Action": [
+                    "s3:ListBucket",
+                    "s3:ListBucketVersions",
+                    "s3:ListBucketMultipartUploads"
+                  ],
                   "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${CompiledPackageCacheBucket}" }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:PutObject",
+                    "s3:PutObjectVersion"
+                  ],
+                  "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${CompiledPackageCacheBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${CompiledPackageCacheBucket}/*" }
                   ]
                 }
@@ -303,13 +336,28 @@
               "Statement": [
                 {
                   "Effect": "Allow",
-                  "Action": "s3:*",
+                  "Action": [
+                    "s3:ListBucket",
+                    "s3:ListBucketVersions",
+                    "s3:ListBucketMultipartUploads"
+                  ],
                   "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${CompiledPackageCacheBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${DirectorBackupBucket}" }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:PutObject",
+                    "s3:PutObjectVersion"
+                  ],
+                  "Resource": [
+                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" },
                     { "Fn::Sub": "arn:aws:s3:::${CompiledPackageCacheBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${DirectorBackupBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${DirectorBackupBucket}/*" }
                   ]
                 }
@@ -344,17 +392,25 @@
                 {
                   "Effect": "Allow",
                   "Action": [
-                    "s3:GetObject",
-                    "s3:GetObjectVersion",
                     "s3:ListBucket",
                     "s3:ListBucketVersions",
-                    "s3:ListBucketMultipartUploads",
-                    "s3:PutObject"
+                    "s3:ListBucketMultipartUploads"
                   ],
                   "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${BackupBucket}" },
+                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:GetObjectVersion",
+                    "s3:PutObject",
+                    "s3:PutObjectVersion"
+                  ],
+                  "Resource": [
                     { "Fn::Sub": "arn:aws:s3:::${BackupBucket}/*" },
-                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
                   ]
                 }
