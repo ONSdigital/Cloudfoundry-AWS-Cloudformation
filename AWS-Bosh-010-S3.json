@@ -186,6 +186,7 @@
                     "s3:ListBucket",
                     "s3:ListBucketVersions"
                   ],
+                  "Resource": { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
                   "Resource": { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
                 }
               ]
@@ -351,7 +352,9 @@
                     "s3:PutObject"
                   ],
                   "Resource": [
+                    { "Fn::Sub": "arn:aws:s3:::${BackupBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${BackupBucket}/*" },
+                    { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}" },
                     { "Fn::Sub": "arn:aws:s3:::${BlobstoreBucket}/*" }
                   ]
                 }
