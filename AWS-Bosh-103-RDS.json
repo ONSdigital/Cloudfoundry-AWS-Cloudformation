@@ -616,7 +616,7 @@
         "GroupDescription": "Apps RDS Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:AppsRdsSecurityGroup" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -628,7 +628,7 @@
         "GroupDescription": "Apps RDS Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSecurityGroup" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfRdsSecurityGroup" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
