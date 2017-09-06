@@ -193,14 +193,47 @@
 
   "Mappings": {
     "PrefixLists": {
+      "ap-northeast-1": {
+        "s3": "pl-61a54008"
+      },
+      "ap-northeast-2": {
+        "s3": "pl-78a54011"
+      },
+      "ap-south-1": {
+        "s3": "pl-78a54011"
+      },
+      "ap-southeast-1": {
+        "s3": "pl-6fa54006"
+      },
+      "ap-southeast-2": {
+        "s3": "pl-6ca54005"
+      },
+      "ca-central-1": {
+        "s3": "pl-7da54014"
+      },
+      "eu-central-1": {
+        "s3": "pl-6ea54007"
+      },
       "eu-west-1": {
         "s3": "pl-6da54004"
       },
       "eu-west-2": {
         "s3": "pl-7ca54015"
       },
-      "eu-central-1": {
-        "s3": "pl-6ea54007"
+      "sa-east-1": {
+        "s3": "pl-6aa54003"
+      },
+      "us-east-1": {
+        "s3": "pl-63a5400a"
+      },
+      "us-east-2": {
+        "s3": "pl-7ba54012"
+      },
+      "us-west-1": {
+        "s3": "pl-6ba54002"
+      },
+      "us-west-2": {
+        "s3": "pl-68a54001"
       }
     }
   },
