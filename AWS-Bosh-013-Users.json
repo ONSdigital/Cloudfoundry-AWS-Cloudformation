@@ -50,7 +50,7 @@
                     "cloudwatch:*"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:cloudwatch:${AWS::Region}:${AWS::AccountId}:*" }
+                  "Resource": { "Fn::Sub": "arn:aws:cloudwatch:*:*:*" }
                 },
                 {
                   "Action": [
@@ -82,14 +82,17 @@
                     "events:*"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:events:${AWS::Region}:${AWS::AccountId}:*" }
+                  "Resource": { "Fn::Sub": "arn:aws:events:*:*:*" }
                 },
                 {
                   "Action": [
-                    "logs:*"
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents",
+                    "logs:DescribeLogStreams"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*" }
+                  "Resource": { "Fn::Sub": "arn:aws:logs:*:*:*" }
                 },
                 {
                   "Action": [
