@@ -47,10 +47,10 @@
                 },
                 {
                   "Action": [
-                    "cloudwatch:*"
+                    "cloudwatch:PutMetricData"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:cloudwatch:*:*:*" }
+                  "Resource": "*"
                 },
                 {
                   "Action": [
