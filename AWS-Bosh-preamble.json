@@ -6,15 +6,7 @@
     "TemplatesBucketName": {
       "Description": "S3 Bucket Name",
       "Value": { "Ref": "S3Bucket" },
-      "Export": {
-        "Name": {
-          "Fn::Join": [
-            "-", [
-              { "Ref": "AWS::StackName" },
-              "TemplatesBucketName"
-            ]
-          ]
-        }
+      "Export": { "Name": { "Fn::Sub": "${AWS::StackName}-TemplatesBucketName" }
       }
     },
     "TemplatesBucketHttpUrl": {
@@ -22,24 +14,24 @@
       "Value": {
         "Fn::Join": [
           "", [
-            "https://s3-", 
-            { "Ref": "AWS::Region" },
-            ".amazonaws.com/",
-            { "Ref": "S3Bucket" }
+            "https://s3",
+            {
+              "Fn::If": [
+                "UsEast1",
+                { "Ref": "AWS::NoValue" },
+                { "Fn::Sub": "-${AWS::Region}" }
+              ]
+            },
+            { "Fn::Sub": ".amazonaws.com/${S3Bucket}" }
           ]
         ]
       },
-      "Export": {
-        "Name": {
-          "Fn::Join": [
-            "-", [
-              { "Ref": "AWS::StackName" },
-              "TemplatesBucketHttpUrl"
-            ]
-          ]
-        }
-      }
+      "Export": { "Name": { "Fn::Sub": "${AWS::StackName}-TemplatesBucketHttpUrl" } }
     }
+  },
+
+  "Conditions": {
+    "UsEast1": { "Fn::Equals": [ { "Ref": "AWS::Region" }, "us-east-1" ] }
   },
 
   "Resources": {
