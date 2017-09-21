@@ -1,1 +1,0 @@
-Rename private security group more correctly and re-factor slightly.  Currently, its use by the Director (Bosh) and the internal private subnets.
