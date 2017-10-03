@@ -56,6 +56,13 @@
       "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "ExternalRdsPort": {
+      "Type": "Number",
+      "Default": "5432",
+      "MinValue": "1024",
+      "MaxValue": "65535",
+      "Description": "External RDS Port"
+    },
     "ExternalRabbitmqAz1Cidr": {
       "Type": "String",
       "Default": "",
@@ -77,34 +84,6 @@
       "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "ExternalSyslogAz1Cidr": {
-      "Type": "String",
-      "Default": "",
-      "Description": "External Syslog CIDR AZ1",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "ExternalSyslogAz2Cidr": {
-      "Type": "String",
-      "Default": "",
-      "Description": "External Syslog CIDR AZ2",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "ExternalSyslogAz3Cidr": {
-      "Type": "String",
-      "Default": "",
-      "Description": "External Syslog CIDR AZ3",
-      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2})?$",
-      "ConstraintDescription": "Valid CIDR"
-    },
-    "ExternalRdsPort": {
-      "Type": "Number",
-      "Default": "5432",
-      "MinValue": "1024",
-      "MaxValue": "65535",
-      "Description": "External RDS Port"
-    },
     "ExternalRabbitmqPort1": {
       "Type": "Number",
       "Default": "5672",
@@ -119,12 +98,39 @@
       "MaxValue": "65535",
       "Description": "External RabbitMQ Port 2"
     },
+    "ExternalSyslogMainIp": {
+      "Type": "String",
+      "Default": "",
+      "Description": "External Syslog Main IP",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3})?$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "ExternalSyslogFallbackIp1": {
+      "Type": "String",
+      "Default": "",
+      "Description": "External Syslog Fallback IP 1",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3})?$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "ExternalSyslogFallbackIp2": {
+      "Type": "String",
+      "Default": "",
+      "Description": "External Syslog Fallback IP 2",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3})?$",
+      "ConstraintDescription": "Valid CIDR"
+    },
     "ExternalSyslogPort": {
       "Type": "Number",
       "Default": "514",
       "MinValue": "1",
       "MaxValue": "65535",
       "Description": "External Syslog Port"
+    },
+    "ExternalSyslogProtocol": {
+      "Type": "String",
+      "Default": "tcp",
+      "Description": "External Syslog Protocol",
+      "AllowedValues": [ "tcp", "udp", "repl" ]
     },
     "DeployElb": {
       "Type": "String",
@@ -137,6 +143,32 @@
       "Default": "true",
       "Description": "MultiAz",
       "AllowedValues": [ "true", "false" ]
+    }
+  },
+
+  "Outputs": {
+    "ExternalSyslogMainIp": {
+      "Description": "External Syslog Main IP",
+      "Condition": "WhitelistExternalSyslogMainIp",
+      "Value": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogMainIp" }, "32" ] ] }
+    },
+    "ExternalSyslogFallbackIp1": {
+      "Description": "External Syslog Fallback IP 1",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
+      "Value": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp1" }, "32" ] ] }
+    },
+    "ExternalSyslogFallbackIp2": {
+      "Description": "External Syslog Fallback IP 2",
+      "Condition": "WhitelistExternalSyslogFallbackIp2",
+      "Value": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp2" }, "32" ] ] }
+    },
+    "ExternalSyslogPort": {
+      "Description": "External Syslog Port",
+      "Value": { "Ref": "ExternalSyslogPort" }
+    },
+    "ExternalSyslogProtocol": {
+      "Description": "External Syslog Protocol",
+      "Value": { "Ref": "ExternalSyslogProtocol" }
     }
   },
 
@@ -186,9 +218,20 @@
       ]
     },
 
-    "WhitelistExternalSyslogAz1Cidr": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogAz1Cidr" }, "" ] } ] },
-    "WhitelistExternalSyslogAz2Cidr": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogAz2Cidr" }, "" ] } ] },
-    "WhitelistExternalSyslogAz3Cidr": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogAz3Cidr" }, "" ] } ] }
+    "WhitelistExternalSyslogMainIp": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogMainIp" }, "" ] } ] },
+    "WhitelistExternalSyslogFallbackIp1": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogMainIp" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogFallbackIp1" }, "" ] } ] }
+      ]
+    },
+    "WhitelistExternalSyslogFallbackIp2": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogMainIp" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogFallbackIp1" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogFallbackIp2" }, "" ] } ] }
+      ]
+    }
   },
 
   "Mappings": {
@@ -495,6 +538,74 @@
         "IpProtocol": "tcp"
       }
     },
+    "DirectorToExternalSyslogMainIp": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogMainIp",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogMainIp" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+    "DirectorToExternalSyslogFallbackIp1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp1" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+    "DirectorToExternalSyslogFallbackIp2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp2" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+
+    "DmzToExternalSyslogMainIp": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogMainIp",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogMainIp" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+    "DmzToExternalSyslogFallbackIp1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp1" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+    "DmzToExternalSyslogFallbackIp2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp2" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+
 
     "ApplicationLbSecurityGroupToRouterSecurityGroupPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
@@ -559,7 +670,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToPrivateInstanceAz1Port4222": {
+    "PrivateToDirectorInstanceAz1Port4222": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
@@ -1007,37 +1118,37 @@
       }
     },
 
-    "PrivateToExternalSyslogAz1Port": {
+    "PrivateToExternalSyslogMainIp": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogAz1Cidr",
+      "Condition": "WhitelistExternalSyslogMainIp",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "CidrIp": { "Ref": "ExternalSyslogAz1Cidr" },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogMainIp" }, "32" ] ] },
         "FromPort": { "Ref": "ExternalSyslogPort" },
         "ToPort": { "Ref": "ExternalSyslogPort" },
-        "IpProtocol": "tcp"
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
       }
     },
-    "PrivateToExternalSyslogAz2Port": {
+    "PrivateToExternalSyslogFallbackIp1": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogAz2Cidr",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "CidrIp": { "Ref": "ExternalSyslogAz2Cidr" },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp1" }, "32" ] ] },
         "FromPort": { "Ref": "ExternalSyslogPort" },
         "ToPort": { "Ref": "ExternalSyslogPort" },
-        "IpProtocol": "tcp"
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
       }
     },
-    "PrivateToExternalSyslogAz3Port": {
+    "PrivateToExternalSyslogFallbackIp2": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogAz3Cidr",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "CidrIp": { "Ref": "ExternalSyslogAz3Cidr" },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp2" }, "32" ] ] },
         "FromPort": { "Ref": "ExternalSyslogPort" },
         "ToPort": { "Ref": "ExternalSyslogPort" },
-        "IpProtocol": "tcp"
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
       }
     },
 
@@ -1162,6 +1273,39 @@
         "FromPort": "4222",
         "ToPort": "4222",
         "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqToExternalSyslogMainIp": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogMainIp",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogMainIp" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+    "RabbitmqToExternalSyslogFallbackIp1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp1" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+    "RabbitmqToExternalSyslogFallbackIp2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalSyslogFallbackIp1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::Join": [ "/", [ { "Ref": "ExternalSyslogFallbackIp2" }, "32" ] ] },
+        "FromPort": { "Ref": "ExternalSyslogPort" },
+        "ToPort": { "Ref": "ExternalSyslogPort" },
+        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
       }
     }
   }
