@@ -218,18 +218,18 @@
       ]
     },
 
-    "WhitelistExternalSyslogCidr1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogCidr1" }, "" ] } ] },
+    "WhitelistExternalSyslogCidr1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogCidr1" }, "" ] } ] },
     "WhitelistExternalSyslogCidr2": {
       "Fn::And": [
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogCidr1" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogCidr2" }, "" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogCidr1" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogCidr2" }, "" ] } ] }
       ]
     },
     "WhitelistExternalSyslogCidr3": {
       "Fn::And": [
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogCidr1" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogCidr2" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistExternalSyslogCidr3" }, "" ] } ] }
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogCidr1" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogCidr2" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogCidr3" }, "" ] } ] }
       ]
     }
   },
