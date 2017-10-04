@@ -15,16 +15,24 @@
 
   "Outputs": {
     "BoshAwsAccessKeyId": {
-      "Description": "ElastiCache Broker Access Key Id",
+      "Description": "Bosh Access Key Id",
       "Value": { "Ref": "BoshAwsAccessKey" }
     },
     "BoshAwsSecretAccessKey": {
-      "Description": "ElastiCache Broker Access Key",
+      "Description": "Bosh Access Key",
       "Value": { "Fn::GetAtt": [ "BoshAwsAccessKey", "SecretAccessKey" ] }
     },
     "BoshAwsUserName": {
-      "Description": "ElastiCache Broker User Name",
+      "Description": "Bosh User Name",
       "Value": { "Ref": "BoshAwsUser" }
+    },
+    "SmtpAwsAccessKeyId": {
+      "Description": "SMTP Access Key Id",
+      "Value": { "Ref": "SmtpAwsAccessKey" }
+    },
+    "SmtpAwsSecretAccessKey": {
+      "Description": "SMTP Broker Access Key",
+      "Value": { "Fn::GetAtt": [ "SmtpAwsAccessKey", "SecretAccessKey" ] }
     }
   },
 
@@ -120,10 +128,48 @@
         ]
       }
     },
+    
+    "SmtpAwsUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
+        "Policies": [
+          {
+            "PolicyName": { "Fn::Sub": "${DeploymentName}-CfSmtpPolicy" },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "ses:SendRawEmail"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                },
+                {
+                  "Action": [
+                    "iam:GetUser"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+
     "BoshAwsAccessKey": {
       "Type": "AWS::IAM::AccessKey",
       "Properties": {
         "UserName": { "Ref": "BoshAwsUser" }
+      }
+    },
+    "SmtpAwsAccessKey": {
+      "Type": "AWS::IAM::AccessKey",
+      "Properties": {
+        "UserName": { "Ref": "SmtpAwsUser" }
       }
     }
   }

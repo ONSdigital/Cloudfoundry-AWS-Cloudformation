@@ -50,6 +50,11 @@
       "Description": "Router Security Groups",
       "Value": { "Ref": "RouterSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } }
+    },
+    "SmtpSecurityGroup": {
+      "Description": "SMTP Outbound Security Groups",
+      "Value": { "Ref": "SmtpSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-SmtpSecurityGroup" } }
     }
   },
 
@@ -115,6 +120,20 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RouterSecurityGroup" } },
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "SmtpSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "SMTP Outbound",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "SecurityGroupEgress": [
+          { "CidrIp": "0.0.0.0/0", "FromPort": "25", "ToPort": "25", "IpProtocol": "tcp" }
+        },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:SmtpSecurityGroup" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
