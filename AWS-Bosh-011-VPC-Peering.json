@@ -137,6 +137,26 @@
       "Value": { "Ref": "VpcPeeringOnlyRouteTable" },
       "Condition": "PeerVpc",
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-VpcPeeringOnlyRouteTable" } }
+    },
+    "Peer1VpcConnectionId": {
+      "Description": "Peer 1 VPC Connection ID",
+      "Value": { "Ref": "VpcPeer1" },
+      "Condition": "Peer1Vpc"
+    },
+    "Peer2VpcConnectionId": {
+      "Description": "Peer 2 VPC Connection ID",
+      "Value": { "Ref": "VpcPeer2" },
+      "Condition": "Peer2Vpc"
+    },
+    "Peer3VpcConnectionId": {
+      "Description": "Peer 3 VPC Connection ID",
+      "Value": { "Ref": "VpcPeer3" },
+      "Condition": "Peer3Vpc"
+    },
+    "Peer4VpcConnectionId": {
+      "Description": "Peer 4 VPC Connection ID",
+      "Value": { "Ref": "VpcPeer4" },
+      "Condition": "Peer4Vpc"
     }
   },
 
