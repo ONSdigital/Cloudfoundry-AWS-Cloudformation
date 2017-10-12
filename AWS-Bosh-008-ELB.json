@@ -301,7 +301,7 @@
     "CfSshElbCanonicalHostedZoneId": {
       "Description": "CF SSH ELB Canonical Hosted Zone ID",
       "Condition": "DeployElb",
-      "Value": { "Fn::GetAtt": [ "CfSshElb","CanonicalHostedZoneID" ] },
+      "Value": { "Fn::GetAtt": [ "CfSshElb","CanonicalHostedZoneNameID" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElbCanonicalHostedZoneId" } }
     },
     "CfSshElb": {
@@ -337,7 +337,7 @@
     "DirectorElbCanonicalHostedZoneId": {
       "Description": "CF SSH ELB Canonical Hosted Zone ID",
       "Condition": "DeployElb",
-      "Value": { "Fn::GetAtt": [ "DirectorElb","CanonicalHostedZoneID" ] },
+      "Value": { "Fn::GetAtt": [ "DirectorElb","CanonicalHostedZoneNameID" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElbCanonicalHostedZoneId" } }
     },
     "DirectorElbDnsName": {
