@@ -262,6 +262,12 @@
       "Value": { "Ref": "ApplicationElb" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElb" } }
     },
+    "ApplicationElbCanonicalHostedZoneId": {
+      "Description": "Application ELB Canonical Hosted Zone ID",
+      "Condition": "DeployElb",
+      "Value": { "Fn::GetAtt": [ "ApplicationElb","CanonicalHostedZoneID" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbCanonicalHostedZoneId" } }
+    },
     "ApplicationElbDnsName": {
       "Description": "ELB DNS Name",
       "Condition": "DeployElb",
@@ -269,28 +275,34 @@
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbDnsName" } }
     },
     "ApplicationElbTargetGroup80": {
-      "Description": "ELB DNS Name",
+      "Description": "Application ELB Target Group Port 80",
       "Condition": "DeployElb",
       "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroup80", "TargetGroupFullName" ] } ] } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80" } }
     },
     "ApplicationElbTargetGroup443": {
-      "Description": "ELB DNS Name",
+      "Description": "Application ELB Target Group Port 443",
       "Condition": "ApplicationSslElb",
       "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroup443", "TargetGroupFullName" ] } ] } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443" } }
     },
     "ApplicationElbTargetGroup80Arn": {
-      "Description": "ELB DNS Name",
+      "Description": "Application ELB Target Group Port 80 ARN",
       "Condition": "DeployElb",
       "Value": { "Ref": "ApplicationElbTargetGroup80" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80Arn" } }
     },
     "ApplicationElbTargetGroup443Arn": {
-      "Description": "ELB DNS Name",
+      "Description": "Application ELB Target Group Port 443 ARN",
       "Condition": "DeployElb",
       "Value": { "Ref": "ApplicationElbTargetGroup443" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443Arn" } }
+    },
+    "CfSshElbCanonicalHostedZoneId": {
+      "Description": "CF SSH ELB Canonical Hosted Zone ID",
+      "Condition": "DeployElb",
+      "Value": { "Fn::GetAtt": [ "CfSshElb","CanonicalHostedZoneID" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElbCanonicalHostedZoneId" } }
     },
     "CfSshElb": {
       "Description": "Cloudfoundry SSH External ELB",
@@ -321,6 +333,12 @@
       "Condition": "DeployElb",
       "Value": { "Ref": "DirectorElb" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElb" } }
+    },
+    "DirectorElbCanonicalHostedZoneId": {
+      "Description": "CF SSH ELB Canonical Hosted Zone ID",
+      "Condition": "DeployElb",
+      "Value": { "Fn::GetAtt": [ "DirectorElb","CanonicalHostedZoneID" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElbCanonicalHostedZoneId" } }
     },
     "DirectorElbDnsName": {
       "Description": "Director ELB DNS Name",
