@@ -380,11 +380,7 @@
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80Arn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443Arn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElb" } },
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbTargetGroup2222Arn" } },
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElb" } },
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbTargetGroup22Arn" } },
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbTargetGroup6868Arn" } },
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbTargetGroup25555Arn" } }
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElb" } }
               ]
             },
             {
