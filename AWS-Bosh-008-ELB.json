@@ -11,6 +11,14 @@
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
+    "HaCfName": {
+      "Type": "String",
+      "Description": "HA CF Name",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
 
     "ApplicationElbTimeout": {
       "Type": "Number",
@@ -364,6 +372,22 @@
 	{ "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
       ]
     },
+    "GenerateApplicationSslCertificateAndHaCfName": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
+	{ "Fn::Not": [ { "Fn::Equals": [ { "Ref": "HaCfName" }, "" ] } ] },
+	{ "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
+      ]
+    },
+    "GenerateApplicationSslCertificateAndNoHaCfName": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
+	{ "Fn::Equals": [ { "Ref": "HaCfName" }, "" ] },
+        { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
+	{ "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
+      ]
+    },
 
     "ApplicationSslElb": {
       "Fn::And": [
@@ -389,9 +413,35 @@
   },
 
   "Resources": {
-    "GeneratedApplicationSslCertificate": {
+    "GeneratedApplicationSslCertificateAndHaCfName": {
       "Type": "AWS::CertificateManager::Certificate",
-      "Condition": "GenerateApplicationSslCertificate",
+      "Condition": "GenerateApplicationSslCertificateAndHaCfName",
+      "Properties": {
+        "DomainName": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
+        "SubjectAlternativeNames": [ { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] } ],
+        "DomainValidationOptions": [
+          {
+            "DomainName": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
+            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
+          },
+          {
+            "DomainName": { "Fn::Join": [ ".", [ "*", { "Ref": "HaCfName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
+            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
+          },
+          {
+            "DomainName": { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
+            "ValidationDomain": { "Fn::If": [ "UseHostedZone", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } }, { "Ref": "SslValidationDomain" } ] }
+          }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:GeneratedApplicationSslCertificate" } },
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "GeneratedApplicationSslCertificateAndNoHaCfName": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Condition": "GenerateApplicationSslCertificateAndNoHaCfName",
       "Properties": {
         "DomainName": { "Fn::Join": [ ".", [ "*.apps", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
         "SubjectAlternativeNames": [ { "Fn::Join": [ ".", [ "*.system", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] } ],
@@ -572,7 +622,13 @@
             "CertificateArn": {
               "Fn::If": [
                 "GenerateApplicationSslCertificate",
-                { "Ref": "GeneratedApplicationSslCertificate" },
+                {
+                  "Fn::If": [
+                    "GenerateApplicationSslCertificateAndHaCfName",
+                    { "Ref": "GeneratedApplicationSslCertificateAndHaCfName" },
+                    { "Ref": "GeneratedApplicationSslCertificateAndNoHaCfName" }
+                  ]
+                },
                 { "Ref": "ExistingApplicationSslCertificate" }
               ]
             }
