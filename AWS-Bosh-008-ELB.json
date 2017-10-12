@@ -262,12 +262,6 @@
       "Value": { "Ref": "ApplicationElb" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElb" } }
     },
-    "ApplicationElbArn": {
-      "Description": "Application ELB ARN",
-      "Condition": "DeployElb",
-      "Value": { "Fn::GetAtt": [ "ApplicationElb","ApplicationElbArn" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbArn" } }
-    },
     "ApplicationElbCanonicalHostedZoneId": {
       "Description": "Application ELB Canonical Hosted Zone ID",
       "Condition": "DeployElb",

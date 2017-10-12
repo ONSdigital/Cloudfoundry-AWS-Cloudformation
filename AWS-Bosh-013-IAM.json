@@ -376,7 +376,6 @@
               ],
               "Effect": "Allow",
               "Resource": [
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbArn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80Arn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443Arn" } },
                 {
