@@ -379,7 +379,7 @@
                   "Fn::Join": [
                     "", [
                       { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
-                      { "Fn::Sub": "${DeploymentName}-CfSshElb" }
+                      { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElb" } }
                     ]
                   ]
                 },
@@ -387,7 +387,7 @@
                   "Fn::Join": [
                     "", [
                       { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
-                      { "Fn::Sub": "${DeploymentName}-DirectorElb" }
+                      { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElb" } }
                     ]
                   ]
                 }
@@ -406,7 +406,7 @@
                   "Fn::Join": [
                     "", [
                       { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
-                      { "Fn::Sub": "${DeploymentName}-CfSshElb" }
+                      { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElb" } }
                     ]
                   ]
                 },
@@ -414,7 +414,7 @@
                   "Fn::Join": [
                     "", [
                       { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
-                      { "Fn::Sub": "${DeploymentName}-DirectorElb" }
+                      { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElb" } }
                     ]
                   ]
                 }
