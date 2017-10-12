@@ -376,11 +376,27 @@
               ],
               "Effect": "Allow",
               "Resource": [
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElb" } },
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbArn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80Arn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443Arn" } },
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElb" } },
-                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElb" } }
+                {
+                  "Fn::Join": [
+                    "", [
+                      { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/apps/" },
+                      { "Fn::Sub": "${DeploymentName}-CfSshElb" },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "", [
+                      { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/apps/" },
+                      { "Fn::Sub": "${DeploymentName}-DirectorElb" },
+                      "/*"
+                    ]
+                  ]
+                }
               ]
             },
             {
