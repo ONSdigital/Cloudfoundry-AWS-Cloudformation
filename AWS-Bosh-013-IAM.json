@@ -370,6 +370,31 @@
             },
             {
               "Action": [
+                "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+                "elasticloadbalancing:RegisterInstancesWithLoadBalancer"
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "", [
+                      { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
+                      { "Fn::Sub": "${DeploymentName}-CfSshElb" }
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "", [
+                      { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
+                      { "Fn::Sub": "${DeploymentName}-DirectorElb" }
+                    ]
+                  ]
+                }
+              ]
+            },
+            {
+              "Action": [
                 "elasticloadbalancing:AddTags",
                 "elasticloadbalancing:ModifyLoadBalancerAttributes",
                 "elasticloadbalancing:RemoveTags"
@@ -382,8 +407,7 @@
                   "Fn::Join": [
                     "", [
                       { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/apps/" },
-                      { "Fn::Sub": "${DeploymentName}-CfSshElb" },
-                      "/*"
+                      { "Fn::Sub": "${DeploymentName}-CfSshElb" }
                     ]
                   ]
                 },
@@ -391,8 +415,7 @@
                   "Fn::Join": [
                     "", [
                       { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/apps/" },
-                      { "Fn::Sub": "${DeploymentName}-DirectorElb" },
-                      "/*"
+                      { "Fn::Sub": "${DeploymentName}-DirectorElb" }
                     ]
                   ]
                 }
