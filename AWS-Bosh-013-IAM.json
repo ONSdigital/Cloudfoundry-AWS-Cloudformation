@@ -396,7 +396,6 @@
             {
               "Action": [
                 "elasticloadbalancing:AddTags",
-                "elasticloadbalancing:ModifyLoadBalancerAttributes",
                 "elasticloadbalancing:RemoveTags"
               ],
               "Effect": "Allow",
@@ -406,7 +405,7 @@
                 {
                   "Fn::Join": [
                     "", [
-                      { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/apps/" },
+                      { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
                       { "Fn::Sub": "${DeploymentName}-CfSshElb" }
                     ]
                   ]
@@ -414,7 +413,7 @@
                 {
                   "Fn::Join": [
                     "", [
-                      { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/apps/" },
+                      { "Fn::Sub": "arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/" },
                       { "Fn::Sub": "${DeploymentName}-DirectorElb" }
                     ]
                   ]
