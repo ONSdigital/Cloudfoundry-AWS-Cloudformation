@@ -14,6 +14,7 @@
     "HaCfName": {
       "Type": "String",
       "Description": "HA CF Name",
+      "Default": "",
       "MinLength": "1",
       "MaxLength": "16",
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
