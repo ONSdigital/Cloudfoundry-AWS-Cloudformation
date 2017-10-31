@@ -220,37 +220,6 @@
       "Value": { "Ref": "RdsAz2Cidr" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } }
     },
-
-    "RequiredNonCfRdsPostgresInstances": {
-      "Description": "Non-RDS PostgreSQL CF Instances",
-      "Value": {
-        "Fn::If": [
-          "DeployCfRdsInstance",
-          "0",
-          "1"
-        ]
-      }
-    },
-    "ConfigureAppsRdsPostgresInstance": {
-      "Description": "Configuration of RDS Apps PostgreSQL Instance (controls Bosh manifest errand to configure Apps PostgreSQL instance",
-      "Value": {
-        "Fn::If": [
-          "DeployAppsRdsInstance",
-          "1",
-          "0"
-        ]
-      }
-    },
-    "ConfigureCfRdsPostgresInstance": {
-      "Description": "Configuration of RDS CF PostgreSQL Instance (controls Bosh manifest errand to configure CF PostgreSQL instance)",
-      "Value": {
-        "Fn::If": [
-          "DeployCfRdsInstance",
-          "1",
-          "0"
-        ]
-      }
-    },
     "DeployAppsRdsInstance": {
       "Description": "Deploy Apps RDS Database Instance",
       "Value": { "Ref": "DeployAppsRdsInstance" }
