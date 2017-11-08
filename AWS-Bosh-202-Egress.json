@@ -1396,7 +1396,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalNtpCidr1",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitMqSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "CidrIp": { "Ref": "ExternalNtpCidr1" },
         "FromPort": "123",
         "ToPort": "123",
@@ -1407,7 +1407,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalNtpCidr2",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitMqSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "CidrIp": { "Ref": "ExternalNtpCidr2" },
         "FromPort": "123",
         "ToPort": "123",
@@ -1418,7 +1418,7 @@
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalNtpCidr3",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitMqSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "CidrIp": { "Ref": "ExternalNtpCidr3" },
         "FromPort": "123",
         "ToPort": "123",
