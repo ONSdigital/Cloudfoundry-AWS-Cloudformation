@@ -15,42 +15,42 @@
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 1",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "FullAccessCidr2": {
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 2",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "FullAccessCidr3": {
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 3",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "FullAccessCidr4": {
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 4",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "FullAccessCidr5": {
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 5",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "FullAccessCidr6": {
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 6",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
 
@@ -58,42 +58,42 @@
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 1",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "HttpAccessCidr2": {
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 2",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "HttpAccessCidr3": {
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 3",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "HttpAccessCidr4": {
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 4",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "HttpAccessCidr5": {
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 5",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "HttpAccessCidr6": {
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 6",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "DeployElb": {
