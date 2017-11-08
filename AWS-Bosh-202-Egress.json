@@ -105,14 +105,14 @@
       "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-3][0-9])?$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "ExternalNtpCidr1": {
+    "ExternalNtpCidr2": {
       "Type": "String",
       "Default": "",
       "Description": "External NTP CIDR 2",
       "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-3][0-9])?$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "ExternalNtpCidr1": {
+    "ExternalNtpCidr3": {
       "Type": "String",
       "Default": "",
       "Description": "External NTP CIDR 3",
