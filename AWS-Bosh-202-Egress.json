@@ -98,6 +98,27 @@
       "MaxValue": "65535",
       "Description": "External RabbitMQ Port 2"
     },
+    "ExternalNtpCidr1": {
+      "Type": "String",
+      "Default": "0.0.0.0/0",
+      "Description": "External NTP CIDR 1",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-3][0-9])?$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "ExternalNtpCidr1": {
+      "Type": "String",
+      "Default": "",
+      "Description": "External NTP CIDR 2",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-3][0-9])?$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "ExternalNtpCidr1": {
+      "Type": "String",
+      "Default": "",
+      "Description": "External NTP CIDR 3",
+      "AllowedPattern": "^(([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-3][0-9])?$",
+      "ConstraintDescription": "Valid CIDR"
+    },
     "ExternalSyslogCidr1": {
       "Type": "String",
       "Default": "",
@@ -218,6 +239,21 @@
       ]
     },
 
+    "WhitelistExternalNtpCidr1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalNtpCidr1" }, "" ] } ] },
+    "WhitelistExternalNtpCidr2": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalNtpCidr1" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalNtpCidr2" }, "" ] } ] }
+      ]
+    },
+    "WhitelistExternalNtpCidr3": {
+      "Fn::And": [
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalNtpCidr1" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalNtpCidr2" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalNtpCidr3" }, "" ] } ] }
+      ]
+    },
+
     "WhitelistExternalSyslogCidr1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalSyslogCidr1" }, "" ] } ] },
     "WhitelistExternalSyslogCidr2": {
       "Fn::And": [
@@ -282,6 +318,27 @@
   },
 
   "Resources": {
+    "ApplicationLbSecurityGroupToRouterSecurityGroupPort80": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "FromPort": "80",
+        "ToPort": "80" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "ApplicationLbSecurityGroupToRouterSecurityGroupPort443": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "FromPort": "443",
+        "ToPort": "443" ,
+        "IpProtocol": "tcp"
+      }
+    },
+
     "DirectorToS3PrefixListPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
@@ -317,46 +374,6 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "CidrIp": "0.0.0.0/0",
-        "FromPort": "443",
-        "ToPort": "443",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateToS3PrefixListPort80": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
-        "FromPort": "80",
-        "ToPort": "80",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateToS3PrefixListPort443": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
-        "FromPort": "443",
-        "ToPort": "443",
-        "IpProtocol": "tcp"
-      }
-    },
-    "RabbitmqToS3PrefixListPort80": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
-        "FromPort": "80",
-        "ToPort": "80",
-        "IpProtocol": "tcp"
-      }
-    },
-    "RabbitmqToS3PrefixListPort443": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
@@ -538,7 +555,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorToExternalSyslogCidr1": {
+    "DirectorInstanceToExternalSyslogCidr1": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalSyslogCidr1",
       "Properties": {
@@ -549,7 +566,7 @@
         "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
       }
     },
-    "DirectorToExternalSyslogCidr2": {
+    "DirectorInstanceToExternalSyslogCidr2": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalSyslogCidr2",
       "Properties": {
@@ -560,7 +577,7 @@
         "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
       }
     },
-    "DirectorToExternalSyslogCidr3": {
+    "DirectorInstanceToExternalSyslogCidr3": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalSyslogCidr3",
       "Properties": {
@@ -569,6 +586,39 @@
         "FromPort": { "Ref": "ExternalSyslogPort" },
         "ToPort": { "Ref": "ExternalSyslogPort" },
         "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+    "DirectorInstanceToExternalNtpCidr1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr1" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
+    "DirectorInstanceToExternalNtpCidr2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr2",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr2" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
+    "DirectorInstanceToExternalNtpCidr3": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr3",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr3" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
       }
     },
 
@@ -605,28 +655,41 @@
         "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
       }
     },
-
-
-    "ApplicationLbSecurityGroupToRouterSecurityGroupPort80": {
+    "DmzToExternalNtpCidr1": {
       "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr1",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
-        "FromPort": "80",
-        "ToPort": "80" ,
-        "IpProtocol": "tcp"
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr1" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
       }
     },
-    "ApplicationLbSecurityGroupToRouterSecurityGroupPort443": {
+    "DmzToExternalNtpCidr2": {
       "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr2",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
-        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
-        "FromPort": "443",
-        "ToPort": "443" ,
-        "IpProtocol": "tcp"
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr2" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
       }
     },
+    "DmzToExternalNtpCidr3": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr3",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr3" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
+
+
     "LbSecurityGroupToRouterGroupPort8080": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "MultiAzAndDeployElb",
@@ -714,28 +777,6 @@
       }
     },
 
-    "RabbitmqToDirectorInstanceAz1Port25777": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
-        "FromPort": "25777",
-        "ToPort": "25777" ,
-        "IpProtocol": "tcp"
-      }
-    },
-    "RabbitmqToDirectorInstanceAz2Port25777": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzAndCreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
-        "FromPort": "25777",
-        "ToPort": "25777" ,
-        "IpProtocol": "tcp"
-      }
-    },
 
     "PrivateToElastiCacheAz1Port6379": {
       "Type": "AWS::EC2::SecurityGroupEgress",
@@ -836,6 +877,26 @@
         "FromPort": "8300",
         "ToPort": "8302",
         "IpProtocol": "udp"
+      }
+    },
+    "PrivateToS3PrefixListPort80": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
+        "FromPort": "80",
+        "ToPort": "80",
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToS3PrefixListPort443": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
       }
     },
 
@@ -993,29 +1054,41 @@
         "IpProtocol": "tcp"
       }
     },
+    "PrivateToExternalNtpCidr1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr1" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
+    "PrivateToExternalNtpCidr2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr2",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr2" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
+    "PrivateToExternalNtpCidr3": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr3",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr3" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
 
-    "RabbitmqToDirectorInstanceAz1Port4222": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks", 
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
-        "FromPort": "4222",
-        "ToPort": "4222" ,
-        "IpProtocol": "tcp"
-      }
-    },
-    "RabbitmqToDirectorInstanceAz2Port4222": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzAndCreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
-        "FromPort": "4222",
-        "ToPort": "4222" ,
-        "IpProtocol": "tcp"
-      }
-    },
+
 
     "PrivateToExternalRdsAz1Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
@@ -1174,6 +1247,50 @@
         "IpProtocol": "-1"
       }
     },
+    "RabbitmqToDirectorInstanceAz1Port4222": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "CreateRabbitmqNetworks", 
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "FromPort": "4222",
+        "ToPort": "4222" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqToDirectorInstanceAz2Port4222": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "FromPort": "4222",
+        "ToPort": "4222" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqToDirectorInstanceAz1Port25777": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "FromPort": "25777",
+        "ToPort": "25777" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqToDirectorInstanceAz2Port25777": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "FromPort": "25777",
+        "ToPort": "25777" ,
+        "IpProtocol": "tcp"
+      }
+    },
 
     "RabbitmqToPrivateAz1TcpPort8300": {
       "Type": "AWS::EC2::SecurityGroupEgress",
@@ -1275,6 +1392,40 @@
         "IpProtocol": "tcp"
       }
     },
+    "RabbitMqToExternalNtpCidr1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr1",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitMqSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr1" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
+    "RabbitMqToExternalNtpCidr2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr2",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitMqSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr2" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
+    "RabbitMqToExternalNtpCidr3": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "WhitelistExternalNtpCidr3",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitMqSecurityGroup" } },
+        "CidrIp": { "Ref": "ExternalNtpCidr3" },
+        "FromPort": "123",
+        "ToPort": "123",
+        "IpProtocol": "udp"
+      }
+    },
+
     "RabbitmqToExternalSyslogCidr1": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "WhitelistExternalSyslogCidr1",
@@ -1306,6 +1457,27 @@
         "FromPort": { "Ref": "ExternalSyslogPort" },
         "ToPort": { "Ref": "ExternalSyslogPort" },
         "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
+      }
+    },
+
+    "RabbitmqToS3PrefixListPort80": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
+        "FromPort": "80",
+        "ToPort": "80",
+        "IpProtocol": "tcp"
+      }
+    },
+    "RabbitmqToS3PrefixListPort443": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "DestinationPrefixListId": { "Fn::FindInMap": [ "PrefixLists", { "Ref": "AWS::Region" }, "s3" ] },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
       }
     }
   }
