@@ -39,21 +39,21 @@
       "Type": "String",
       "Default": "",
       "Description": "External RDS Database AZ1 CIDR",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRdsAz2Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External RDS Database AZ2 CIDR",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRdsAz3Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External RDS Database AZ3 CIDR",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRdsPort": {
@@ -67,21 +67,21 @@
       "Type": "String",
       "Default": "",
       "Description": "External RabbitMQ CIDR AZ1",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRabbitmqAz2Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External RabbitMQ CIDR AZ2",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRabbitmqAz3Cidr": {
       "Type": "String",
       "Default": "",
       "Description": "External RabbitMQ CIDR AZ3",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalRabbitmqPort1": {
@@ -102,35 +102,35 @@
       "Type": "String",
       "Default": "0.0.0.0/0",
       "Description": "External NTP CIDR 1",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalNtpCidr2": {
       "Type": "String",
       "Default": "",
       "Description": "External NTP CIDR 2",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalNtpCidr3": {
       "Type": "String",
       "Default": "",
       "Description": "External NTP CIDR 3",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalSyslogCidr1": {
       "Type": "String",
       "Default": "",
       "Description": "External Syslog Main CIDR",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalSyslogCidr2": {
       "Type": "String",
       "Default": "",
       "Description": "External Syslog Fallback CIDR 1",
-      "AllowedPattern": "^((([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])\\.){3}([01][0-9]?[0-9]?|2[0-4][0-9]|25[0-5])/([0-2]?[0-9]|3[0-2]))?$",
+      "AllowedPattern": "^((([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))\\.){3}([01][0-9]?[0-9]?|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
     "ExternalSyslogCidr3": {
