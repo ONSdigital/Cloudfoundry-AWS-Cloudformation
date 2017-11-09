@@ -233,32 +233,22 @@
       "Condition": "CreateRdsInfrastructure",
       "Value": { "Ref": "RdsSubnetGroup" }
     },
-    "RdsAz1Subnet": {
-      "Description": "RDS AZ1 Subnet",
-      "Condition": "",
-      "Value": { "Ref": "RdsAz1Subnet" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz1Subnet" } }
-    },
-    "RdsAz2Subnet": {
-      "Description": "RDS AZ2 Subnet",
-      "Condition": "",
-      "Value": { "Ref": "RdsAz2Subnet" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-RdsAz2Subnet" } }
-    },
+
     "AppsRdsInstanceAddress": {
       "Description": "Applications RDS Access Address",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Endpoint.Address" ] }
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Apps${RdsInstanceAddress}" } },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstanceAddress" } }
     },
     "AppsRdsInstanceDns": {
       "Description": "RDS Apps Instance DNS Name",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Apps${RdsInstanceDns}" } }
     },
     "AppsRdsInstancePort": {
       "Description": "Applications RDS Port",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Endpoint.Port" ] },
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Apps${RdsInstancePort}" } },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } }
     },
     "AppsRdsInstanceUsername": {
@@ -274,23 +264,56 @@
     "AppsRdsSecurityGroup": {
       "Description": "Applicationis RDS Password",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Ref": "AppsRdsSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } }
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Apps${RdsSecurityGroup}" } }
     },
+
+    "BoshRdsInstanceAddress": {
+      "Description": "Applications RDS Access Address",
+      "Condition": "DeployBoshRdsInstance",
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Bosh${RdsInstanceAddress}" } },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstanceAddress" } }
+    },
+    "BoshRdsInstanceDns": {
+      "Description": "RDS Bosh Instance DNS Name",
+      "Condition": "DeployBoshRdsInstance",
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Bosh${RdsInstanceDns}" } }
+    },
+    "BoshRdsInstancePort": {
+      "Description": "Applications RDS Port",
+      "Condition": "DeployBoshRdsInstance",
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Bosh${RdsInstancePort}" } },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } }
+    },
+    "BoshRdsInstanceUsername": {
+      "Description": "Applications RDS Username",
+      "Condition": "DeployBoshRdsInstance",
+      "Value": { "Ref": "BoshRdsInstanceUsername" }
+    },
+    "BoshRdsInstancePassword": {
+      "Description": "Applications RDS Password",
+      "Condition": "DeployBoshRdsInstance",
+      "Value": { "Ref": "BoshRdsInstancePassword" }
+    },
+    "BoshRdsSecurityGroup": {
+      "Description": "Applicationis RDS Password",
+      "Condition": "DeployBoshRdsInstance",
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Bosh${RdsSecurityGroup}" } }
+    },
+
     "CfRdsInstanceAddress": {
       "Description": "Cloudfoundry RDS Access Address",
       "Condition": "DeployCfRdsInstance",
-      "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Endpoint.Address" ] }
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Apps${RdsInstanceAddress}" } }
     },
     "CfRdsInstanceDns": {
       "Description": "RDS CF Instance DNS Name",
       "Condition": "DeployCfRdsInstance",
-      "Value": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Apps${RdsInstanceDns}" } }
     },
     "CfRdsInstancePort": {
       "Description": "Cloudfoundry RDS Port",
       "Condition": "DeployCfRdsInstance",
-      "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Endpoint.Port" ] },
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Apps${RdsInstancePort}" } },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } }
     },
     "CfRdsInstanceUsername": {
@@ -306,9 +329,10 @@
     "CfRdsSecurityGroup": {
       "Description": "Cloudfoundry RDS Security Group",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Ref": "CfRdsSecurityGroup" },
+      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Cf${RdsSecurityGroup}" } },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } }
     },
+
     "RdsBrokerAccessKeyId": {
       "Description": "RDS Broker Access Key Id",
       "Condition": "DeployAppsRdsInstance",
@@ -335,36 +359,99 @@
     },
     "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-    "MultiAzAndDeployAppsRdsInstance": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] }
-      ]
-    },
-    "MultiAzAndDeployCfRdsInstance": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] }
-      ]
-    },
 
-    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
-    "SingleAzAndDeployAppsRdsInstance": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] }
-      ]
-    },
-    "SingleAzAndDeployCfRdsInstance": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] }
-      ]
-    }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] }
   },
 
   "Resources": {
+    "AppsRdsInstance": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "DeployAppsRdsInstance",
+      "Properties": {
+        "Parameters": {
+          "DeploymentName": { "Ref": "DeploymentName" },
+          "RdsInstanceName": "Apps",
+          "RdsInstancePreferredBackupWindow": { "Ref": "AppsRdsInstancePreferredBackupWindow" },
+          "RdsInstancePreferredMaintenanceWindow": { "Ref": "AppsRdsInstancePreferredMaintenanceWindow" },
+          "RdsInstanceBackupRetentionPeriod": { "Ref": "AppsRdsInstanceBackupRetentionPeriod" },
+          "RdsInstanceEngine": { "Ref": "AppsRdsInstanceEngine" },
+          "RdsInstanceSnapshotIdentifier": { "Ref": "AppsRdsInstanceSnapshotIdentifier" },
+          "RdsInstanceSize": { "Ref": "AppsRdsInstanceSize" },
+          "RdsInstanceStorageSize": { "Ref": "AppsRdsInstanceStorageSize" },
+          "RdsInstanceUsername": { "Ref": "AppsRdsInstanceUsername" },
+          "RdsInstancePassword": { "Ref": "AppsRdsInstancePassword" },
+          "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
+          "MultiAz": { "Ref": "MultiAz" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } }
+            ]
+          ]
+        }
+      }
+    },
+
+
+    "BoshRdsInstance": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "DeployBoshRdsInstance",
+      "Properties": {
+        "Parameters": {
+          "DeploymentName": { "Ref": "DeploymentName" },
+          "RdsInstanceName": "Bosh",
+          "RdsInstancePreferredBackupWindow": { "Ref": "BoshRdsInstancePreferredBackupWindow" },
+          "RdsInstancePreferredMaintenanceWindow": { "Ref": "BoshRdsInstancePreferredMaintenanceWindow" },
+          "RdsInstanceBackupRetentionPeriod": { "Ref": "BoshRdsInstanceBackupRetentionPeriod" },
+          "RdsInstanceEngine": { "Ref": "BoshRdsInstanceEngine" },
+          "RdsInstanceSnapshotIdentifier": { "Ref": "BoshRdsInstanceSnapshotIdentifier" },
+          "RdsInstanceSize": { "Ref": "BoshRdsInstanceSize" },
+          "RdsInstanceStorageSize": { "Ref": "BoshRdsInstanceStorageSize" },
+          "RdsInstanceUsername": { "Ref": "BoshRdsInstanceUsername" },
+          "RdsInstancePassword": { "Ref": "BoshRdsInstancePassword" },
+          "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
+          "MultiAz": { "Ref": "MultiAz" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } }
+            ]
+          ]
+        }
+      }
+    },
+    "CfRdsInstance": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Condition": "DeployCfRdsInstance",
+      "Properties": {
+        "Parameters": {
+          "DeploymentName": { "Ref": "DeploymentName" },
+          "RdsInstanceName": "Cf",
+          "RdsInstancePreferredBackupWindow": { "Ref": "CfRdsInstancePreferredBackupWindow" },
+          "RdsInstancePreferredMaintenanceWindow": { "Ref": "CfRdsInstancePreferredMaintenanceWindow" },
+          "RdsInstanceBackupRetentionPeriod": { "Ref": "CfRdsInstanceBackupRetentionPeriod" },
+          "RdsInstanceEngine": { "Ref": "CfRdsInstanceEngine" },
+          "RdsInstanceSnapshotIdentifier": { "Ref": "CfRdsInstanceSnapshotIdentifier" },
+          "RdsInstanceSize": { "Ref": "CfRdsInstanceSize" },
+          "RdsInstanceStorageSize": { "Ref": "CfRdsInstanceStorageSize" },
+          "RdsInstanceUsername": { "Ref": "CfRdsInstanceUsername" },
+          "RdsInstancePassword": { "Ref": "CfRdsInstancePassword" },
+          "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
+          "MultiAz": { "Ref": "MultiAz" }
+        },
+        "TemplateURL": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } }
+            ]
+          ]
+        }
+      }
+    },
+
     "RdsAz1Subnet": {
       "Type": "AWS::EC2::Subnet",
       "Condition": "CreateRdsInfrastructure",
@@ -405,103 +492,6 @@
         ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:RdsSubnetGroup" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-
-    "AppsRdsInstance": {
-      "Type": "AWS::RDS::DBInstance",
-      "Condition": "SingleAzAndDeployAppsRdsInstance",
-      "Properties": {
-        "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
-        "DBInstanceClass": { "Ref": "AppsRdsInstanceSize" },
-        "AllocatedStorage": { "Ref": "AppsRdsInstanceStorageSize" },
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
-        "BackupRetentionPeriod": { "Ref": "AppsRdsInstanceBackupRetentionPeriod" },
-        "CopyTagsToSnapshot": "true",
-        "Engine": { "Ref": "AppsRdsInstanceEngine" },
-        "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
-        "DBSnapshotIdentifier": { "Ref": "AppsRdsInstanceSnapshotIdentifier" },
-        "MasterUsername": { "Ref": "AppsRdsInstanceUsername" },
-        "MasterUserPassword": { "Ref": "AppsRdsInstancePassword" },
-        "PreferredBackupWindow": { "Ref": "AppsRdsInstancePreferredBackupWindow" },
-        "PreferredMaintenanceWindow": { "Ref": "AppsRdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "AppsRdsSecurityGroup" } ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:AppsRdsInstance" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "AppsRdsInstance": {
-      "Type": "AWS::RDS::DBInstance",
-      "Condition": "MultiAzAndDeployAppsRdsInstance",
-      "Properties": {
-        "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-ApplicationDB" },
-        "DBInstanceClass": { "Ref": "AppsRdsInstanceSize" },
-        "AllocatedStorage": { "Ref": "AppsRdsInstanceStorageSize" },
-        "BackupRetentionPeriod": { "Ref": "AppsRdsInstanceBackupRetentionPeriod" },
-        "CopyTagsToSnapshot": "true",
-        "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
-        "DBSnapshotIdentifier": { "Ref": "AppsRdsInstanceSnapshotIdentifier" },
-        "Engine": { "Ref": "AppsRdsInstanceEngine" },
-        "MasterUsername": { "Ref": "AppsRdsInstanceUsername" },
-        "MasterUserPassword": { "Ref": "AppsRdsInstancePassword" },
-        "MultiAZ": "true",
-        "PreferredBackupWindow": { "Ref": "AppsRdsInstancePreferredBackupWindow" },
-        "PreferredMaintenanceWindow": { "Ref": "AppsRdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "AppsRdsSecurityGroup" } ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:AppsRdsInstance" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "CfRdsInstance": {
-      "Type": "AWS::RDS::DBInstance",
-      "Condition": "SingleAzAndDeployCfRdsInstance",
-      "Properties": {
-        "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-CloudfoundryDB" },
-        "DBInstanceClass": { "Ref": "CfRdsInstanceSize" },
-        "AllocatedStorage": { "Ref": "CfRdsInstanceStorageSize" },
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
-        "BackupRetentionPeriod": { "Ref": "CfRdsInstanceBackupRetentionPeriod" },
-        "CopyTagsToSnapshot": "true",
-        "Engine": { "Ref": "CfRdsInstanceEngine" },
-        "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
-        "DBSnapshotIdentifier": { "Ref": "CfRdsInstanceSnapshotIdentifier" },
-        "MasterUsername": { "Ref": "CfRdsInstanceUsername" },
-        "MasterUserPassword": { "Ref": "CfRdsInstancePassword" },
-        "PreferredBackupWindow": { "Ref": "CfRdsPreferredBackupWindow" },
-        "PreferredMaintenanceWindow": { "Ref": "CfRdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "CfRdsSecurityGroup" } ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfRdsInstance" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "CfRdsInstance": {
-      "Type": "AWS::RDS::DBInstance",
-      "Condition": "MultiAzAndDeployCfRdsInstance",
-      "Properties": {
-        "DBInstanceIdentifier": { "Fn::Sub": "${DeploymentName}-CloudfoundryDB" },
-        "DBInstanceClass": { "Ref": "CfRdsInstanceSize" },
-        "AllocatedStorage": { "Ref": "CfRdsInstanceStorageSize" },
-        "BackupRetentionPeriod": { "Ref": "CfRdsInstanceBackupRetentionPeriod" },
-        "CopyTagsToSnapshot": "true",
-        "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
-        "DBSnapshotIdentifier": { "Ref": "CfRdsInstanceSnapshotIdentifier" },
-        "Engine": { "Ref": "CfRdsInstanceEngine" },
-        "MasterUsername": { "Ref": "CfRdsInstanceUsername" },
-        "MasterUserPassword": { "Ref": "CfRdsInstancePassword" },
-        "MultiAZ": "true",
-        "PreferredBackupWindow": { "Ref": "CfRdsInstancePreferredBackupWindow" },
-        "PreferredMaintenanceWindow": { "Ref": "CfRdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "CfRdsSecurityGroup" } ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfRdsInstance" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -548,58 +538,6 @@
       "Condition": "DeployAppsRdsInstance",
       "Properties": {
         "UserName": { "Ref": "RdsBrokerUser" }
-      }
-    },
-
-    "AppsRdsInstanceDns": {
-      "Type": "AWS::Route53::RecordSet",
-      "Condition": "DeployAppsRdsInstance",
-      "Properties": {
-        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::Join": [ ".", [ "app-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
-        "TTL": "3600",
-        "Type": "CNAME",
-        "ResourceRecords": [
-          { "Fn::GetAtt": [ "AppsRdsInstance", "Endpoint.Address" ] }
-        ]
-      }
-    },
-
-    "CfRdsInstanceDns": {
-      "Type": "AWS::Route53::RecordSet",
-      "Condition": "DeployCfRdsInstance",
-      "Properties": {
-        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::Join": [ ".", [ "cf-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
-        "TTL": "3600",
-        "Type": "CNAME",
-        "ResourceRecords": [
-          { "Fn::GetAtt": [ "CfRdsInstance", "Endpoint.Address" ] }
-        ]
-      }
-    },
-    "AppsRdsSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployAppsRdsInstance",
-      "Properties": {
-        "GroupDescription": "Apps RDS Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:AppsRdsSecurityGroup" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "CfRdsSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployCfRdsInstance",
-      "Properties": {
-        "GroupDescription": "Apps RDS Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:CfRdsSecurityGroup" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
       }
     }
   }
