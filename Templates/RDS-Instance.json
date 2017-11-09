@@ -133,7 +133,7 @@
     },
     "RdsInstanceDns": {
       "Description": "RDS Instance DNS Name",
-      "Value": { "Fn::Join": [ ".", [ "${RdsInstanceName}-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
+      "Value": { "Fn::Join": [ ".", [ { "Fn::Sub": "${RdsInstanceName}-rds" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
     },
     "RdsInstancePort": {
       "Description": "RDS Port",
@@ -204,7 +204,7 @@
       "Type": "AWS::Route53::RecordSet",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::Join": [ ".", [ "${RdsInstanceName}-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
+        "Name": { "Fn::Join": [ ".", [ { "Fn::Sub": "${RdsInstanceName}-rds" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
         "TTL": "3600",
         "Type": "CNAME",
         "ResourceRecords": [
