@@ -145,6 +145,87 @@
       "MinValue": "5",
       "MaxValue": "30"
     },
+    "BoshRdsInstancePreferredBackupWindow": {
+      "Type": "String",
+      "Default": "01:00-04:00",
+      "Description": "RDS Preferred backup window",
+      "AllowedPattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]-([0-1][0-9]|2[0-3]):[0-5][0-9]$",
+      "ConstraintDescription": "hh24:mi-hh24:mi, eg 23:59-01:24"
+    },
+    "BoshRdsInstancePreferredMaintenanceWindow": {
+      "Type": "String",
+      "Default": "Mon:04:00-Mon:06:00",
+      "Description": "Cloudfoundry RDS Preferred maintenance window",
+      "AllowedPattern": "^(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([0-1][0-9]|2[0-3]):[0-5][0-9]-(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([0-1][0-9]|2[0-3]):[0-5][0-9]$",
+      "ConstraintDescription": "ddd:hh24:mi-hh24:mi, eg Mon:23:59-Tue:01:24"
+    },
+    "BoshRdsInstanceBackupRetentionPeriod": {
+      "Type": "Number",
+      "Description": "RDS Bosh Instance Backup Retention Period",
+      "Default": "28",
+      "MinValue": "5",
+      "MaxValue": "30"
+    },
+    "BoshRdsInstanceEngine": {
+      "Type": "String",
+      "Default": "postgres",
+      "Description": "Bosh RDS Engine",
+      "AllowedValues": [
+        "postgres"
+      ]
+    },
+    "BoshRdsInstanceSnapshotIdentifier": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Bosh RDS snapshot identifier - for restores",
+      "AllowedPattern": "^[a-z0-9:.-]*$",
+      "ConstraintDescription": "AWS RDS snapshot identifier, or empty to create a new database"
+    },
+    "BoshRdsInstanceSize": {
+      "Type": "String",
+      "Default": "db.t2.medium",
+      "Description": "Bosh RDS Size (instance size affects max_connections)",
+      "AllowedValues": [
+        "db.t2.micro",
+        "db.t2.small",
+        "db.t2.medium",
+        "db.t2.large",
+        "db.m4.large",
+        "db.m4.xlarge"
+      ]
+    },
+    "BoshRdsInstanceStorageSize": {
+      "Type": "Number",
+      "Description": "RDS Bosh Instance Storage Size",
+      "Default": "25",
+      "MinValue": "5",
+      "MaxValue": "6144"
+    },
+    "BoshRdsInstanceMaxConnections": {
+      "Type": "Number",
+      "Description": "RDS Bosh Instance Max Connections",
+      "Default": "100",
+      "MinValue": "5",
+      "MaxValue": "999"
+    },
+    "BoshRdsInstanceUsername": {
+      "Type": "String",
+      "Default": "postgres",
+      "Description": "Bosh RDS user",
+      "MinLength": "1",
+      "MaxLength": "63",
+      "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
+      "ConstraintDescription": "Alphanumeric characters only and must start with a letter"
+    },
+    "BoshRdsInstancePassword": {
+      "Type": "String",
+      "Default": "password",
+      "Description": "Bosh RDS password",
+      "MinLength": "1",
+      "MaxLength": "63",
+      "AllowedPattern": "^[^\"@]+$",
+      "ConstraintDescription": "Can be any printable ASCII character except \"/\", \"\"\", or \"@\""
+    },
     "CfRdsInstanceEngine": {
       "Type": "String",
       "Default": "postgres",
@@ -268,13 +349,13 @@
       "Value": { "Ref": "AppsRdsInstancePassword" }
     },
     "AppsRdsSecurityGroup": {
-      "Description": "Applicationis RDS Password",
+      "Description": "Applications RDS Password",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Apps${RdsSecurityGroup}" } }
     },
 
     "BoshRdsInstanceAddress": {
-      "Description": "Applications RDS Access Address",
+      "Description": "Bosh RDS Access Address",
       "Condition": "DeployBoshRdsInstance",
       "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Bosh${RdsInstanceAddress}" } },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstanceAddress" } }
@@ -285,23 +366,23 @@
       "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Bosh${RdsInstanceDns}" } }
     },
     "BoshRdsInstancePort": {
-      "Description": "Applications RDS Port",
+      "Description": "Bosh RDS Port",
       "Condition": "DeployBoshRdsInstance",
       "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Bosh${RdsInstancePort}" } },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } }
     },
     "BoshRdsInstanceUsername": {
-      "Description": "Applications RDS Username",
+      "Description": "Bosh RDS Username",
       "Condition": "DeployBoshRdsInstance",
       "Value": { "Ref": "BoshRdsInstanceUsername" }
     },
     "BoshRdsInstancePassword": {
-      "Description": "Applications RDS Password",
+      "Description": "Bosh RDS Password",
       "Condition": "DeployBoshRdsInstance",
       "Value": { "Ref": "BoshRdsInstancePassword" }
     },
     "BoshRdsSecurityGroup": {
-      "Description": "Applicationis RDS Password",
+      "Description": "Bosh RDS Password",
       "Condition": "DeployBoshRdsInstance",
       "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-Bosh${RdsSecurityGroup}" } }
     },
