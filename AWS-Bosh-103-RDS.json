@@ -325,7 +325,7 @@
       "Description": "Applications RDS Access Address",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstanceAddress" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApsRdsInstanceAddress:" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstanceAddress:" } }
     },
     "AppsRdsInstanceDns": {
       "Description": "RDS Apps Instance DNS Name",
@@ -336,7 +336,7 @@
       "Description": "Applications RDS Port",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstancePort" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApsRdsInstancePort" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } }
     },
     "AppsRdsInstanceUsername": {
       "Description": "Applications RDS Username",
