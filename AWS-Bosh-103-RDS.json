@@ -324,19 +324,19 @@
     "AppsRdsInstanceAddress": {
       "Description": "Applications RDS Access Address",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstanceAddress" } },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstanceAddress" } }
+      "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstanceAddress" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApsRdsInstanceAddress:" } }
     },
     "AppsRdsInstanceDns": {
       "Description": "RDS Apps Instance DNS Name",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstanceDns" } }
+      "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstanceDns" ] }
     },
     "AppsRdsInstancePort": {
       "Description": "Applications RDS Port",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort}" } },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } }
+      "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstancePort" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApsRdsInstancePort" } }
     },
     "AppsRdsInstanceUsername": {
       "Description": "Applications RDS Username",
@@ -351,24 +351,25 @@
     "AppsRdsSecurityGroup": {
       "Description": "Applications RDS Password",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } }
+      "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsSecurityGroup" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } }
     },
 
     "BoshRdsInstanceAddress": {
       "Description": "Bosh RDS Access Address",
       "Condition": "DeployBoshRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstanceAddress" } },
+      "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsInstanceAddress" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstanceAddress" } }
     },
     "BoshRdsInstanceDns": {
       "Description": "RDS Bosh Instance DNS Name",
       "Condition": "DeployBoshRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstanceDns" } }
+      "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsInstanceDns" ] }
     },
     "BoshRdsInstancePort": {
       "Description": "Bosh RDS Port",
       "Condition": "DeployBoshRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
+      "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsInstancePort" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } }
     },
     "BoshRdsInstanceUsername": {
@@ -384,23 +385,25 @@
     "BoshRdsSecurityGroup": {
       "Description": "Bosh RDS Password",
       "Condition": "DeployBoshRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsSecurityGroup" } }
+      "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsSecurityGroup" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsSecurityGroup" } }
     },
 
     "CfRdsInstanceAddress": {
       "Description": "Cloudfoundry RDS Access Address",
       "Condition": "DeployCfRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstanceAddress" } }
+      "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Outputs.RdsInstanceAddress" ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsInstanceAddress" } }
     },
     "CfRdsInstanceDns": {
       "Description": "RDS CF Instance DNS Name",
       "Condition": "DeployCfRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstanceDns" } }
+      "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Outputs.RdsInstanceDns" ] }
     },
     "CfRdsInstancePort": {
       "Description": "Cloudfoundry RDS Port",
       "Condition": "DeployCfRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+      "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Outputs.RdsInstancePort" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } }
     },
     "CfRdsInstanceUsername": {
@@ -416,7 +419,7 @@
     "CfRdsSecurityGroup": {
       "Description": "Cloudfoundry RDS Security Group",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } },
+      "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Outputs.RdsSecurityGroup" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } }
     },
 
@@ -475,13 +478,14 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } }
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
+              "Templates",
+              "RDS-Instance.json"
             ]
           ]
         }
       }
     },
-
 
     "BoshRdsInstance": {
       "Type": "AWS::CloudFormation::Stack",
@@ -505,7 +509,9 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } }
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
+              "Templates",
+              "RDS-Instance.json"
             ]
           ]
         }
@@ -533,7 +539,9 @@
         "TemplateURL": {
           "Fn::Join": [
             "/", [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } }
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-preamble-TemplatesBucketHttpUrl" } },
+              "Templates",
+              "RDS-Instance.json"
             ]
           ]
         }

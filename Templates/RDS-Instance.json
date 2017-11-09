@@ -112,7 +112,7 @@
       "Description": "RDS Subnet Group",
       "MinLength": "10",
       "MaxLength": "255",
-      "AllowedPattern": "^[a-z0-9]+$"
+      "AllowedPattern": "^[a-z0-9-]+$"
     },
     "MultiAz": {
       "Type": "String",
@@ -125,28 +125,23 @@
   "Outputs": {
     "RdsInstance": {
       "Description": "RDS Instance",
-      "Value": { "Ref": "RdsInstance" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-${RdsInstanceName}RdsInstance" } }
+      "Value": { "Ref": "RdsInstance" }
     },
     "RdsInstanceAddress": {
       "Description": "RDS Instance Address",
-      "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Address" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-${RdsInstanceName}RdsInstanceAddress" } }
+      "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Address" ] }
     },
     "RdsInstanceDns": {
       "Description": "RDS Instance DNS Name",
-      "Value": { "Fn::Join": [ ".", [ "${RdsInstanceName}-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-${RdsInstanceName}RdsInstanceDns" } }
+      "Value": { "Fn::Join": [ ".", [ "${RdsInstanceName}-rds", { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DomainName" } } ] ] }
     },
     "RdsInstancePort": {
       "Description": "RDS Port",
-      "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Port" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-${RdsInstanceName}RdsInstancePort" } }
+      "Value": { "Fn::GetAtt": [ "RdsInstance", "Endpoint.Port" ] }
     },
     "RdsSecurityGroup": {
       "Description": "RDS Security Group",
-      "Value": { "Ref": "RdsSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-${RdsInstanceName}${RdsSecurityGroup}" } }
+      "Value": { "Ref": "RdsSecurityGroup" }
     }
   },
 
