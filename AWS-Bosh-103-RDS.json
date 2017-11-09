@@ -31,10 +31,16 @@
       "Description": "Deploy Apps RDS Instance",
       "AllowedValues": [ "true", "false" ]
     },
+    "DeployBoshRdsInstance": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy Bosh RDS Instance",
+      "AllowedValues": [ "true", "false" ]
+    },
     "DeployCfRdsInstance": {
       "Type": "String",
       "Default": "true",
-      "Description": "Deploy Cf RDS Instance",
+      "Description": "Deploy CF RDS Instance",
       "AllowedValues": [ "true", "false" ]
     },
     "AppsRdsInstancePreferredBackupWindow": {
@@ -358,6 +364,7 @@
       ]
     },
     "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
+    "DeployBoshRdsInstance": { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
 
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
