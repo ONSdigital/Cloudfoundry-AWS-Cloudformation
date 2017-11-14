@@ -70,7 +70,7 @@
     },
     "NatAz2Ip": {
       "Description": "NAT AZ2 IP 2",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Value": { "Ref": "NatAz2Ip" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } }
     },
@@ -87,7 +87,7 @@
     },
     "NatAz2IpAllocationId": {
       "Description": "NAT AZ2 IP Allocation ID",
-      "Condition": "MultiAz",
+      "Condition": "MultiAzOrElb",
       "Value": { "Fn::GetAtt": [ "NatAz2Ip", "AllocationId" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2Ip-AllocationId" } }
     },
