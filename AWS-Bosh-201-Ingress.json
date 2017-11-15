@@ -81,6 +81,12 @@
         { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] }
       ]
     },
+    "MultiAzAndCreateElastiCacheInfrastructure": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "CreateElastiCacheInfrastructure" }, "true" ] }
+      ]
+    },
     "WhitelistScanSource": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ScanSourceCidr" }, "" ] } ] },
     "WhitelistScanSourceAndDeployElb": {
       "Fn::And": [
@@ -515,7 +521,7 @@
     },
     "PrivateAz2ToElastiCachePort6379": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "CreateElastiCacheInfrastructure",
+      "Condition": "MultiAzAndCreateElastiCacheInfrastructure",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElastiCacheSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz2Cidr" } },
