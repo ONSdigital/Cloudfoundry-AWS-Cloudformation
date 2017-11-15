@@ -27,7 +27,7 @@
 
   "Outputs": {},
 
-  "Conditions": {,
+  "Conditions": {
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
