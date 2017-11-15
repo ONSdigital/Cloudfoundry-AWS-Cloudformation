@@ -29,6 +29,12 @@
       "Description": "Deploy Apps RDS Instance",
       "AllowedValues": [ "true", "false" ]
     },
+    "DeployBoshRdsInstance": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Deploy Bosh RDS Instance",
+      "AllowedValues": [ "true", "false" ]
+    },
     "DeployCfRdsInstance": {
       "Type": "String",
       "Default": "true",
@@ -197,6 +203,7 @@
     "CreateElastiCacheInfrastructure": { "Fn::Equals": [ { "Ref": "CreateElastiCacheInfrastructure" }, "true" ] },
     "CreateRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] },
     "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
+    "DeployBoshRdsInstance": { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
     "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
@@ -210,6 +217,24 @@
       "Fn::And": [
         { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] }
+      ]
+    },
+    "MultiAzAndDeployAppsRdsInstance": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] }
+      ]
+    },
+    "MultiAzAndDeployBoshRdsInstance": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] }
+      ]
+    },
+    "MultiAzAndDeployCfRdsInstance": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] }
       ]
     },
     "WhitelistExternalRdsAz1Cidr": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsAz1Cidr" }, "" ] } ] },
@@ -552,6 +577,28 @@
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
         "FromPort": "6868",
         "ToPort": "6868" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorInstanceToBoshRdsAz1Port": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "DeployBoshRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz1Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorInstanceToBoshRdsAz2Port": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "MultiAzAndDeployBoshRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -913,7 +960,7 @@
     },
     "PrivateToAppsRdsAz2Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployAppsRdsInstance",
+      "Condition": "MultiAzAndDeployAppsRdsInstance",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
@@ -935,7 +982,7 @@
     },
     "PrivateToCfRdsAz2Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployAppsRdsInstance",
+      "Condition": "MultiAzDeployAppsRdsInstance",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
@@ -957,7 +1004,7 @@
     },
     "PrivateToRabbitmqAz2Port4567": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
+      "Condition": "MultiAzCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
@@ -979,7 +1026,7 @@
     },
     "PrivateToRabbitmqAz2Port1883": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
+      "Condition": "MultiAzCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
@@ -1001,7 +1048,7 @@
     },
     "PrivateToRabbitmqAz2Port5671": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
+      "Condition": "MultiAzCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
@@ -1023,7 +1070,7 @@
     },
     "PrivateToRabbitmqAz2Port15672": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
+      "Condition": "MultiAzCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
@@ -1045,7 +1092,7 @@
     },
     "PrivateToRabbitmqAz2Port15674": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
+      "Condition": "MultiAzCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
