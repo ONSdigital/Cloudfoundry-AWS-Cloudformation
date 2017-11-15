@@ -652,7 +652,7 @@
 
     "PrivateAz1toRabbitmqUdpPort8300": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Conditions": "CreateRabbitmqNetworks",
+      "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateAz1Cidr" } },
