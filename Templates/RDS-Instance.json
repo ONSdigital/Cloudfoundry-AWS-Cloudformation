@@ -123,9 +123,9 @@
   },
 
   "Outputs": {
-    "RdsInstance": {
-      "Description": "RDS Instance",
-      "Value": { "Ref": "RdsInstance" }
+    "RdsInstanceName": {
+      "Description": "RDS Instance Name",
+      "Value": { "Ref": "RdsInstanceName" }
     },
     "RdsInstanceAddress": {
       "Description": "RDS Instance Address",
