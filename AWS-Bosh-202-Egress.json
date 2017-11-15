@@ -1004,7 +1004,7 @@
     },
     "PrivateToRabbitmqAz2Port4567": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzCreateRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
@@ -1026,7 +1026,7 @@
     },
     "PrivateToRabbitmqAz2Port1883": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzCreateRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
@@ -1048,7 +1048,7 @@
     },
     "PrivateToRabbitmqAz2Port5671": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzCreateRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
@@ -1070,7 +1070,7 @@
     },
     "PrivateToRabbitmqAz2Port15672": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzCreateRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
@@ -1092,7 +1092,7 @@
     },
     "PrivateToRabbitmqAz2Port15674": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzCreateRabbitmqNetworks",
+      "Condition": "MultiAzAndCreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqAz2Cidr" } },
