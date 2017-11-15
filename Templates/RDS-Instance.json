@@ -123,9 +123,9 @@
   },
 
   "Outputs": {
-    "RdsInstanceName": {
-      "Description": "RDS Instance Name",
-      "Value": { "Ref": "RdsInstanceName" }
+    "RdsInstance": {
+      "Description": "RDS Instance",
+      "Value": { "Ref": "RdsInstance" }
     },
     "RdsInstanceAddress": {
       "Description": "RDS Instance Address",
@@ -153,12 +153,17 @@
   "Resources": {
     "RdsInstance": {
       "Type": "AWS::RDS::DBInstance",
-      "Condition": "SingleAz",
       "Properties": {
-        "DBInstanceIdentifier": { "Fn::Sub": "${RdsInstanceName}-DB" },
+        "DBInstanceIdentifier": { "Fn::Join": [ "-", [ { "Fn::Sub": "${RdsInstanceName}-DB" }, { "Ref": "DeploymentName" } ] ] },
         "DBInstanceClass": { "Ref": "RdsInstanceSize" },
         "AllocatedStorage": { "Ref": "RdsInstanceStorageSize" },
-        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
+        "AvailabilityZone": {
+          "Fn::If": [
+            "MultiAz",
+            { "Ref": "AWS::NoValue" },
+            { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } }
+          ]
+        },
         "BackupRetentionPeriod": { "Ref": "RdsInstanceBackupRetentionPeriod" },
         "CopyTagsToSnapshot": "true",
         "Engine": { "Ref": "RdsInstanceEngine" },
@@ -166,30 +171,7 @@
         "DBSnapshotIdentifier": { "Ref": "RdsInstanceSnapshotIdentifier" },
         "MasterUsername": { "Ref": "RdsInstanceUsername" },
         "MasterUserPassword": { "Ref": "RdsInstancePassword" },
-        "PreferredBackupWindow": { "Ref": "RdsInstancePreferredBackupWindow" },
-        "PreferredMaintenanceWindow": { "Ref": "RdsInstancePreferredMaintenanceWindow" },
-        "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}-${RdsInstanceName}:RdsInstance" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "RdsInstance": {
-      "Type": "AWS::RDS::DBInstance",
-      "Condition": "MultiAz",
-      "Properties": {
-        "DBInstanceIdentifier": { "Fn::Sub": "${RdsInstanceName}-DB" },
-        "DBInstanceClass": { "Ref": "RdsInstanceSize" },
-        "AllocatedStorage": { "Ref": "RdsInstanceStorageSize" },
-        "BackupRetentionPeriod": { "Ref": "RdsInstanceBackupRetentionPeriod" },
-        "CopyTagsToSnapshot": "true",
-        "DBSubnetGroupName": { "Ref": "RdsSubnetGroup" },
-        "DBSnapshotIdentifier": { "Ref": "RdsInstanceSnapshotIdentifier" },
-        "Engine": { "Ref": "RdsInstanceEngine" },
-        "MasterUsername": { "Ref": "RdsInstanceUsername" },
-        "MasterUserPassword": { "Ref": "RdsInstancePassword" },
-        "MultiAZ": "true",
+        "MultiAZ": { "Ref": "MultiAz" },
         "PreferredBackupWindow": { "Ref": "RdsInstancePreferredBackupWindow" },
         "PreferredMaintenanceWindow": { "Ref": "RdsInstancePreferredMaintenanceWindow" },
         "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
