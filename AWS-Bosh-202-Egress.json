@@ -982,7 +982,7 @@
     },
     "PrivateToCfRdsAz2Port": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzDeployAppsRdsInstance",
+      "Condition": "MultiAzAndDeployAppsRdsInstance",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
