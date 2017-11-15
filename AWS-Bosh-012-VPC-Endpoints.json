@@ -62,7 +62,7 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
           {
             "Fn::If": [
-              "MultiAzOrDeployElb",
+              "MultiAzOrElb",
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
               { "Ref": "AWS::NoValue" }
             ]
