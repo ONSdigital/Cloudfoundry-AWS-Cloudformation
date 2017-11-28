@@ -497,6 +497,7 @@
                 "s3:ListBucketMultipartUploads"
               ],
               "Resource": [
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BackupBucketArn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketArn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CompiledPackageCacheBucketArn" } },
                 { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorBackupBucketArn" } }
@@ -512,6 +513,7 @@
                 "s3:PutObject"
               ],
               "Resource": [
+                { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BackupBucketArn" } },
                 { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BlobstoreBucketArn" } }, "/*" ] ] },
                 { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CompiledPackageCacheBucketArn" } }, "/*" ] ] },
                 { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorBackupBucketArn" } }, "/*" ] ] }
