@@ -327,16 +327,16 @@
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstanceAddress" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstanceAddress:" } }
     },
-    "AppsRdsInstanceDns": {
+    "AppsDbDns": {
       "Description": "RDS Apps Instance DNS Name",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstanceDns" ] }
     },
-    "AppsRdsInstancePort": {
+    "AppsDbPort": {
       "Description": "Applications RDS Port",
       "Condition": "DeployAppsRdsInstance",
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstancePort" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } }
     },
     "AppsDbAdminUsername": {
       "Description": "Applications RDS Username",
@@ -361,16 +361,16 @@
       "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsInstanceAddress" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstanceAddress" } }
     },
-    "BoshRdsInstanceDns": {
+    "BoshDbDns": {
       "Description": "RDS Bosh Instance DNS Name",
       "Condition": "DeployBoshRdsInstance",
       "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsInstanceDns" ] }
     },
-    "BoshRdsInstancePort": {
+    "BoshDbPort": {
       "Description": "Bosh RDS Port",
       "Condition": "DeployBoshRdsInstance",
       "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsInstancePort" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshDbPort" } }
     },
     "BoshDbAdminUsername": {
       "Description": "Bosh RDS Username",
@@ -395,16 +395,16 @@
       "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Outputs.RdsInstanceAddress" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsInstanceAddress" } }
     },
-    "CfRdsInstanceDns": {
+    "CfDbDns": {
       "Description": "RDS CF Instance DNS Name",
       "Condition": "DeployCfRdsInstance",
       "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Outputs.RdsInstanceDns" ] }
     },
-    "CfRdsInstancePort": {
+    "CfDbPort": {
       "Description": "Cloudfoundry RDS Port",
       "Condition": "DeployCfRdsInstance",
       "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Outputs.RdsInstancePort" ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } }
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfDbPort" } }
     },
     "CfDbAdminUsername": {
       "Description": "Cloudfoundry RDS Username",
