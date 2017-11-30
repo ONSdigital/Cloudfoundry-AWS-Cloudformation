@@ -106,7 +106,7 @@
       "MinValue": "5",
       "MaxValue": "999"
     },
-    "AppsRdsInstanceUsername": {
+    "AppsDbAdminUsername": {
       "Type": "String",
       "Default": "postgres",
       "Description": "Apps RDS user",
@@ -115,7 +115,7 @@
       "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
       "ConstraintDescription": "Alphanumeric characters only and must start with a letter"
     },
-    "AppsRdsInstancePassword": {
+    "AppsDbPassword": {
       "Type": "String",
       "Default": "password",
       "Description": "Apps RDS password",
@@ -208,7 +208,7 @@
       "MinValue": "5",
       "MaxValue": "999"
     },
-    "BoshRdsInstanceUsername": {
+    "BoshDbAdminUsername": {
       "Type": "String",
       "Default": "postgres",
       "Description": "Bosh RDS user",
@@ -217,7 +217,7 @@
       "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
       "ConstraintDescription": "Alphanumeric characters only and must start with a letter"
     },
-    "BoshRdsInstancePassword": {
+    "BoshDbAdminPassword": {
       "Type": "String",
       "Default": "password",
       "Description": "Bosh RDS password",
@@ -268,7 +268,7 @@
       "MinValue": "5",
       "MaxValue": "6144"
     },
-    "CfRdsInstanceUsername": {
+    "CfDbAdminUsername": {
       "Type": "String",
       "Default": "postgres",
       "Description": "Cloudfoundry RDS user",
@@ -277,7 +277,7 @@
       "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
       "ConstraintDescription": "Alphanumeric characters only and must start with a letter"
     },
-    "CfRdsInstancePassword": {
+    "CfDbAdminPassword": {
       "Type": "String",
       "Default": "password",
       "Description": "Cloudfoundry RDS password",
@@ -338,15 +338,15 @@
       "Value": { "Fn::GetAtt": [ "AppsRdsInstance", "Outputs.RdsInstancePort" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } }
     },
-    "AppsRdsInstanceUsername": {
+    "AppsDbAdminUsername": {
       "Description": "Applications RDS Username",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Ref": "AppsRdsInstanceUsername" }
+      "Value": { "Ref": "AppsDbAdminUsername" }
     },
-    "AppsRdsInstancePassword": {
+    "AppsDbAdminPassword": {
       "Description": "Applications RDS Password",
       "Condition": "DeployAppsRdsInstance",
-      "Value": { "Ref": "AppsRdsInstancePassword" }
+      "Value": { "Ref": "AppsDbAdminPassword" }
     },
     "AppsRdsSecurityGroup": {
       "Description": "Applications RDS Password",
@@ -372,18 +372,18 @@
       "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsInstancePort" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } }
     },
-    "BoshRdsInstanceUsername": {
+    "BoshDbAdminUsername": {
       "Description": "Bosh RDS Username",
       "Condition": "DeployBoshRdsInstance",
-      "Value": { "Ref": "BoshRdsInstanceUsername" }
+      "Value": { "Ref": "BoshDbAdminUsername" }
     },
-    "BoshRdsInstancePassword": {
+    "BoshDbAdminPassword": {
       "Description": "Bosh RDS Password",
       "Condition": "DeployBoshRdsInstance",
-      "Value": { "Ref": "BoshRdsInstancePassword" }
+      "Value": { "Ref": "BoshDbAdminPassword" }
     },
     "BoshRdsSecurityGroup": {
-      "Description": "Bosh RDS Password",
+      "Description": "Bosh RDS Security Group",
       "Condition": "DeployBoshRdsInstance",
       "Value": { "Fn::GetAtt": [ "BoshRdsInstance", "Outputs.RdsSecurityGroup" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshRdsSecurityGroup" } }
@@ -406,15 +406,15 @@
       "Value": { "Fn::GetAtt": [ "CfRdsInstance", "Outputs.RdsInstancePort" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } }
     },
-    "CfRdsInstanceUsername": {
+    "CfDbAdminUsername": {
       "Description": "Cloudfoundry RDS Username",
       "Condition": "DeployCfRdsInstance",
-      "Value": { "Ref": "AppsRdsInstanceUsername" }
+      "Value": { "Ref": "CfDbAdminUsername" }
     },
-    "CfRdsInstancePassword": {
+    "CfDbAdminPassword": {
       "Description": "Cloudfoundry RDS Password",
       "Condition": "DeployCfRdsInstance",
-      "Value": { "Ref": "CfRdsInstancePassword" }
+      "Value": { "Ref": "CfDbAdminPassword" }
     },
     "CfRdsSecurityGroup": {
       "Description": "Cloudfoundry RDS Security Group",
@@ -470,8 +470,8 @@
           "RdsInstanceSnapshotIdentifier": { "Ref": "AppsRdsInstanceSnapshotIdentifier" },
           "RdsInstanceSize": { "Ref": "AppsRdsInstanceSize" },
           "RdsInstanceStorageSize": { "Ref": "AppsRdsInstanceStorageSize" },
-          "RdsInstanceUsername": { "Ref": "AppsRdsInstanceUsername" },
-          "RdsInstancePassword": { "Ref": "AppsRdsInstancePassword" },
+          "RdsInstanceUsername": { "Ref": "AppsDbAdminUsername" },
+          "RdsInstancePassword": { "Ref": "AppsDbAdminPassword" },
           "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
           "MultiAz": { "Ref": "MultiAz" }
         },
@@ -501,8 +501,8 @@
           "RdsInstanceSnapshotIdentifier": { "Ref": "BoshRdsInstanceSnapshotIdentifier" },
           "RdsInstanceSize": { "Ref": "BoshRdsInstanceSize" },
           "RdsInstanceStorageSize": { "Ref": "BoshRdsInstanceStorageSize" },
-          "RdsInstanceUsername": { "Ref": "BoshRdsInstanceUsername" },
-          "RdsInstancePassword": { "Ref": "BoshRdsInstancePassword" },
+          "RdsInstanceUsername": { "Ref": "BoshDbAdminUsername" },
+          "RdsInstancePassword": { "Ref": "BoshDbAdminPassword" },
           "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
           "MultiAz": { "Ref": "MultiAz" }
         },
@@ -531,8 +531,8 @@
           "RdsInstanceSnapshotIdentifier": { "Ref": "CfRdsInstanceSnapshotIdentifier" },
           "RdsInstanceSize": { "Ref": "CfRdsInstanceSize" },
           "RdsInstanceStorageSize": { "Ref": "CfRdsInstanceStorageSize" },
-          "RdsInstanceUsername": { "Ref": "CfRdsInstanceUsername" },
-          "RdsInstancePassword": { "Ref": "CfRdsInstancePassword" },
+          "RdsInstanceUsername": { "Ref": "CfDbAdminUsername" },
+          "RdsInstancePassword": { "Ref": "CfDbAdminPassword" },
           "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
           "MultiAz": { "Ref": "MultiAz" }
         },
