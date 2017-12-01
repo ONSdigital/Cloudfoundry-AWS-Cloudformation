@@ -109,16 +109,16 @@
     "AppsDbAdminUsername": {
       "Type": "String",
       "Default": "postgres",
-      "Description": "Apps RDS user",
+      "Description": "Apps RDS admin username",
       "MinLength": "1",
       "MaxLength": "63",
       "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
       "ConstraintDescription": "Alphanumeric characters only and must start with a letter"
     },
-    "AppsDbPassword": {
+    "AppsDbAdminPassword": {
       "Type": "String",
       "Default": "password",
-      "Description": "Apps RDS password",
+      "Description": "Apps RDS admin password",
       "MinLength": "1",
       "MaxLength": "63",
       "AllowedPattern": "^[^\"@]+$",
@@ -211,7 +211,7 @@
     "BoshDbAdminUsername": {
       "Type": "String",
       "Default": "postgres",
-      "Description": "Bosh RDS user",
+      "Description": "Bosh RDS admin username",
       "MinLength": "1",
       "MaxLength": "63",
       "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
@@ -220,7 +220,7 @@
     "BoshDbAdminPassword": {
       "Type": "String",
       "Default": "password",
-      "Description": "Bosh RDS password",
+      "Description": "Bosh RDS admin password",
       "MinLength": "1",
       "MaxLength": "63",
       "AllowedPattern": "^[^\"@]+$",
@@ -271,7 +271,7 @@
     "CfDbAdminUsername": {
       "Type": "String",
       "Default": "postgres",
-      "Description": "Cloudfoundry RDS user",
+      "Description": "Cloudfoundry RDS admin username",
       "MinLength": "1",
       "MaxLength": "63",
       "AllowedPattern": "^[A-Za-z][A-Za-z0-9]+$",
@@ -280,7 +280,7 @@
     "CfDbAdminPassword": {
       "Type": "String",
       "Default": "password",
-      "Description": "Cloudfoundry RDS password",
+      "Description": "Cloudfoundry RDS admin password",
       "MinLength": "1",
       "MaxLength": "63",
       "AllowedPattern": "^[^\"@]+$",
