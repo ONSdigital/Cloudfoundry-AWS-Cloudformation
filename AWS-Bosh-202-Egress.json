@@ -586,8 +586,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz1Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -597,8 +597,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -608,8 +608,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz1Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -619,8 +619,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -630,8 +630,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz1Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -641,8 +641,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -997,8 +997,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz1Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -1008,8 +1008,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -1019,8 +1019,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz1Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "IpProtocol": "tcp"
       }
     },
@@ -1030,8 +1030,8 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RdsAz2Cidr" } },
-        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
-        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "IpProtocol": "tcp"
       }
     },
