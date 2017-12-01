@@ -271,6 +271,50 @@
         "IpProtocol": "tcp"
       }
     },
+    "DirectorAz1ToAppsRdsPort": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployAppsRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorAz2ToAppsRdsPort": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAzAndDeployAppsRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsInstancePort" } },
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorAz1ToCfRdsPort": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployCfRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz1Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorAz2ToCfRdsPort": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAzAndDeployCfRdsInstance",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } },
+        "CidrIp": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorAz2Cidr" } },
+        "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsInstancePort" } },
+        "IpProtocol": "tcp"
+      }
+    },
 
     "NatAz1IpToLbSecurityGroup443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
