@@ -783,7 +783,7 @@
 
     "LbSecurityGroupToRouterGroupPort8080": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "MultiAzAndDeployElb",
+      "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
         "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
