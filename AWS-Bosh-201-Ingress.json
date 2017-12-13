@@ -507,7 +507,7 @@
 
     "LbSecurityGroupToRouterGroupPort80": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
@@ -518,7 +518,7 @@
     },
     "LbSecurityGroupToRouterGroupPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAz",
+      "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
@@ -529,7 +529,7 @@
     },
     "LbSecurityGroupToRouterGroupPort8080": {
       "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "MultiAzAndDeployElb",
+      "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
