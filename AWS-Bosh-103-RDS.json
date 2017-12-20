@@ -473,7 +473,7 @@
           "RdsInstanceUsername": { "Ref": "AppsDbAdminUsername" },
           "RdsInstancePassword": { "Ref": "AppsDbAdminPassword" },
           "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
-          "MultiAz": { "Ref": "MultiAz" }
+          "MultiAz": { "Fn::If": [ "MultiAz", "true", "false" ] }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -504,7 +504,7 @@
           "RdsInstanceUsername": { "Ref": "BoshDbAdminUsername" },
           "RdsInstancePassword": { "Ref": "BoshDbAdminPassword" },
           "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
-          "MultiAz": { "Ref": "MultiAz" }
+          "MultiAz": { "Fn::If": [ "MultiAz", "true", "false" ] }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -534,7 +534,7 @@
           "RdsInstanceUsername": { "Ref": "CfDbAdminUsername" },
           "RdsInstancePassword": { "Ref": "CfDbAdminPassword" },
           "RdsSubnetGroup": { "Ref": "RdsSubnetGroup" },
-          "MultiAz": { "Ref": "MultiAz" }
+          "MultiAz": { "Fn::If": [ "MultiAz", "true", "false" ] }
         },
         "TemplateURL": {
           "Fn::Join": [
