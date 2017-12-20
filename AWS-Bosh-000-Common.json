@@ -19,11 +19,11 @@
       "AllowedPattern": "^[A-Za-z0-9 -]+$",
       "ConstraintDescription": "Can be any printable alphanumeric character, spaces or hypens"
     },
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "Default": "SingleAZ",
+      "Description": "Availbility Type",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     },
     "HostedZone": {
       "Type": "String",
@@ -111,9 +111,9 @@
       "Description": "AWS Availability Zone 3 Number",
       "Value": { "Ref": "AwsAvailabilityZone3Number" }
     },
-    "MultiAz": {
-      "Description": "Multi AZ?",
-      "Value": { "Ref": "MultiAz" }
+    "Availability": {
+      "Description": "Availability Type",
+      "Value": { "Ref": "Availability" }
     },
     "StackProtectionGroup": {
       "Description": "Stack Protection Group",
@@ -141,7 +141,7 @@
   },
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MulitAZ" ] },
     "StackProtection": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "StackProtectionGroup" }, "" ] } ] }
   },
 

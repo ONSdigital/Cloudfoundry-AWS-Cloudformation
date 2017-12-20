@@ -250,11 +250,11 @@
       "AllowedValues": [ "internet-facing", "internal" ]
     },
 
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "Default": "SingleAZ",
+      "Description": "Availability Type",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     },
     "DeployElb": {
       "Type": "String",
@@ -410,7 +410,7 @@
     },
 
     "UseHostedZone": { "Fn::Equals": [ { "Ref": "SslValidationDomain" }, "" ] },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] }
   },
 
   "Resources": {

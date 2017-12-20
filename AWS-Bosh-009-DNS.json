@@ -11,11 +11,11 @@
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "Default": "SingleAZ",
+      "Description": "Availability Type",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     },
     "DeployElb": {
       "Type": "String",
@@ -122,18 +122,18 @@
   "Conditions": {
     "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
 
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
     "MultiAzAndAllocateLbIp": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     },
-    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
+    "SingleAz": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] } ] },
     "SingleAzAndAllocateLbIp": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] } ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     },

@@ -123,11 +123,11 @@
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR or empty"
     },
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "Default": "SingleAZ",
+      "Description": "Availability Type",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     }
   },
 
@@ -193,15 +193,6 @@
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcCidr" }, "" ] } ] }
       ]
     },
-    "MultiAzAndPeer1Vpc": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcId" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1OwnerId" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1RoleArn" }, "" ] } ] },
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcCidr" }, "" ] } ] }
-      ]
-    },
     "PeerVpc": {
       "Fn::Or": [
         { 
@@ -238,9 +229,18 @@
         }
       ]
     },
+    "MultiAzAndPeer1Vpc": {
+      "Fn::And": [
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1OwnerId" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1RoleArn" }, "" ] } ] },
+        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer1VpcCidr" }, "" ] } ] }
+      ]
+    },
     "MultiAzAndPeer2Vpc": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2VpcId" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2OwnerId" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer2RoleArn" }, "" ] } ] },
@@ -249,7 +249,7 @@
     },
     "MultiAzAndPeer3Vpc": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3VpcId" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3OwnerId" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer3RoleArn" }, "" ] } ] },
@@ -258,7 +258,7 @@
     },
     "MultiAzAndPeer4Vpc": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4VpcId" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4OwnerId" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Peer4RoleArn" }, "" ] } ] },

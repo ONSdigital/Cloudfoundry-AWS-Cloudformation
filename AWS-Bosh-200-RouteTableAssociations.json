@@ -147,11 +147,11 @@
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR or empty"
     },
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "Default": "SingleAZ",
+      "Description": "Availability Type",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     }
   },
 
@@ -160,7 +160,7 @@
     "CreateRabbitmqNetworks": { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] },
     "MultiAzAndCreateRabbitmqNetworks": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] }
       ]
     },

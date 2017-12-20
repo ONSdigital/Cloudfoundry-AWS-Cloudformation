@@ -32,11 +32,11 @@
       "AllowedPattern": "^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2])$",
       "ConstraintDescription": "Valid CIDR"
     },
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
+      "Default": "SingleAZ",
       "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     },
     "DeployElb": {
       "Type": "String",
@@ -67,10 +67,10 @@
   },
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
     "MultiAzOrElb": {
       "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
       ]
     }

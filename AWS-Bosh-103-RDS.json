@@ -286,11 +286,11 @@
       "AllowedPattern": "^[^\"@]+$",
       "ConstraintDescription": "Can be any printable ASCII character except \"/\", \"\"\", or \"@\""
     },
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "Default": "SingleAZ",
+      "Description": "Availability Type",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     }
   },
 
@@ -451,8 +451,8 @@
     "DeployBoshRdsInstance": { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
 
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
-    "SingleAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "false" ] }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
+    "SingleAz": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] } ] }
   },
 
   "Resources": {

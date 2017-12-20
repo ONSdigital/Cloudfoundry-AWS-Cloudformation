@@ -60,11 +60,11 @@
       "Description": "Deploy External ELB",
       "AllowedValues": [ "true", "false" ]
     },
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "Default": "SingleAZ",
+      "Description": "Availability Typr",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     }
   },
 
@@ -75,40 +75,40 @@
     "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
     "DeployBoshRdsInstance": { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
     "MultiAzAndDeployElb": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
       ]
     },
     "MultiAzAndCreateRabbitmqNetworks": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] }
       ]
     },
     "MultiAzAndCreateElastiCacheInfrastructure": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "CreateElastiCacheInfrastructure" }, "true" ] }
       ]
     },
     "MultiAzAndDeployAppsRdsInstance": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] }
       ]
     },
     "MultiAzAndDeployBoshRdsInstance": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] }
       ]
     },
     "MultiAzAndDeployCfRdsInstance": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] }
       ]
     },

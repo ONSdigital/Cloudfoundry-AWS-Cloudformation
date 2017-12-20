@@ -18,11 +18,11 @@
       "Description": "Allocate External IP (eg for HA Proxy)",
       "AllowedValues": [ "true", "false" ]
     },
-    "MultiAz": {
+    "Availability": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy multiple AZs",
-      "AllowedValues": [ "true", "false" ]
+      "Default": "SingleAZ",
+      "Description": "Availability Type",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
     },
     "DeployElb": {
       "Type": "String",
@@ -107,17 +107,17 @@
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
     "MultiAzAndAllocateLbIp": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
       ]
     },
     "MultiAzOrElb": {
       "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "MultiAz" }, "true" ] },
+        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
         { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
       ]
     }
