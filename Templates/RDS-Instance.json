@@ -153,6 +153,7 @@
   "Resources": {
     "RdsInstance": {
       "Type": "AWS::RDS::DBInstance",
+      "DeletionPolicy" : "Delete",
       "Properties": {
         "DBInstanceIdentifier": { "Fn::Join": [ "-", [ { "Fn::Sub": "${RdsInstanceName}-DB" }, { "Ref": "DeploymentName" } ] ] },
         "DBInstanceClass": { "Ref": "RdsInstanceSize" },
