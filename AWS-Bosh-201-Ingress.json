@@ -497,7 +497,7 @@
       }
     },
 
-    "RabbitmqAz1ToPrivateTcpPort8300": {
+    "RabbitmqToPrivateTcpPort8300": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
