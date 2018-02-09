@@ -41,7 +41,7 @@
       "Description": "Deploy Cf RDS Instance",
       "AllowedValues": [ "true", "false" ]
     },
-    "ExternalRdsAz1Cidr": {
+    "ExternalRdsCidr1": {
       "Type": "String",
       "Default": "",
       "Description": "External RDS Database CIDR",

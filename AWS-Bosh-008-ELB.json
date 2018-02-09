@@ -217,7 +217,7 @@
       "Value": { "Ref": "ApplicationElbTargetGroupTcp80" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroupTcp80Arn" } }
     },
-    "ApplicationElbTargetGroup443Arn": {
+    "ApplicationElbTargetGroupTcp443Arn": {
       "Description": "Application ELB Target Group TCP Port 443 ARN",
       "Condition": "DeployElb",
       "Value": { "Ref": "ApplicationElbTargetGroupTcp443" },
@@ -510,7 +510,7 @@
         "Targets": [],
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElbTargetGroup443" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElbTargetGroupTcp443" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -554,7 +554,7 @@
         "DefaultActions": [
           {
             "Type": "forward",
-            "TargetGroupArn": { "Ref": "ApplicationElbTargetGroup443" }
+            "TargetGroupArn": { "Ref": "ApplicationElbTargetGroupTcp443" }
           }
         ],
         "LoadBalancerArn": { "Ref": "ApplicationElb" },
