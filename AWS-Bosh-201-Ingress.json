@@ -108,30 +108,19 @@
   },
 
   "Resources": {
-   "CfSshElbSecurityGroupToCfSshInstanceSecurityGroup": {
-     "Type": "AWS::EC2::SecurityGroupIngress",
-     "Condition": "DeployElb",
-     "Properties": {
-       "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } },
-       "Description": "CF SSH ELB Security Group To CF SSH Instance Security Group Port 2222 & 2223 (ssh-proxy & ssh-proxy-healthcheck)",
-       "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
-       "FromPort": "2222",
-       "ToPort": "2223",
-       "IpProtocol": "tcp"
-     }
-   },
-    "DirectorInstanceToPrivatePort22": {
+    "CfSshElbSecurityGroupToCfSshInstanceSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "DeployElb",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "Description": "Director Instance Security Group To Private Security Group TCP Port 22 (ssh)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
-        "FromPort": "22",
-        "ToPort": "22" ,
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } },
+        "Description": "CF SSH ELB Security Group To CF SSH Instance Security Group TCP Ports 2222 & 2223 (ssh-proxy & ssh-proxy-healthcheck)",
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+        "FromPort": "2222",
+        "ToPort": "2223",
         "IpProtocol": "tcp"
       }
     },
-    "DirectorInstanceToAppsRdsPort": {
+    "DirectorInstanceToAppsRdsTcpPort": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployAppsRdsInstance",
       "Properties": {
@@ -143,7 +132,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorInstanceToBoshRdsPort": {
+    "DirectorInstanceToBoshRdsTcpPort": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployBoshRdsInstance",
       "Properties": {
@@ -155,7 +144,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorInstanceToCfRdsPort": {
+    "DirectorInstanceToCfRdsTcpPort": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployCfRdsInstance",
       "Properties": {
@@ -167,7 +156,18 @@
         "IpProtocol": "tcp"
       }
     },
-    "DirectorInstanceToRabbitmqPort22": {
+    "DirectorInstanceToPrivateTcpPort22": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "Description": "Director Instance Security Group To Private Security Group TCP Port 22 (ssh)",
+        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorInstanceToRabbitmqTcpPort22": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -180,7 +180,7 @@
       }
     },
 
-    "NatAz1IpToLbSecurityGroup443": {
+    "NatAz1IpToLbSecurityGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
@@ -198,7 +198,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "NatAz2IpToLbSecurityGroup443": {
+    "NatAz2IpToLbSecurityGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
@@ -217,7 +217,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "NatAz3IpToLbSecurityGroup443": {
+    "NatAz3IpToLbSecurityGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
@@ -237,7 +237,7 @@
       }
     },
 
-    "PrivateToLbSecurityGroup80": {
+    "PrivateToLbSecurityGroupTcpPort80": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
@@ -249,7 +249,7 @@
       }
     },
 
-    "PrivateToLbSecurityGroup443": {
+    "PrivateToLbSecurityGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
@@ -261,7 +261,7 @@
       }
     },
 
-    "LbSecurityGroupToRouterGroupPort80": {
+    "LbSecurityGroupToRouterGroupTcpPort80": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployElb",
       "Properties": {
@@ -273,7 +273,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "LbSecurityGroupToRouterGroupPort443": {
+    "LbSecurityGroupToRouterGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployElb",
       "Properties": {
@@ -285,7 +285,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "LbSecurityGroupToRouterGroupPort8080": {
+    "LbSecurityGroupToRouterGroupTcpPort8080": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployElb",
       "Properties": {
@@ -298,7 +298,7 @@
       }
     },
 
-    "PrivateToDirectorInstancePort4222": {
+    "PrivateToDirectorInstanceTcpPort4222": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
@@ -310,7 +310,7 @@
       }
     },
 
-    "PrivateToDirectorInstancePort25777": {
+    "PrivateToDirectorInstanceTcpPort25777": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
@@ -322,7 +322,7 @@
       }
     },
 
-    "PrivateToElastiCachePort6379": {
+    "PrivateToElastiCacheTcpPort6379": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateElastiCacheInfrastructure",
       "Properties": {
@@ -373,19 +373,7 @@
       }
     },
 
-    "PrivateToRabbitmqPort4567": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "Description": "Private Security Group To RabbitMQ Security Group TCP Port 4567 (rabbitmq service broker)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "FromPort": "4567",
-        "ToPort": "4567",
-        "IpProtocol": "tcp"
-      }
-    },
-    "PrivateToRabbitmqPort1883": {
+    "PrivateToRabbitmqTcpPort1883": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -397,7 +385,19 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToRabbitmqPort5671": {
+    "PrivateToRabbitmqTcpPort4567": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "Description": "Private Security Group To RabbitMQ Security Group TCP Port 4567 (rabbitmq service broker)",
+        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "FromPort": "4567",
+        "ToPort": "4567",
+        "IpProtocol": "tcp"
+      }
+    },
+    "PrivateToRabbitmqTcpPort5671": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -409,7 +409,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToRabbitmqPort15672": {
+    "PrivateToRabbitmqTcpPort15672": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -421,7 +421,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToRabbitmqPort15674": {
+    "PrivateToRabbitmqTcpPort15674": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -434,7 +434,7 @@
       }
     },
 
-    "PrivateToAppsRdsPort": {
+    "PrivateToAppsRdsTcpPort": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployAppsRdsInstance",
       "Properties": {
@@ -446,7 +446,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToCfRdsPort": {
+    "PrivateToCfRdsTcpPort": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployCfRdsInstance",
       "Properties": {
@@ -459,7 +459,7 @@
       }
     },
 
-    "RabbitmqToDirectorInstancePort4222": {
+    "RabbitmqToDirectorInstanceTcpPort4222": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -471,7 +471,7 @@
         "IpProtocol": "tcp"
       }
     },
-    "RabbitmqToDirectorInstancePort25777": {
+    "RabbitmqToDirectorInstanceTcpPort25777": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
@@ -484,7 +484,7 @@
       }
     },
 
-    "RabbitmqToPrivatePort4222": {
+    "RabbitmqToPrivateTcpPort4222": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
