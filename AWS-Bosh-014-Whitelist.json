@@ -191,7 +191,7 @@
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
             ]
           },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
         },
         "TemplateURL": {
@@ -224,7 +224,7 @@
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
             ]
           },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
         },
         "TemplateURL": {
@@ -258,7 +258,7 @@
             ]
           },
 
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
         },
         "TemplateURL": {
@@ -291,7 +291,7 @@
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
             ]
           },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
         },
         "TemplateURL": {
@@ -324,7 +324,7 @@
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
             ]
           },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
         },
         "TemplateURL": {
@@ -357,7 +357,7 @@
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
             ]
           },
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
         },
         "TemplateURL": {
@@ -376,7 +376,7 @@
       "Condition": "PermitHttpAccessCidr1",
       "Properties": {
         "Parameters": {
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr1" }
         },
         "TemplateURL": {
@@ -395,7 +395,7 @@
       "Condition": "PermitHttpAccessCidr2",
       "Properties": {
         "Parameters": {
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr2" }
         },
         "TemplateURL": {
@@ -414,7 +414,7 @@
       "Condition": "PermitHttpAccessCidr3",
       "Properties": {
         "Parameters": {
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr3" }
         },
         "TemplateURL": {
@@ -433,7 +433,7 @@
       "Condition": "PermitHttpAccessCidr4",
       "Properties": {
         "Parameters": {
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr4" }
         },
         "TemplateURL": {
@@ -452,7 +452,7 @@
       "Condition": "PermitHttpAccessCidr5",
       "Properties": {
         "Parameters": {
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr5" }
         },
         "TemplateURL": {
@@ -471,7 +471,7 @@
       "Condition": "PermitHttpAccessCidr6",
       "Properties": {
         "Parameters": {
-          "LbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+          "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "HttpAccessCidr6" }
         },
         "TemplateURL": {

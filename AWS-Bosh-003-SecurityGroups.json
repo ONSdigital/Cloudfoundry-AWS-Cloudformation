@@ -26,6 +26,11 @@
   },
 
   "Outputs": {
+    "ApplicationLbSecurityGroup": {
+      "Description": "Application Load Balancer Security Group",
+      "Value": { "Ref": "ApplicationLbSecurityGroup" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } }
+    },
     "DirectorInstanceSecurityGroup": {
       "Description": "Director Instance Security Group",
       "Value": { "Ref": "DirectorInstanceSecurityGroup" },
@@ -35,11 +40,6 @@
       "Description": "DMZ Security Groups",
       "Value": { "Ref": "DmzSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } }
-    },
-    "LbSecurityGroup": {
-      "Description": "Load Balancer Security Group",
-      "Value": { "Ref": "LbSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } }
     },
     "PrivateSecurityGroup": {
       "Description": "Private Security Groups",
@@ -91,13 +91,13 @@
         ]
       }
     },
-    "LbSecurityGroup": {
+    "ApplicationLbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Load Balancer Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbSecurityGroup" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationLbSecurityGroup" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }

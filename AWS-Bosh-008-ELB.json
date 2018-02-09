@@ -55,69 +55,6 @@
       "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
     },
-    "DirectorElbProtocol1": {
-      "Type": "String",
-      "Default": "TCP",
-      "Description": "Director ELB Instance Protocol 1",
-      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
-    },
-    "DirectorElbProtocol2": {
-      "Type": "String",
-      "Default": "TCP",
-      "Description": "Director ELB Instance Protocol 2",
-      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
-    },
-    "DirectorElbProtocol3": {
-      "Type": "String",
-      "Default": "TCP",
-      "Description": "Director ELB Instance Protocol 3",
-      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
-    },
-    "DirectorElbInstancePort1": {
-      "Type": "Number",
-      "Default": "22",
-      "Description": "Director ELB Instance Port 1",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
-    "DirectorElbInstancePort2": {
-      "Type": "Number",
-      "Default": "6868",
-      "Description": "Director ELB Instance Port 2",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
-    "DirectorElbInstancePort3": {
-      "Type": "Number",
-      "Default": "25555",
-      "Description": "Director ELB Instance Port 3",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
-    "DirectorElbLoadbalancerPort1": {
-      "Type": "Number",
-      "Default": "22",
-      "Description": "Director ELB Instance Port 1",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
-    "DirectorElbLoadbalancerPort2": {
-      "Type": "Number",
-      "Default": "6868",
-      "Description": "Director ELB Instance Port 2",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
-    "DirectorElbLoadbalancerPort3": {
-      "Type": "Number",
-      "Default": "25555",
-      "Description": "Director ELB Instance Port 3",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
     "DirectorElbHealthyThreshold": {
       "Type": "Number",
       "Default": "4",
@@ -194,27 +131,6 @@
       "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
       "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
     },
-    "CfSshElbInstancePort": {
-      "Type": "Number",
-      "Default": "2222",
-      "Description": "Cloudfoundry SSH ELB Instance Port",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
-    "CfSshElbInstanceProtocol": {
-      "Type": "String",
-      "Default": "TCP",
-      "Description": "Cloudfoundry SSH ELB Instance Protocol",
-      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
-    },
-    "CfSshElbLoadbalancerPort": {
-      "Type": "Number",
-      "Default": "2222",
-      "Description": "Cloudfoundry SSH ELB Instance Port",
-      "MinValue": "1",
-      "MaxValue": "65535"
-    },
     "CfSshElbHealthyThreshold": {
       "Type": "Number",
       "Default": "4",
@@ -283,29 +199,29 @@
       "Value": { "Fn::GetAtt": [ "ApplicationElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbDnsName" } }
     },
-    "ApplicationElbTargetGroup80": {
-      "Description": "Application ELB Target Group Port 80",
+    "ApplicationElbTargetGroupTcp80": {
+      "Description": "Application ELB Target Group TCP Port 80",
       "Condition": "DeployElb",
-      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroup80", "TargetGroupFullName" ] } ] } ] },
+      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroupTcp80", "TargetGroupFullName" ] } ] } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80" } }
     },
-    "ApplicationElbTargetGroup443": {
-      "Description": "Application ELB Target Group Port 443",
+    "ApplicationElbTargetGroupTcp443": {
+      "Description": "Application ELB Target Group TCP Port 443",
       "Condition": "ApplicationSslElb",
-      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroup443", "TargetGroupFullName" ] } ] } ] },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443" } }
+      "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroupTcp443", "TargetGroupFullName" ] } ] } ] },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroupTcp443" } }
     },
-    "ApplicationElbTargetGroup80Arn": {
-      "Description": "Application ELB Target Group Port 80 ARN",
+    "ApplicationElbTargetGroupTcp80Arn": {
+      "Description": "Application ELB Target Group TCP Port 80 ARN",
       "Condition": "DeployElb",
-      "Value": { "Ref": "ApplicationElbTargetGroup80" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup80Arn" } }
+      "Value": { "Ref": "ApplicationElbTargetGroupTcp80" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroupTcp80Arn" } }
     },
     "ApplicationElbTargetGroup443Arn": {
-      "Description": "Application ELB Target Group Port 443 ARN",
+      "Description": "Application ELB Target Group TCP Port 443 ARN",
       "Condition": "DeployElb",
-      "Value": { "Ref": "ApplicationElbTargetGroup443" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroup443Arn" } }
+      "Value": { "Ref": "ApplicationElbTargetGroupTcp443" },
+      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroupTcp443Arn" } }
     },
     "CfSshElbCanonicalHostedZoneId": {
       "Description": "CF SSH ELB Canonical Hosted Zone ID",
@@ -474,10 +390,10 @@
         "CrossZone": "true",
         "Listeners": [
           {
-            "InstancePort": { "Ref": "CfSshElbInstancePort" },
-            "InstanceProtocol": { "Ref": "CfSshElbInstanceProtocol" },
-            "LoadBalancerPort": { "Ref": "CfSshElbLoadbalancerPort" },
-            "Protocol": { "Ref": "CfSshElbProtocol" }
+            "InstancePort": "2222",
+            "InstanceProtocol": "TCP",
+            "LoadBalancerPort": "2222",
+            "Protocol": "TCP"
           }
         ],
         "Scheme": { "Ref": "CfSshElbScheme" },
@@ -506,21 +422,21 @@
         "CrossZone": "true",
         "Listeners": [
           {
-            "InstancePort": { "Ref": "DirectorElbInstancePort1" },
+            "InstancePort": "22",
             "InstanceProtocol": "TCP",
-            "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort1" },
+            "LoadBalancerPort": "22",
             "Protocol": "TCP"
           },
           {
-            "InstancePort": { "Ref": "DirectorElbInstancePort2" },
+            "InstancePort": "6868",
             "InstanceProtocol": "TCP",
-            "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort2" },
+            "LoadBalancerPort": "6868",
             "Protocol": "TCP"
           },
           {
-            "InstancePort": { "Ref": "DirectorElbInstancePort3" },
+            "InstancePort": "25555",
             "InstanceProtocol": "TCP",
-            "LoadBalancerPort": { "Ref": "DirectorElbLoadbalancerPort3" },
+            "LoadBalancerPort": "25555",
             "Protocol": "TCP"
           }
         ],
@@ -553,7 +469,7 @@
         "LoadBalancerAttributes": [
           { "Key": "idle_timeout.timeout_seconds", "Value": { "Ref": "ApplicationElbTimeout" } }
         ],
-        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } } ],
+        "SecurityGroups": [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } } ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationElb" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
@@ -561,7 +477,7 @@
       }
     },
 
-    "ApplicationElbTargetGroup80": {
+    "ApplicationElbTargetGroupTcp80": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
       "Condition": "DeployElb",
       "Properties": {
@@ -580,7 +496,7 @@
         ]
       }
     },
-    "ApplicationElbTargetGroup443": {
+    "ApplicationElbTargetGroupTcp443": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
       "Condition": "DeployElb",
       "Properties": {
@@ -600,7 +516,7 @@
       }
     },
 
-    "ApplicationElbListener80": {
+    "ApplicationElbListenerTcp80": {
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
       "Properties": {
         "DefaultActions": [
@@ -614,7 +530,7 @@
         "Protocol": "HTTP"
       }
     },
-    "ApplicationElbListener443": {
+    "ApplicationElbListenerTcp443": {
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
       "Condition": "ApplicationSslElb",
       "Properties": {

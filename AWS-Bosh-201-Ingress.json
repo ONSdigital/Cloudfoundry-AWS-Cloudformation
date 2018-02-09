@@ -68,43 +68,7 @@
     "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
     "DeployBoshRdsInstance": { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-    "MultiAzAndDeployElb": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
-      ]
-    },
-    "MultiAzAndCreateRabbitmqNetworks": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "CreateRabbitmqNetworks" }, "true" ] }
-      ]
-    },
-    "MultiAzAndCreateElastiCacheInfrastructure": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "CreateElastiCacheInfrastructure" }, "true" ] }
-      ]
-    },
-    "MultiAzAndDeployAppsRdsInstance": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] }
-      ]
-    },
-    "MultiAzAndDeployBoshRdsInstance": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] }
-      ]
-    },
-    "MultiAzAndDeployCfRdsInstance": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] }
-      ]
-    }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] }
   },
 
   "Resources": {
@@ -126,7 +90,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } },
         "Description": "Director Instance Security Group To Apps RDS Security Group",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
         "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
         "IpProtocol": "tcp"
@@ -138,7 +102,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshRdsSecurityGroup" } },
         "Description": "Director Instance Security Group To Bosh RDS Security Group",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshDbPort" } },
         "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshDbPort" } },
         "IpProtocol": "tcp"
@@ -150,7 +114,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } },
         "Description": "Director Instance Security Group To CF RDS Security Group",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "IpProtocol": "tcp"
@@ -161,7 +125,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "Description": "Director Instance Security Group To Private Security Group TCP Port 22 (ssh)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "FromPort": "22",
         "ToPort": "22" ,
         "IpProtocol": "tcp"
@@ -173,17 +137,17 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "Director Instance Security Group To RabbitMQ Security Group TCP Port 22 (ssh)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "FromPort": "22",
         "ToPort": "22" ,
         "IpProtocol": "tcp"
       }
     },
 
-    "NatAz1IpToLbSecurityGroupTcpPort443": {
+    "NatAz1IpToApplicationLbSecurityGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
         "Description": "NAT AZ1 IP To Loadbalancer Security Group TCP Port 443 (https) - required To allow CF To call back into CF",
         "CidrIp": {
           "Fn::Join": [
@@ -198,11 +162,11 @@
         "IpProtocol": "tcp"
       }
     },
-    "NatAz2IpToLbSecurityGroupTcpPort443": {
+    "NatAz2IpToApplicationLbSecurityGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
         "Description": "NAT AZ2 IP To Loadbalancer Security Group TCP Port 443 (https) - required To allow CF To call back into CF",
         "CidrIp": {
           "Fn::Join": [
@@ -217,11 +181,11 @@
         "IpProtocol": "tcp"
       }
     },
-    "NatAz3IpToLbSecurityGroupTcpPort443": {
+    "NatAz3IpToApplicationLbSecurityGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "MultiAz",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
         "Description": "NAT AZ3 IP To Loadbalancer Security Group TCP Port 443 (https) - required To allow CF To call back into CF",
         "CidrIp": {
           "Fn::Join": [
@@ -237,61 +201,61 @@
       }
     },
 
-    "PrivateToLbSecurityGroupTcpPort80": {
+    "PrivateToApplicationLbSecurityGroupTcpPort80": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
         "Description": "Private Security Group To Loadbalancer Security Group TCP Port 80 (http) - is this required?",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "80",
         "ToPort": "80",
         "IpProtocol": "tcp"
       }
     },
 
-    "PrivateToLbSecurityGroupTcpPort443": {
+    "PrivateToApplicationLbSecurityGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
         "Description": "Private Security Group To Loadbalancer Security Group TCP Port 443 (https) - is this required?",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "443",
         "ToPort": "443",
         "IpProtocol": "tcp"
       }
     },
 
-    "LbSecurityGroupToRouterGroupTcpPort80": {
+    "ApplicationLbSecurityGroupToRouterGroupTcpPort80": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "Description": "LB Security Group To Router Security Group TCP Port 80 (http)",
-        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
         "FromPort": "80",
         "ToPort": "80" ,
         "IpProtocol": "tcp"
       }
     },
-    "LbSecurityGroupToRouterGroupTcpPort443": {
+    "ApplicationLbSecurityGroupToRouterGroupTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "Description": "LB Security Group To Router Security Group TCP Port 443 (https)",
-        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
         "FromPort": "443",
         "ToPort": "443" ,
         "IpProtocol": "tcp"
       }
     },
-    "LbSecurityGroupToRouterGroupTcpPort8080": {
+    "ApplicationLbSecurityGroupToRouterGroupTcpPort8080": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
         "Description": "LB Security Group To Router Security Group TCP Port 8080 (http-alt)",
-        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-LbSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
         "FromPort": "8080",
         "ToPort": "8080" ,
         "IpProtocol": "tcp"
@@ -303,7 +267,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "Description": "Private Security Group To Director Instance Security Group TCP Port 4222 (nats)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "4222",
         "ToPort": "4222" ,
         "IpProtocol": "tcp"
@@ -315,7 +279,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "Description": "Private Security Group To Director Instance Security Group TCP Port 25777 (registry)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "25777",
         "ToPort": "25777" ,
         "IpProtocol": "tcp"
@@ -328,7 +292,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ElastiCacheSecurityGroup" } },
         "Description": "Private Security Group To ElastiCache Security Group TCP Port 6379 (redis)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "6379",
         "ToPort": "6379",
         "IpProtocol": "tcp"
@@ -340,7 +304,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "Description": "Private Security Group To Private Security Group",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "-1",
         "ToPort": "-1",
         "IpProtocol": "-1"
@@ -353,7 +317,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "Private Security Group To RabbitMQ Security Group TCP Port 8300-8302 (consul)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "8300",
         "ToPort": "8302" ,
         "IpProtocol": "tcp"
@@ -366,7 +330,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "Private Security Group To RabbitMQ Security Group UDP Port 8300-8302 (consul)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "8300",
         "ToPort": "8302" ,
         "IpProtocol": "udp"
@@ -379,7 +343,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "Private Security Group To RabbitMQ Security Group TCP Port 1883 (mqtt)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "1883",
         "ToPort": "1883",
         "IpProtocol": "tcp"
@@ -391,7 +355,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "Private Security Group To RabbitMQ Security Group TCP Port 4567 (rabbitmq service broker)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "4567",
         "ToPort": "4567",
         "IpProtocol": "tcp"
@@ -403,7 +367,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "Private Security Group To RabbitMQ Security Group TCP Port 5671 & 5672  (rabbitmq & rabbitmq-ssl)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "5671",
         "ToPort": "5672",
         "IpProtocol": "tcp"
@@ -415,7 +379,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "Private Security Group To RabbitMQ Security Group TCP Port 15672 (rabbitmq management dashboard)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "15672",
         "ToPort": "15672",
         "IpProtocol": "tcp"
@@ -427,7 +391,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "Private Security Group To RabbitMQ Security Group TCP Port 15674 (web stomp)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "15674",
         "ToPort": "15674",
         "IpProtocol": "tcp"
@@ -440,7 +404,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsRdsSecurityGroup" } },
         "Description": "PRivate Security Group To Apps RDS Security Group",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
         "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AppsDbPort" } },
         "IpProtocol": "tcp"
@@ -452,7 +416,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } },
         "Description": "PRivate Security Group To CF RDS Security Group",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "IpProtocol": "tcp"
@@ -465,7 +429,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "Description": "Private Security Group To Director Instance Security Group TCP Port 4222 (nats)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "FromPort": "4222",
         "ToPort": "4222" ,
         "IpProtocol": "tcp"
@@ -477,7 +441,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "Description": "Private Security Group To Director Instance Security Group TCP Port 25777 (registry)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "FromPort": "25777",
         "ToPort": "25777" ,
         "IpProtocol": "tcp"
@@ -490,7 +454,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "Description": "RabbitMQ Security Group To Private Security Group TCP Port 4222 (nats)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "FromPort": "4222",
         "ToPort": "4222" ,
         "IpProtocol": "tcp"
@@ -503,7 +467,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "Description": "RabbitMQ Security Group To Private Security Group TCP Port 8300-8302 (consul)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "FromPort": "8300",
         "ToPort": "8302" ,
         "IpProtocol": "tcp"
@@ -516,7 +480,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "Description": "RabbitMQ Security Group To Private Security Group UDP Port 8300-8302 (consul)",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "FromPort": "8300",
         "ToPort": "8302" ,
         "IpProtocol": "udp"
@@ -529,7 +493,7 @@
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "Description": "RabbitMQ Security Group To RabbitMQ Security Group",
-        "SourceGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
         "FromPort": "-1",
         "ToPort": "-1",
         "IpProtocol": "-1"
