@@ -130,8 +130,20 @@
         "GroupDescription": "SMTP Outbound",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "SecurityGroupEgress": [
-          { "CidrIp": "0.0.0.0/0", "FromPort": "25", "ToPort": "25", "IpProtocol": "tcp" },
-          { "CidrIp": "0.0.0.0/0", "FromPort": "587", "ToPort": "587", "IpProtocol": "tcp" }
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Outbound SMTP TCP Port 25 (smtp)",
+            "FromPort": "25",
+            "ToPort": "25",
+            "IpProtocol": "tcp"
+          },
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Outbound SMTP TCP Port 25 (submission)",
+            "FromPort": "587",
+            "ToPort": "587",
+            "IpProtocol": "tcp"
+          }
         ],
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:SmtpSecurityGroup" } },
