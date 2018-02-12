@@ -20,7 +20,34 @@
       "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9])?$",
       "ConstraintDescription": "Must be a valid domain label matching /^(([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9])?$/"
     },
+    "GenerateApplicationSslCertificate": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Generate Application AWS SSL certificate - requires manual intervention to validate request email",
+      "AllowedValues": [ "true", "false" ]
+    },
+    "ExistingApplicationSslCertificate": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Existing Application SSL certificate ARN",
+      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
+      "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
+    },
 
+    "SslValidationDomain": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Domain to send the SSL validation emails to. Should be empty, or a the parent domain of HostedZone",
+      "AllowedPattern": "^((([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,})?$",
+      "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/ or empty"
+    },
+
+    "Availability": {
+      "Type": "String",
+      "Default": "SingleAZ",
+      "Description": "Availability Type",
+      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
+    },
     "ApplicationElbTimeout": {
       "Type": "Number",
       "Default": "30",
@@ -47,13 +74,6 @@
       "Default": "internet-facing",
       "Description": "Application ELB: Internet facing or internal load balancer",
       "AllowedValues": [ "internet-facing", "internal" ]
-    },
-    "DirectorElbHealthCheckTarget": {
-      "Type": "String",
-      "Default": "TCP:22",
-      "Description": "Director ELB health check target",
-      "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
     },
     "DirectorElbHealthyThreshold": {
       "Type": "Number",
@@ -90,47 +110,6 @@
       "AllowedValues": [ "internet-facing", "internal" ]
     },
 
-    "GenerateApplicationSslCertificate": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Generate Application AWS SSL certificate - requires manual intervention to validate request email",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "ExistingApplicationSslCertificate": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Existing Application SSL certificate ARN",
-      "AllowedPattern": "^(arn:aws::iam::[0-9]+:server-certificate/[0-9]+:[A-Za-z0-9-]+)?$",
-      "ConstraintDescription": "AWS ACM SSL certificate ARN or empty"
-    },
-
-    "SslValidationDomain": {
-      "Type": "String",
-      "Default": "",
-      "Description": "Domain to send the SSL validation emails to. Should be empty, or a the parent domain of HostedZone",
-      "AllowedPattern": "^((([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+[A-Za-z0-9]{2,})?$",
-      "ConstraintDescription": "Must be a valid domain name matching /^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]\\.)+([A-Za-z0-9]{2,}$/ or empty"
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "CfSshElbHealthCheckTarget": {
-      "Type": "String",
-      "Default": "HTTP:2223/",
-      "Description": "Cloudfoundry SSH ELB Health Check Target",
-      "AllowedPattern": "^((TCP|SSL):[0-9]+|HTTPS?:[0-9]+/.*)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL and port number, eg TCP:22, HTTPS:443"
-    },
-    "CfSshElbProtocol": {
-      "Type": "String",
-      "Default": "TCP",
-      "Description": "Cloudfoundry SSH ELB Instance Protocol",
-      "AllowedPattern": "^(TCP|HTTP|HTTPS|SSL)$",
-      "ConstraintDescription": "HTTPS, HTTP, TCP, SSL"
-    },
     "CfSshElbHealthyThreshold": {
       "Type": "Number",
       "Default": "4",
@@ -166,42 +145,39 @@
       "AllowedValues": [ "internet-facing", "internal" ]
     },
 
-    "Availability": {
+    "LbAz1Cidr": {
       "Type": "String",
-      "Default": "SingleAZ",
-      "Description": "Availability Type",
-      "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
+      "Default": "10.0.10.0/24",
+      "Description": "Loadbalancer AZ1 CIDR",
+      "AllowedPattern": "^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2])$",
+      "ConstraintDescription": "Valid CIDR"
     },
-    "DeployElb": {
+    "LbAz2Cidr": {
       "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
-    }
+      "Default": "10.0.11.0/24",
+      "Description": "Loadbalancer AZ2 CIDR",
+      "AllowedPattern": "^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2])$",
+      "ConstraintDescription": "Valid CIDR"
   },
 
   "Outputs": {
     "ApplicationElb": {
       "Description": "Application ELB",
-      "Condition": "DeployElb",
       "Value": { "Ref": "ApplicationElb" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElb" } }
     },
     "ApplicationElbCanonicalHostedZoneId": {
       "Description": "Application ELB Canonical Hosted Zone ID",
-      "Condition": "DeployElb",
       "Value": { "Fn::GetAtt": [ "ApplicationElb","CanonicalHostedZoneID" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbCanonicalHostedZoneId" } }
     },
     "ApplicationElbDnsName": {
       "Description": "ELB DNS Name",
-      "Condition": "DeployElb",
       "Value": { "Fn::GetAtt": [ "ApplicationElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbDnsName" } }
     },
     "ApplicationElbTargetGroupTcp80": {
       "Description": "Application ELB Target Group TCP Port 80",
-      "Condition": "DeployElb",
       "Value": { "Fn::Select": [ "1", { "Fn::Split": [ "/", { "Fn::GetAtt": [ "ApplicationElbTargetGroupTcp80", "TargetGroupFullName" ] } ] } ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroupTcp80" } }
     },
@@ -213,85 +189,70 @@
     },
     "ApplicationElbTargetGroupTcp80Arn": {
       "Description": "Application ELB Target Group TCP Port 80 ARN",
-      "Condition": "DeployElb",
       "Value": { "Ref": "ApplicationElbTargetGroupTcp80" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroupTcp80Arn" } }
     },
     "ApplicationElbTargetGroupTcp443Arn": {
       "Description": "Application ELB Target Group TCP Port 443 ARN",
-      "Condition": "DeployElb",
       "Value": { "Ref": "ApplicationElbTargetGroupTcp443" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ApplicationElbTargetGroupTcp443Arn" } }
     },
     "CfSshElbCanonicalHostedZoneId": {
       "Description": "CF SSH ELB Canonical Hosted Zone ID",
-      "Condition": "DeployElb",
       "Value": { "Fn::GetAtt": [ "CfSshElb","CanonicalHostedZoneNameID" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElbCanonicalHostedZoneId" } }
     },
     "CfSshElb": {
       "Description": "Cloudfoundry SSH External ELB",
-      "Condition": "DeployElb",
       "Value": { "Ref": "CfSshElb" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElb" } }
     },
     "CfSshElbDnsName": {
       "Description": "Cloudfoundry SSH ELB DNS Name",
-      "Condition": "DeployElb",
       "Value": { "Fn::GetAtt": [ "CfSshElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElbDnsName" } }
     },
     "CfSshElbSecurityGroup": {
       "Description": "CF SSH ELB Security Group",
-      "Condition": "DeployElb",
       "Value": { "Ref": "CfSshElbSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } }
     },
     "CfSshInstanceSecurityGroup": {
       "Description": "CF SSH Instance Security Group",
-      "Condition": "DeployElb",
       "Value": { "Ref": "CfSshInstanceSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
     },
     "DirectorElb": {
       "Description": "Director External ELB",
-      "Condition": "DeployElb",
       "Value": { "Ref": "DirectorElb" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElb" } }
     },
     "DirectorElbCanonicalHostedZoneId": {
       "Description": "CF SSH ELB Canonical Hosted Zone ID",
-      "Condition": "DeployElb",
       "Value": { "Fn::GetAtt": [ "DirectorElb","CanonicalHostedZoneNameID" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElbCanonicalHostedZoneId" } }
     },
     "DirectorElbDnsName": {
       "Description": "Director ELB DNS Name",
-      "Condition": "DeployElb",
       "Value": { "Fn::GetAtt": [ "DirectorElb","DNSName" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElbDnsName" } }
     },
     "DirectorElbSecurityGroup": {
       "Description": "Director ELB Security Group",
-      "Condition": "DeployElb",
       "Value": { "Ref": "DirectorElbSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } }
     }
   },
 
   "Conditions": {
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-
     "GenerateApplicationSslCertificate": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
 	{ "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
       ]
     },
     "GenerateApplicationSslCertificateAndHaCfName": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
 	{ "Fn::Not": [ { "Fn::Equals": [ { "Ref": "HaCfName" }, "" ] } ] },
 	{ "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
@@ -299,7 +260,6 @@
     },
     "GenerateApplicationSslCertificateAndNoHaCfName": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
 	{ "Fn::Equals": [ { "Ref": "HaCfName" }, "" ] },
         { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
 	{ "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
@@ -307,19 +267,13 @@
     },
 
     "ApplicationSslElb": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-        {
-          "Fn::Or": [
-            { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
-            { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] } ] }
-          ]
-        }
-      ]
+       "Fn::Or": [
+         { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "true" ] },
+         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] } ] }
+       ]
     },
     "ApplicationPlainTextElb": {
       "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
         { "Fn::Equals": [ { "Ref": "GenerateApplicationSslCertificate" }, "false" ] },
         { "Fn::Equals": [ { "Ref": "ExistingApplicationSslCertificate" }, "" ] }
       ]
@@ -330,6 +284,48 @@
   },
 
   "Resources": {
+    "LbAz1Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone1" } },
+        "CidrBlock": { "Ref": "LbAz1Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbAz1Subnet" } },
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "LbAz2Subnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-AwsAvailabilityZone2" } },
+        "CidrBlock": { "Ref": "LbAz2Cidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:LbAz2Subnet" } },
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+
+    "LbAz1SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "LbAz1Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
+      }
+    },
+    "LbAz2SubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "LbAz2Subnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-InternetRouteTable" } }
+      }
+    },
+
     "GeneratedApplicationSslCertificateAndHaCfName": {
       "Type": "AWS::CertificateManager::Certificate",
       "Condition": "GenerateApplicationSslCertificateAndHaCfName",
@@ -381,11 +377,10 @@
 
     "CfSshElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
-      "Condition": "DeployElb",
       "Properties": {
         "Subnets": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+          { "Ref": "LbAz1Subnet" },
+          { "Ref": "LbAz2Subnet" }
         ],
         "CrossZone": "true",
         "Listeners": [
@@ -400,7 +395,7 @@
         "HealthCheck": {
           "HealthyThreshold": { "Ref": "CfSshElbHealthyThreshold" },
           "Interval": { "Ref": "CfSshElbHealthCheckInternal" },
-          "Target": { "Ref": "CfSshElbHealthCheckTarget" },
+          "Target": "HTTP:2223/",
           "Timeout": { "Ref": "CfSshElbHealthCheckTimeout" },
           "UnhealthyThreshold": { "Ref": "CfSshElbUnhealthyThreshold" }
         },
@@ -413,11 +408,10 @@
     },
     "DirectorElb": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
-      "Condition": "DeployElb",
       "Properties": {
         "Subnets": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+          { "Ref": "LbAz1Subnet" },
+          { "Ref": "LbAz2Subnet" }
         ],
         "CrossZone": "true",
         "Listeners": [
@@ -444,7 +438,7 @@
         "HealthCheck": {
           "HealthyThreshold": { "Ref": "DirectorElbHealthyThreshold" },
           "Interval": { "Ref": "DirectorElbHealthCheckInternal" },
-          "Target": { "Ref": "DirectorElbHealthCheckTarget" },
+          "Target": "TCP:22",
           "Timeout": { "Ref": "DirectorElbHealthCheckTimeout" },
           "UnhealthyThreshold": { "Ref": "DirectorElbUnhealthyThreshold" }
         },
@@ -459,12 +453,11 @@
 
     "ApplicationElb": {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
-      "Condition": "DeployElb",
       "Properties": {
         "Scheme": { "Ref": "ApplicationElbScheme" },
         "Subnets": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz1Subnet" } },
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzAz2Subnet" } }
+          { "Ref": "LbAz1Subnet" },
+          { "Ref": "LbAz2Subnet" }
         ],
         "LoadBalancerAttributes": [
           { "Key": "idle_timeout.timeout_seconds", "Value": { "Ref": "ApplicationElbTimeout" } }
@@ -479,7 +472,6 @@
 
     "ApplicationElbTargetGroupTcp80": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
-      "Condition": "DeployElb",
       "Properties": {
         "Port": "80",
         "Protocol": "HTTP",
@@ -498,7 +490,6 @@
     },
     "ApplicationElbTargetGroupTcp443": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
-      "Condition": "DeployElb",
       "Properties": {
         "Port": "443",
         "Protocol":"HTTPS",
@@ -565,7 +556,6 @@
 
     "CfSshElbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployElb",
       "Properties": {
         "GroupDescription": "CF SSH ELB Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
@@ -577,7 +567,6 @@
     },
     "CfSshInstanceSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployElb",
       "Properties": {
         "GroupDescription": "CF SSH Instance Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
@@ -589,7 +578,6 @@
     },
     "DirectorElbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
-      "Condition": "DeployElb",
       "Properties": {
         "GroupDescription": "Director ELB Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },

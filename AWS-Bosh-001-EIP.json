@@ -11,58 +11,15 @@
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
     },
-
-    "AllocateLbIp": {
-      "Type": "String",
-      "Default": "false",
-      "Description": "Allocate External IP (eg for HA Proxy)",
-      "AllowedValues": [ "true", "false" ]
-    },
     "Availability": {
       "Type": "String",
       "Default": "SingleAZ",
       "Description": "Availability Type",
       "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "AllocateBoshPublicIp": {
-      "Type": "String",
-      "Default": "false",
-      "Description": "Allocate Public Bosh IP",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
   "Outputs": {
-    "AllocateLbIp": {
-      "Description": "Allocate LB IP",
-      "Condition": "AllocateLbIp",
-      "Value": { "Ref": "AllocateLbIp" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-AllocateLbIp" } }
-    },
-    "BoshLitePublicIp": {
-      "Description": "Bosh Lite (Bootstrap) IP",
-      "Condition": "AllocateBoshPublicIp",
-      "Value": { "Ref": "BoshLitePublicIp" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-BoshLitePublicIp" } }
-    },
-    "ExternalAz1Ip": {
-      "Description": "LB External AZ1 IP",
-      "Condition": "AllocateLbIp",
-      "Value": { "Ref": "ExternalAz1Ip" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } }
-    },
-    "ExternalAz2Ip": {
-      "Description": "LB External AZ2 IP",
-      "Condition": "MultiAzAndAllocateLbIp",
-      "Value": { "Ref": "ExternalAz2Ip" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-ExternalAz2Ip" } }
-    },
     "NatAz1Ip": {
       "Description": "NAT AZ1 IP 1",
       "Value": { "Ref": "NatAz1Ip" },
@@ -70,7 +27,6 @@
     },
     "NatAz2Ip": {
       "Description": "NAT AZ2 IP 2",
-      "Condition": "MultiAzOrElb",
       "Value": { "Ref": "NatAz2Ip" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } }
     },
@@ -87,7 +43,6 @@
     },
     "NatAz2IpAllocationId": {
       "Description": "NAT AZ2 IP Allocation ID",
-      "Condition": "MultiAzOrElb",
       "Value": { "Fn::GetAtt": [ "NatAz2Ip", "AllocationId" ] },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-NatAz2Ip-AllocationId" } }
     },
@@ -100,52 +55,19 @@
   },
 
   "Conditions": {
-    "AllocateBoshPublicIp": { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] },
-    "AllocateLbIp": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
-      ]
-    },
-    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-    "MultiAzAndAllocateLbIp": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
-      ]
-    },
-    "MultiAzOrElb": {
-      "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
-      ]
-    }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] }
   },
 
   "Resources": {
-    "BoshLitePublicIp": {
-      "Type": "AWS::EC2::EIP",
-      "Condition": "AllocateBoshPublicIp"
-    },
     "NatAz1Ip": {
       "Type": "AWS::EC2::EIP"
     },
     "NatAz2Ip": {
-      "Type": "AWS::EC2::EIP",
-      "Condition": "MultiAzOrElb"
+      "Type": "AWS::EC2::EIP"
     },
     "NatAz3Ip": {
       "Type": "AWS::EC2::EIP",
       "Condition": "MultiAz"
-    },
-    "ExternalAz1Ip": {
-      "Type": "AWS::EC2::EIP",
-      "Condition": "AllocateLbIp"
-    },
-    "ExternalAz2Ip": {
-      "Type": "AWS::EC2::EIP",
-      "Condition": "MultiAzAndAllocateLbIp"
     }
   }
 }

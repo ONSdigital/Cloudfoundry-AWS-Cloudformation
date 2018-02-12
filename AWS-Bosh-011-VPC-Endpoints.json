@@ -16,25 +16,13 @@
       "Default": "SingleAZ",
       "Description": "Availability Type",
       "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
   "Outputs": {},
 
   "Conditions": {
-    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-    "MultiAzOrElb": {
-      "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
-      ]
-    }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] }
   },
 
   "Resources": {
@@ -62,7 +50,7 @@
           { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1RouteTable" } },
           {
             "Fn::If": [
-              "MultiAzOrElb",
+              "MultiAz",
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2RouteTable" } },
               { "Ref": "AWS::NoValue" }
             ]
