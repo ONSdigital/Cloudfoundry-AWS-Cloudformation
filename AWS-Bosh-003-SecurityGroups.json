@@ -16,12 +16,6 @@
       "Default": "SingleAZ",
       "Description": "Availability Type",
       "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -35,11 +29,6 @@
       "Description": "Director Instance Security Group",
       "Value": { "Ref": "DirectorInstanceSecurityGroup" },
       "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
-    },
-    "DmzSecurityGroup": {
-      "Description": "DMZ Security Groups",
-      "Value": { "Ref": "DmzSecurityGroup" },
-      "Export": { "Name": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } }
     },
     "PrivateSecurityGroup": {
       "Description": "Private Security Groups",
@@ -59,38 +48,10 @@
   },
 
   "Conditions": {
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-    "MultiAzOrElb": {
-      "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
-      ]
-    }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] }
   },
 
   "Resources": {
-    "DirectorInstanceSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "Director Security Group",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorInstanceSecurityGroup" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
-    "DmzSecurityGroup": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties": {
-        "GroupDescription": "DMZ In Out",
-        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
-        "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DmzSecurityGroup" } },
-          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
-        ]
-      }
-    },
     "ApplicationLbSecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -98,6 +59,17 @@
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
           { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:ApplicationLbSecurityGroup" } },
+          { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
+        ]
+      }
+    },
+    "DirectorInstanceSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Director Security Group",
+        "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:DirectorInstanceSecurityGroup" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }

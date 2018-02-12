@@ -95,12 +95,6 @@
       "Description": "Whitelisted HTTP(S) Access CIDR 6",
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -108,7 +102,6 @@
   },
 
   "Conditions": {
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
     "PermitFullAccessCidr1": {
       "Fn::Not": [
         { "Fn::Equals": [ { "Ref": "FullAccessCidr1" }, "" ] }
@@ -177,21 +170,9 @@
       "Condition": "PermitFullAccessCidr1",
       "Properties": {
         "Parameters": {
-          "CfSshSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
-            ]
-          },
-          "DirectorSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
-            ]
-          },
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } },
+          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
         },
         "TemplateURL": {
@@ -210,21 +191,9 @@
       "Condition": "PermitFullAccessCidr2",
       "Properties": {
         "Parameters": {
-          "CfSshSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
-            ]
-          },
-          "DirectorSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
-            ]
-          },
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
         },
         "TemplateURL": {
@@ -243,22 +212,9 @@
       "Condition": "PermitFullAccessCidr3",
       "Properties": {
         "Parameters": {
-          "CfSshSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
-            ]
-          },
-          "DirectorSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
-            ]
-          },
-
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
         },
         "TemplateURL": {
@@ -277,21 +233,9 @@
       "Condition": "PermitFullAccessCidr4",
       "Properties": {
         "Parameters": {
-          "CfSshSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
-            ]
-          },
-          "DirectorSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
-            ]
-          },
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
         },
         "TemplateURL": {
@@ -310,21 +254,9 @@
       "Condition": "PermitFullAccessCidr5",
       "Properties": {
         "Parameters": {
-          "CfSshSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
-            ]
-          },
-          "DirectorSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
-            ]
-          },
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
         },
         "TemplateURL": {
@@ -343,21 +275,9 @@
       "Condition": "PermitFullAccessCidr6",
       "Properties": {
         "Parameters": {
-          "CfSshSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } }
-            ]
-          },
-          "DirectorSecurityGroup": {
-            "Fn::If": [
-              "DeployElb", 
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } }
-            ]
-          },
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+          "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+          "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
           "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
         },
         "TemplateURL": {

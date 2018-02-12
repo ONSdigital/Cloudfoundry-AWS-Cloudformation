@@ -158,12 +158,6 @@
       "Default": "tcp",
       "Description": "External Syslog Protocol",
       "AllowedValues": [ "tcp", "udp" ]
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -199,7 +193,6 @@
     "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
     "DeployBoshRdsInstance": { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
     "WhitelistExternalRdsCidr1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsCidr1" }, "" ] } ] },
     "WhitelistExternalRdsCidr2": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsCidr2" }, "" ] } ] },
     "WhitelistExternalRdsCidr3": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsCidr3" }, "" ] } ] },
@@ -328,6 +321,28 @@
         "IpProtocol": "tcp"
       }
     },
+    "ApplicationLbToRouterTcpPort8080": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+        "Description": "Application LB Security Group To Router Security Group TCP Port 8080 (http-alt)",
+        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
+        "FromPort": "8080",
+        "ToPort": "8080" ,
+        "IpProtocol": "tcp"
+      }
+    },
+   "CfSshElbToCfSshInstanceTcpPort2222": {
+     "Type": "AWS::EC2::SecurityGroupEgress",
+     "Properties": {
+       "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
+       "Description": "Application LB Security Group To Router Security Group TCP Ports 2222 & 2223 (ssh proxy & ssh proxy health check)",
+       "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } },
+       "FromPort": "2222",
+       "ToPort": "2223",
+       "IpProtocol": "tcp"
+     }
+   },
 
     "DirectorToS3PrefixListPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
@@ -376,7 +391,6 @@
 
     "DirectorElbToDirectorTcpPort22": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
         "Description": "Director Load Balancer Security Group To Director Instance Security Group TCP Port 22 (ssh)",
@@ -388,7 +402,6 @@
     },
     "DirectorElbToDirectorTcpPort6868": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
         "Description": "Director Load Balancer Security Group To Director Instance Security Group TCP Port 6868 (mbus)",
@@ -400,7 +413,6 @@
     },
     "DirectorElbToDirectorTcpPort25555": {
       "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployElb",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
         "Description": "Director Load Balancer Security Group To Director Instance Security Group TCP Port 25555 (director)",
@@ -411,41 +423,6 @@
       }
     },
 
-    "DirectorInstanceToPrivateTcpPort22": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
-        "Description": "Director Instance Security Group To Private Security Group TCP Port 22 (ssh)",
-        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "FromPort": "22",
-        "ToPort": "22" ,
-        "IpProtocol": "tcp"
-      }
-    },
-    "DirectorInstanceToRabbitmqTcpPort22": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
-        "Description": "Director Instance Security Group To RabbitMQ Security Group TCP Port 22 (ssh)",
-        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "FromPort": "22",
-        "ToPort": "22" ,
-        "IpProtocol": "tcp"
-      }
-    },
-    "DirectorInstanceToRabbitmqTcpPort6868": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
-        "Description": "Director Instance Security Group To RabbitMQ Security Group TCP Port 6868 (mbus)",
-        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "FromPort": "6868",
-        "ToPort": "6868" ,
-        "IpProtocol": "tcp"
-      }
-    },
     "DirectorInstanceToAppsRdsTcpPort": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "DeployAppsRdsInstance",
@@ -479,6 +456,29 @@
         "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfRdsSecurityGroup" } },
         "FromPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
         "ToPort": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfDbPort" } },
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorInstanceToPrivateTcpPort22": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "Description": "Director Instance Security Group To Private Security Group TCP Port 22 (ssh)",
+        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
+        "IpProtocol": "tcp"
+      }
+    },
+    "DirectorInstanceToRabbitmqTcpPort22": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
+        "Description": "Director Instance Security Group To RabbitMQ Security Group TCP Port 22 (ssh)",
+        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "FromPort": "22",
+        "ToPort": "22" ,
         "IpProtocol": "tcp"
       }
     },
@@ -555,104 +555,6 @@
       }
     },
 
-    "DmzToExternalSyslogCidr1": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogCidr1",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
-        "Description": "DMZ Security Group To External Syslog CIDR1",
-        "CidrIp": { "Ref": "ExternalSyslogCidr1" },
-        "FromPort": { "Ref": "ExternalSyslogPort" },
-        "ToPort": { "Ref": "ExternalSyslogPort" },
-        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
-      }
-    },
-    "DmzToExternalSyslogCidr2": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogCidr2",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
-        "Description": "DMZ Security Group To External Syslog CIDR2",
-        "CidrIp": { "Ref": "ExternalSyslogCidr2" },
-        "FromPort": { "Ref": "ExternalSyslogPort" },
-        "ToPort": { "Ref": "ExternalSyslogPort" },
-        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
-      }
-    },
-    "DmzToExternalSyslogCidr3": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalSyslogCidr3",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
-        "Description": "DMZ Security Group To External Syslog CIDR3",
-        "CidrIp": { "Ref": "ExternalSyslogCidr3" },
-        "FromPort": { "Ref": "ExternalSyslogPort" },
-        "ToPort": { "Ref": "ExternalSyslogPort" },
-        "IpProtocol": { "Ref": "ExternalSyslogProtocol" }
-      }
-    },
-    "DmzToExternalNtpCidr1": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalNtpCidr1",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
-        "Description": "DMZ Security Group To External NTP CIDR1 UDP Port 123",
-        "CidrIp": { "Ref": "ExternalNtpCidr1" },
-        "FromPort": "123",
-        "ToPort": "123",
-        "IpProtocol": "udp"
-      }
-    },
-    "DmzToExternalNtpCidr2": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalNtpCidr2",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
-        "Description": "DMZ Security Group To External NTP CIDR2 UDP Port 123",
-        "CidrIp": { "Ref": "ExternalNtpCidr2" },
-        "FromPort": "123",
-        "ToPort": "123",
-        "IpProtocol": "udp"
-      }
-    },
-    "DmzToExternalNtpCidr3": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "WhitelistExternalNtpCidr3",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DmzSecurityGroup" } },
-        "Description": "DMZ Security Group To External NTP CIDR3 UDP Port 123",
-        "CidrIp": { "Ref": "ExternalNtpCidr3" },
-        "FromPort": "123",
-        "ToPort": "123",
-        "IpProtocol": "udp"
-      }
-    },
-
-
-    "ApplicationLbToRouterTcpPort8080": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "DeployElb",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
-        "Description": "Application LB Security Group To Router Security Group TCP Port 8080 (http-alt)",
-        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RouterSecurityGroup" } },
-        "FromPort": "8080",
-        "ToPort": "8080" ,
-        "IpProtocol": "tcp"
-      }
-    },
-   "CfSshElbToCfSshInstanceTcpPort2222": {
-     "Type": "AWS::EC2::SecurityGroupEgress",
-     "Condition": "DeployElb",
-     "Properties": {
-       "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
-       "Description": "Application LB Security Group To Router Security Group TCP Ports 2222 & 2223 (ssh proxy & ssh proxy health check)",
-       "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshInstanceSecurityGroup" } },
-       "FromPort": "2222",
-       "ToPort": "2223",
-       "IpProtocol": "tcp"
-     }
-   },
 
     "PrivateToPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",

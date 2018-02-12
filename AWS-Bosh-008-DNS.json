@@ -16,24 +16,6 @@
       "Default": "SingleAZ",
       "Description": "Availability Type",
       "AllowedValues": [ "SingleAZ", "SingleAZ-HA", "MultiAZ" ]
-    },
-    "DeployElb": {
-      "Type": "String",
-      "Default": "true",
-      "Description": "Deploy External ELB",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "AllocateLbIp": {
-      "Type": "String",
-      "Default": "false",
-      "Description": "Allocate External IP (eg for HA Proxy)",
-      "AllowedValues": [ "true", "false" ]
-    },
-    "AllocateBoshPublicIp": {
-      "Type": "String",
-      "Default": "false",
-      "Description": "Allocate Public Bosh IP",
-      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -95,7 +77,6 @@
     },
     "NatAz2DnsName": {
       "Description": "NAT AZ2 DNS Name",
-      "Condition": "MultiAz",
       "Value": {
         "Fn::Join": [
           ".", [
@@ -120,36 +101,13 @@
   },
 
   "Conditions": {
-    "DeployElb": { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] },
-
-    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-    "MultiAzAndAllocateLbIp": {
-      "Fn::And": [
-        { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] },
-        { "Fn::Equals": [ { "Ref": "AllocateLbIp" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
-      ]
-    },
     "SingleAz": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] } ] },
-    "SingleAzAndAllocateLbIp": {
-      "Fn::And": [
-        { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] } ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "false" ] }
-      ]
-    },
-    "AllocateBoshIp": { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] },
-    "DeployElbOrAllocateBoshIp": {
-      "Fn::Or": [
-        { "Fn::Equals": [ { "Ref": "AllocateBoshPublicIp" }, "true" ] },
-        { "Fn::Equals": [ { "Ref": "DeployElb" }, "true" ] }
-      ]
-    }
+    "MultiAz": { "Fn::Equals": [ { "Ref": "Availability" }, "MultiAZ" ] }
   },
 
   "Resources": {
     "ElbDnsRrs": {
       "Type": "AWS::Route53::RecordSetGroup",
-      "Condition": "DeployElb",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
         "RecordSets": [
@@ -193,42 +151,37 @@
       }
     },
 
-    "DirectorIpDnsRr": {
-      "Type": "AWS::Route53::RecordSet",
-      "Condition": "AllocateBoshIp",
-      "Properties": {
-        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::Join": [ ".", [ "director", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
-        "TTL": "3600",
-        "Type": "A",
-        "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-BoshLitePublicIp" } }
-        ]
-      }
-    },
-
-    "NatSingleAzDnsRr": {
-      "Type": "AWS::Route53::RecordSet",
+    "NatSingleAzDnsRrs": {
+      "Type": "AWS::Route53::RecordSetGroup",
       "Condition": "SingleAz",
       "Properties": {
         "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::Join": [ ".", [ "nat", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
-        "TTL": "3600",
-        "Type": "A",
-        "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } }
-        ]
-      }
-    },
-    "NatAz1DnsRr": {
-      "Type": "AWS::Route53::RecordSet",
-      "Properties": {
-        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "Name": { "Fn::Join": [ ".", [ "nat-z1", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
-        "TTL": "3600",
-        "Type": "A",
-        "ResourceRecords": [
-          { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } }
+        "RecordSets": [
+          {
+            "Name": { "Fn::Join": [ ".", [ "nat", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+            "TTL": "3600",
+            "Type": "A",
+            "ResourceRecords": [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } }
+            ]
+          },
+          {
+            "Name": { "Fn::Join": [ ".", [ "nat-z2", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+            "TTL": "3600",
+            "Type": "A",
+            "ResourceRecords": [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } }
+            ]
+          },
+          {
+            "Name": { "Fn::Join": [ ".", [ "nat-z3", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+            "TTL": "3600",
+            "Type": "A",
+            "ResourceRecords": [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } }
+            ]
+          }
         ]
       }
     },
@@ -254,6 +207,14 @@
             "TTL": "3600",
             "Type": "A",
             "ResourceRecords": [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } }
+            ]
+          },
+          {
+            "Name": { "Fn::Join": [ ".", [ "nat-z2", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+            "TTL": "3600",
+            "Type": "A",
+            "ResourceRecords": [
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } }
             ]
           },
@@ -263,60 +224,6 @@
             "Type": "A",
             "ResourceRecords": [
               { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } }
-            ]
-          }
-        ]
-      }
-    },
-
-    "AppsExternalSingleIpDnsRR": {
-      "Type": "AWS::Route53::RecordSetGroup",
-      "Condition": "SingleAzAndAllocateLbIp",
-      "Properties": {
-        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "RecordSets": [
-          {
-            "Name": { "Fn::Join": [ ".", [ "*.apps", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
-            "TTL": "3600",
-            "Type": "A",
-            "ResourceRecords": [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } }
-            ]
-          },
-          {
-            "Name": { "Fn::Join": [ ".", [ "*.system", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
-            "TTL": "3600",
-            "Type": "A",
-            "ResourceRecords": [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } }
-            ]
-          }
-        ]
-      }
-    },
-
-    "ExternalMultiIpDnsRR": {
-      "Type": "AWS::Route53::RecordSetGroup",
-      "Condition": "MultiAzAndAllocateLbIp",
-      "Properties": {
-        "HostedZoneName": { "Fn::Join": [ "", [ { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } }, "." ] ] },
-        "RecordSets": [
-          {
-            "Name": { "Fn::Join": [ ".", [ "*.apps", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
-            "TTL": "3600",
-            "Type": "A",
-            "ResourceRecords": [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz2Ip" } }
-            ]
-          },
-          {
-            "Name": { "Fn::Join": [ ".", [ "*.system", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
-            "TTL": "3600",
-            "Type": "A",
-            "ResourceRecords": [
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz1Ip" } },
-              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ExternalAz2Ip" } }
             ]
           }
         ]
