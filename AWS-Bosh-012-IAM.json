@@ -58,14 +58,6 @@
     "BoshAwsSecretAccessKey": {
       "Description": "Bosh Broker Access Key",
       "Value": { "Fn::GetAtt": [ "BoshAwsAccessKey", "SecretAccessKey" ] }
-    },
-    "SmtpAwsAccessKeyId": {
-      "Description": "SMTP Access Key Id",
-      "Value": { "Ref": "SmtpAwsAccessKey" }
-    },
-    "SmtpAwsSecretAccessKey": {
-      "Description": "SMTP Broker Access Key",
-      "Value": { "Fn::GetAtt": [ "SmtpAwsAccessKey", "SecretAccessKey" ] }
     }
   },
 
@@ -332,69 +324,6 @@
       }
     },
 
-    "SmtpAwsUser": {
-      "Type": "AWS::IAM::User",
-      "Properties": {
-        "Path": { "Fn::Sub": "/Cloudfoundry/Cloudformation/${DeploymentName}/" },
-        "Policies": [
-          {
-            "PolicyName": { "Fn::Sub": "${DeploymentName}-SmtpAwsUserPolicy" },
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Action": [
-                    "ses:SendRawEmail"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": "*",
-                  "Condition": {
-                    "StringLike": {
-                      "ses:Recipients": [
-                        {
-                          "Fn::Join": [
-                            "@", [
-                              "*", {
-                                "Fn::If": [
-                                  "WhitelistedUaaEmailDomain1",
-                                  { "Ref": "UaaEmailDomain1" },
-                                  "*"
-                                ]
-                              }
-                            ]
-                          ]
-                        },
-                        {
-                          "Fn::Join": [
-                            "@", [
-                              "*", {
-                                "Fn::If": [
-                                  "WhitelistedUaaEmailDomain2",
-                                  { "Ref": "UaaEmailDomain2" },
-                                  "*"
-                                ]
-                              }
-                            ]
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                },
-                {
-                  "Action": [
-                    "iam:GetUser"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": "*"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
-
     "BoshDirectorPolicy": {
       "Type": "AWS::IAM::ManagedPolicy",
       "Properties": {
@@ -624,12 +553,6 @@
       "Type": "AWS::IAM::AccessKey",
       "Properties": {
         "UserName": { "Ref": "BoshAwsUser" }
-      }
-    },
-    "SmtpAwsAccessKey": {
-      "Type": "AWS::IAM::AccessKey",
-      "Properties": {
-        "UserName": { "Ref": "SmtpAwsUser" }
       }
     }
   }
