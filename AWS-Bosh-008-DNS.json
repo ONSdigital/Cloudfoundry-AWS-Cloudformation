@@ -167,7 +167,7 @@
             ]
           },
           {
-            "Name": { "Fn::Join": [ ".", [ "nat-z2", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+            "Name": { "Fn::Join": [ ".", [ "nat-z1", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
             "TTL": "3600",
             "Type": "A",
             "ResourceRecords": [
@@ -175,7 +175,7 @@
             ]
           },
           {
-            "Name": { "Fn::Join": [ ".", [ "nat-z3", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+            "Name": { "Fn::Join": [ ".", [ "nat-z2", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
             "TTL": "3600",
             "Type": "A",
             "ResourceRecords": [
@@ -203,7 +203,7 @@
             ]
           },
           {
-            "Name": { "Fn::Join": [ ".", [ "nat-z2", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
+            "Name": { "Fn::Join": [ ".", [ "nat-z1", { "Ref": "DeploymentName" }, { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-HostedZone" } } ] ] },
             "TTL": "3600",
             "Type": "A",
             "ResourceRecords": [
