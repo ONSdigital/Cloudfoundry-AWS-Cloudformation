@@ -10,6 +10,22 @@
       "MaxLength": "16",
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
+    },
+    "UaaEmailDomain1": {
+      "Type": "String",
+      "Description": "Whitelisted Email Domain Allowed to Receive Emails from UAA",
+      "MinLength": "1",
+      "MaxLength": "32",
+      "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9].?)+$",
+      "ConstraintDescription": "Must be a valid domain name"
+    },
+    "UaaEmailDomain2": {
+      "Type": "String",
+      "Description": "Whitelisted Email Domain Allowed to Receive Emails from UAA",
+      "MinLength": "1",
+      "MaxLength": "32",
+      "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9].?)+$",
+      "ConstraintDescription": "Must be a valid domain name"
     }
   },
 
@@ -51,6 +67,11 @@
       "Description": "SMTP Broker Access Key",
       "Value": { "Fn::GetAtt": [ "SmtpAwsAccessKey", "SecretAccessKey" ] }
     }
+  },
+
+  "Conditions": {
+    "WhitelistedUaaEmailDomain1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "UaaEmailDomain1" }, "" ] } ] },
+    "WhitelistedUaaEmailDomain2": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "UaaEmailDomain2" }, "" ] } ] }
   },
 
   "Resources": {
@@ -326,7 +347,39 @@
                     "ses:SendRawEmail"
                   ],
                   "Effect": "Allow",
-                  "Resource": "*"
+                  "Resource": "*",
+                  "Condition": {
+                    "StringLike": {
+                      "ses:Recipients": [
+                        {
+                          "Fn::Join": [
+                            "@", [
+                              "*", {
+                                "Fn::If": [
+                                  "WhitelistedUaaEmailDomain1",
+                                  { "Ref": "UaaEmailDomain1" },
+                                  "*"
+                                ]
+                              }
+                            ]
+                          ]
+                        },
+                        {
+                          "Fn::Join": [
+                            "@", [
+                              "*", {
+                                "Fn::If": [
+                                  "WhitelistedUaaEmailDomain2",
+                                  { "Ref": "UaaEmailDomain2" },
+                                  "*"
+                                ]
+                              }
+                            ]
+                          ]
+                        }
+                      ]
+                    }
+                  }
                 },
                 {
                   "Action": [
