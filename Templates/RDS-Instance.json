@@ -177,7 +177,7 @@
         "PreferredMaintenanceWindow": { "Ref": "RdsInstancePreferredMaintenanceWindow" },
         "VPCSecurityGroups": [ { "Ref": "RdsSecurityGroup" } ],
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}-${RdsInstanceName}:RdsInstance" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:${RdsInstanceName}RdsInstance" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
@@ -202,7 +202,7 @@
         "GroupDescription": "RDS Security Group",
         "VpcId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CloudFoundryVpc" } },
         "Tags": [
-          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}-${RdsInstanceName}:RdsSecurityGroup" } },
+          { "Key": "Name", "Value": { "Fn::Sub": "${DeploymentName}:${RdsInstanceName}RdsSecurityGroup" } },
           { "Key": "deployment", "Value": { "Ref": "DeploymentName" } }
         ]
       }
