@@ -10,22 +10,6 @@
       "MaxLength": "16",
       "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
       "ConstraintDescription": "Must be a valid domain label matching /^([A-Za-z0-9]+[A-Za-z0-9-])+[A-Za-z0-9]$/"
-    },
-    "UaaEmailDomain1": {
-      "Type": "String",
-      "Description": "Whitelisted Email Domain Allowed to Receive Emails from UAA",
-      "MinLength": "1",
-      "MaxLength": "32",
-      "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9].?)+$",
-      "ConstraintDescription": "Must be a valid domain name"
-    },
-    "UaaEmailDomain2": {
-      "Type": "String",
-      "Description": "Whitelisted Email Domain Allowed to Receive Emails from UAA",
-      "MinLength": "1",
-      "MaxLength": "32",
-      "AllowedPattern": "^(([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9].?)+$",
-      "ConstraintDescription": "Must be a valid domain name"
     }
   },
 
@@ -59,11 +43,6 @@
       "Description": "Bosh Broker Access Key",
       "Value": { "Fn::GetAtt": [ "BoshAwsAccessKey", "SecretAccessKey" ] }
     }
-  },
-
-  "Conditions": {
-    "WhitelistedUaaEmailDomain1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "UaaEmailDomain1" }, "" ] } ] },
-    "WhitelistedUaaEmailDomain2": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "UaaEmailDomain2" }, "" ] } ] }
   },
 
   "Resources": {
