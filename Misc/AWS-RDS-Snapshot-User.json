@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "RDS Snapshot User\naws rds-create-db-snapshot--db-instance-identifier $DATABASE_NAME --db-snapshot-identifier $DATABASE_NAME-snapshot-identifier\naws rds delete-db-snapshot --db-snapshot-identifier $SNAPSHOT_NAME\naws rds describe-db-snapshots --db-instance-identifier $DATABASE_NAME\n",
+  "Description": "RDS Snapshot User & Group\naws rds-create-db-snapshot--db-instance-identifier $DATABASE_NAME --db-snapshot-identifier $DATABASE_NAME-snapshot-identifier\naws rds delete-db-snapshot --db-snapshot-identifier $SNAPSHOT_NAME\naws rds describe-db-snapshots --db-instance-identifier $DATABASE_NAME\n",
 
   "Parameters": {
     "RdsIdentifier": {
@@ -32,8 +32,23 @@
     "RdsSnapshotGroup": {
       "Type": "AWS::IAM::Group",
       "Properties": {
+        "GroupName": {
+          "Fn::Join": [
+            "-", [
+              { "Ref": "RdsIdentifier" },
+              "RdsSnapshotGroup"
+            ]
+          ]
+        },
         "Policies": {
-          "PolicyName": "RdsSnapshotPolicy",
+          "PolicyName": {
+            "Fn::Join": [
+              "-", [
+                { "Ref": "RdsIdentifier" },
+                "RdsSnapshotPolicy"
+              ]
+            ]
+          },
           "PolicyDocument": {
             "Version": "2012-10-17",
             "Statement": [
