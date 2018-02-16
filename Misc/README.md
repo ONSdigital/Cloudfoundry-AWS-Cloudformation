@@ -16,7 +16,7 @@
 
 3. RDS Snapshot User
    - AWS-RDS-Snapshot-User.json
-     - Creates an AWS user who has permission to snapshot a predefined database, list snapshots for that database and delete specific snapshots that have the database name as their prefix
+     - Creates an AWS user & group that have permission to snapshot a predefined database, list snapshots for that database and delete specific snapshots that have the database name as their prefix
 
 # RDS Snapshot Instructions
 

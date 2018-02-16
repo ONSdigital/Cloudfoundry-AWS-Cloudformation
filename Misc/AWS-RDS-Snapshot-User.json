@@ -21,25 +21,52 @@
     "RdsSnapshotSecretAccessKey": {
       "Description": "RDS Snapshot User Broker Access Key",
       "Value": { "Fn::GetAtt": [ "RdsSnapshotAccessKey", "SecretAccessKey" ] }
+    },
+    "RdsSnapshotGroupName": {
+      "Description": "RDS Snapshot Group Name",
+      "Value": { "Ref": "RdsSnapshotGroup" }
     }
   },
 
   "Resources": {
-    "RdsSnapshotUser": {
-      "Type": "AWS::IAM::User",
+    "RdsSnapshotGroup": {
+      "Type": "AWS::IAM::Group",
       "Properties": {
-        "Policies": [
-          {
-            "PolicyName": "RdsSnapshotPolicy",
-            "PolicyDocument": {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Action": [
-                    "rds:DeleteDBSnapshot"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": {
+        "Policies": {
+          "PolicyName": "RdsSnapshotPolicy",
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Action": [
+                  "rds:DeleteDBSnapshot"
+                ],
+                "Effect": "Allow",
+                "Resource": {
+                  "Fn::Join": [
+                    "", [
+                      "arn:aws:rds:*:*:snapshot:",
+                      { "Ref": "RdsIdentifier" },
+                      "*"
+                    ]
+                  ]
+                }
+              },
+              {
+                "Action": [
+                  "rds:CreateDBSnapshot"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                  {
+                    "Fn::Join": [
+                      ":", [
+                        "arn:aws:rds:*:*:db",
+                        { "Ref": "RdsIdentifier" }
+                      ]
+                    ]
+                  },
+                  { 
                     "Fn::Join": [
                       "", [
                         "arn:aws:rds:*:*:snapshot:",
@@ -48,51 +75,34 @@
                       ]
                     ]
                   }
-                },
-                {
-                  "Action": [
-                    "rds:CreateDBSnapshot"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": [
-                    {
-                      "Fn::Join": [
-                        ":", [
-                          "arn:aws:rds:*:*:db",
-                          { "Ref": "RdsIdentifier" }
-                        ]
+                ]
+              },
+              {
+                "Action": [
+                  "rds:DescribeDBSnapshots"
+                ],
+                "Effect": "Allow",
+                "Resource": [
+                  {
+                    "Fn::Join": [
+                      ":", [
+                        "arn:aws:rds:*:*:db",
+                        { "Ref": "RdsIdentifier" }
                       ]
-                    },
-                    { 
-                      "Fn::Join": [
-                        "", [
-                          "arn:aws:rds:*:*:snapshot:",
-                          { "Ref": "RdsIdentifier" },
-                          "*"
-                        ]
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "Action": [
-                    "rds:DescribeDBSnapshots"
-                  ],
-                  "Effect": "Allow",
-                  "Resource": [
-                    {
-                      "Fn::Join": [
-                        ":", [
-                          "arn:aws:rds:*:*:db",
-                          { "Ref": "RdsIdentifier" }
-                        ]
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
+                    ]
+                  }
+                ]
+              }
+            ]
           }
+        }
+      }
+    },
+    "RdsSnapshotUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Groups": [
+          { "Ref": "RdsSnapshotGroup" }
         ]
       }
     },
