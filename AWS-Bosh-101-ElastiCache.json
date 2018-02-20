@@ -133,8 +133,8 @@
         "SubnetIds": [
           { "Ref": "ElastiCacheAz1Subnet" },
           { "Ref": "ElastiCacheAz2Subnet" }
-        ] 
-      } 
+        ]
+      }
     },
 
     "ElastiCacheSecurityGroup": {
@@ -171,7 +171,7 @@
                     "elasticache:RebootCacheCluster"
                   ],
                   "Effect": "Allow",
-                  "Resource": { "Fn::Sub": "arn:aws:elasticache:${AWS::Region}:::*" }
+                  "Resource": "*"
                 },
                 {
                   "Action": [
