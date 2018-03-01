@@ -723,18 +723,6 @@
         "IpProtocol": "tcp"
       }
     },
-    "PrivateToRabbitmqTcpPort8883": {
-      "Type": "AWS::EC2::SecurityGroupEgress",
-      "Condition": "CreateRabbitmqNetworks",
-      "Properties": {
-        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
-        "Description": "Private Security Group To RabbitMQ Security Group TCP Ports 8883 (mqtt+ssl)",
-        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "FromPort": "8883",
-        "ToPort": "8883",
-        "IpProtocol": "tcp"
-      }
-    },
     "PrivateToRabbitmqTcpPort15672": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Condition": "CreateRabbitmqNetworks",
