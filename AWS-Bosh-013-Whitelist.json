@@ -18,12 +18,26 @@
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "FullAccessCidrDescription1": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
+    },
     "FullAccessCidr2": {
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 2",
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccessCidrDescription2": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
     },
     "FullAccessCidr3": {
       "Type": "String",
@@ -32,12 +46,26 @@
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "FullAccessCidrDescription3": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
+    },
     "FullAccessCidr4": {
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 4",
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccessCidrDescription4": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
     },
     "FullAccessCidr5": {
       "Type": "String",
@@ -46,12 +74,26 @@
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "FullAccessCidrDescription5": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
+    },
     "FullAccessCidr6": {
       "Type": "String",
       "Default": "",
       "Description": "Full Whitelisted Access CIDR 6",
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
+    },
+    "FullAccessCidrDescription6": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
     },
 
     "HttpAccessCidr1": {
@@ -61,12 +103,26 @@
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "HttpAccessCidrDescription1": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
+    },
     "HttpAccessCidr2": {
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 2",
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
+    },
+    "HttpAccessCidrDescription2": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
     },
     "HttpAccessCidr3": {
       "Type": "String",
@@ -75,12 +131,26 @@
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "HttpAccessCidrDescription3": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
+    },
     "HttpAccessCidr4": {
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 4",
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
+    },
+    "HttpAccessCidrDescription4": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
     },
     "HttpAccessCidr5": {
       "Type": "String",
@@ -89,13 +159,27 @@
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
     },
+    "HttpAccessCidrDescription5": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
+    },
     "HttpAccessCidr6": {
       "Type": "String",
       "Default": "",
       "Description": "Whitelisted HTTP(S) Access CIDR 6",
       "AllowedPattern": "^((([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2]))?$",
       "ConstraintDescription": "Valid CIDR"
-    }
+    },
+    "HttpAccessCidrDescription6": {
+      "Type": "String",
+      "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "ConstraintDescription": "Valid description"
+    },
   },
 
   "Outputs": {
@@ -173,7 +257,8 @@
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
           "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr1" }
+          "WhitelistedCidr": { "Ref": "FullAccessCidr1" },
+          "CidrDescription": { "Ref": "FullAccessCidrDescription1" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -194,7 +279,8 @@
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
           "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr2" }
+          "WhitelistedCidr": { "Ref": "FullAccessCidr2" },
+          "CidrDescription": { "Ref": "FullAccessCidrDescription2" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -215,7 +301,8 @@
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
           "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr3" }
+          "WhitelistedCidr": { "Ref": "FullAccessCidr3" },
+          "CidrDescription": { "Ref": "FullAccessCidrDescription3" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -236,7 +323,8 @@
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
           "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr4" }
+          "WhitelistedCidr": { "Ref": "FullAccessCidr4" },
+          "CidrDescription": { "Ref": "FullAccessCidrDescription4" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -257,7 +345,8 @@
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
           "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr5" }
+          "WhitelistedCidr": { "Ref": "FullAccessCidr5" },
+          "CidrDescription": { "Ref": "FullAccessCidrDescription5" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -278,7 +367,8 @@
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
           "CfSshSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-CfSshElbSecurityGroup" } },
           "DirectorSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorElbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "FullAccessCidr6" }
+          "WhitelistedCidr": { "Ref": "FullAccessCidr6" },
+          "CidrDescription": { "Ref": "FullAccessCidrDescription6" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -297,7 +387,8 @@
       "Properties": {
         "Parameters": {
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr1" }
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr1" },
+          "CidrDescription": { "Ref": "HttpAccessCidrDescription1" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -316,7 +407,8 @@
       "Properties": {
         "Parameters": {
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr2" }
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr2" },
+          "CidrDescription": { "Ref": "HttpAccessCidrDescription2" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -335,7 +427,8 @@
       "Properties": {
         "Parameters": {
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr3" }
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr3" },
+          "CidrDescription": { "Ref": "HttpAccessCidrDescription3" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -354,7 +447,8 @@
       "Properties": {
         "Parameters": {
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr4" }
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr4" },
+          "CidrDescription": { "Ref": "HttpAccessCidrDescription4" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -373,7 +467,8 @@
       "Properties": {
         "Parameters": {
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr5" }
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr5" },
+          "CidrDescription": { "Ref": "HttpAccessCidrDescription5" }
         },
         "TemplateURL": {
           "Fn::Join": [
@@ -392,7 +487,8 @@
       "Properties": {
         "Parameters": {
           "ApplicationLbSecurityGroup": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
-          "WhitelistedCidr": { "Ref": "HttpAccessCidr6" }
+          "WhitelistedCidr": { "Ref": "HttpAccessCidr6" },
+          "CidrDescription": { "Ref": "HttpAccessCidrDescription6" }
         },
         "TemplateURL": {
           "Fn::Join": [
