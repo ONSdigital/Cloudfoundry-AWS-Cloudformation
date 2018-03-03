@@ -67,7 +67,7 @@
       "Condition": "AllowLbAccess",
       "Properties": {
         "GroupId": { "Ref": "ApplicationLbSecurityGroup" },
-        "Description": { "Fn::Sub": "${CidrDescription} To Application Load Balancer Security Group TCP Port 80 (http) }",
+        "Description": { "Fn::Sub": "${CidrDescription} To Application Load Balancer Security Group TCP Port 80 (http)" },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "80",
         "ToPort": "80" ,
@@ -79,7 +79,7 @@
       "Condition": "AllowLbAccess",
       "Properties": {
         "GroupId": { "Ref": "ApplicationLbSecurityGroup" },
-        "Description": { "Fn::Sub": "${CidrDescription} To Application Load Balancer Security Group TCP Port 443 (https) }",
+        "Description": { "Fn::Sub": "${CidrDescription} To Application Load Balancer Security Group TCP Port 443 (https)" },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "443",
         "ToPort": "443" ,

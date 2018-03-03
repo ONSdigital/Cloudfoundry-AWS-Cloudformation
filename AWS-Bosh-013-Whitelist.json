@@ -179,7 +179,7 @@
       "Default": "",
       "AllowedPattern": "^[0-9a-zA-Z -]+$",
       "ConstraintDescription": "Valid description"
-    },
+    }
   },
 
   "Outputs": {
