@@ -13,6 +13,13 @@
     "CidrDescription": {
       "Type": "String",
       "Description": "Description of CIDR",
+      "Default": "",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
+      "ConstraintDescription": "Valid description"
+    },
+    "DefaultCidrDescription": {
+      "Type": "String",
+      "Description": "Default Description of CIDR - CidrDescription should be used instead",
       "Default": "Whitelisted CIDR",
       "AllowedPattern": "^[0-9a-zA-Z -]+$",
       "ConstraintDescription": "Valid description"
@@ -58,7 +65,8 @@
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "WhitelistedCidr" }, "" ] } ] },
         { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ApplicationLbSecurityGroup" }, "" ] } ] }
       ]
-    }
+    },
+    "CidrDescription": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "CidrDescription" }, "" ] } ] }
   },
 
   "Resources": {
@@ -67,7 +75,20 @@
       "Condition": "AllowLbAccess",
       "Properties": {
         "GroupId": { "Ref": "ApplicationLbSecurityGroup" },
-        "Description": { "Fn::Sub": "${CidrDescription} To Application Load Balancer Security Group TCP Port 80 (http)" },
+        "Description": {
+          "Fn::Join": [
+            " ", [
+              {
+                "Fn::If": [
+                  "CidrDescription",
+                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "DefaultCidrDescription" }
+                ]
+              },
+              "To Application Load Balancer Security Group TCP Port 80 (http)"
+            ]
+          ]
+        },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "80",
         "ToPort": "80" ,
@@ -80,6 +101,20 @@
       "Properties": {
         "GroupId": { "Ref": "ApplicationLbSecurityGroup" },
         "Description": { "Fn::Sub": "${CidrDescription} To Application Load Balancer Security Group TCP Port 443 (https)" },
+        "Description": {
+          "Fn::Join": [
+            " ", [
+              {
+                "Fn::If": [
+                  "CidrDescription",
+                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "DefaultCidrDescription" }
+                ]
+              },
+              "To Application Load Balancer Security Group TCP Port 443 (https)"
+            ]
+          ]
+        },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "443",
         "ToPort": "443" ,
@@ -91,7 +126,20 @@
       "Condition": "AllowCfSshAccess",
       "Properties": {
         "GroupId": { "Ref": "CfSshSecurityGroup" },
-        "Description": { "Fn::Sub": "${CidrDescription} To CF SSH Security Group TCP Port 2222 (cf ssh)" },
+        "Description": {
+          "Fn::Join": [
+            " ", [
+              {
+                "Fn::If": [
+                  "CidrDescription",
+                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "DefaultCidrDescription" }
+                ]
+              },
+              "To CF SSH Load Balancer Security Group TCP Port 2222 (CF SSH)"
+            ]
+          ]
+        },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "2222",
         "ToPort": "2222" ,
@@ -103,7 +151,20 @@
       "Condition": "AllowDirectorAccess",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "Description": { "Fn::Sub": "${CidrDescription} To Director Security Group TCP Port 22 (ssh)" },
+        "Description": {
+          "Fn::Join": [
+            " ", [
+              {
+                "Fn::If": [
+                  "CidrDescription",
+                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "DefaultCidrDescription" }
+                ]
+              },
+              "To Direcrtor Load Balancer Security Group TCP Port 22 (ssh)"
+            ]
+          ]
+        },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "22",
         "ToPort": "22" ,
@@ -115,7 +176,20 @@
       "Condition": "AllowDirectorAccess",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "Description": { "Fn::Sub": "${CidrDescription} To Director Security Group TCP Port 6868 (mbus)" },
+        "Description": {
+          "Fn::Join": [
+            " ", [
+              {
+                "Fn::If": [
+                  "CidrDescription",
+                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "DefaultCidrDescription" }
+                ]
+              },
+              "To Direcrtor Load Balancer Security Group TCP Port 6868 (nats)"
+            ]
+          ]
+        },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "6868",
         "ToPort": "6868" ,
@@ -127,7 +201,20 @@
       "Condition": "AllowDirectorAccess",
       "Properties": {
         "GroupId": { "Ref": "DirectorSecurityGroup" },
-        "Description": { "Fn::Sub": "${CidrDescription} To Director Security Group TCP Port 25555 (director)" },
+        "Description": {
+          "Fn::Join": [
+            " ", [
+              {
+                "Fn::If": [
+                  "CidrDescription",
+                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "DefaultCidrDescription" }
+                ]
+              },
+              "To Direcrtor Load Balancer Security Group TCP Port 25555 (messagebus)"
+            ]
+          ]
+        },
         "CidrIp": { "Ref": "WhitelistedCidr" },
         "FromPort": "25555",
         "ToPort": "25555" ,

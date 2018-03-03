@@ -22,7 +22,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "FullAccessCidr2": {
@@ -36,7 +36,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "FullAccessCidr3": {
@@ -50,7 +50,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "FullAccessCidr4": {
@@ -64,7 +64,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "FullAccessCidr5": {
@@ -78,7 +78,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "FullAccessCidr6": {
@@ -92,7 +92,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
 
@@ -107,7 +107,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "HttpAccessCidr2": {
@@ -121,7 +121,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "HttpAccessCidr3": {
@@ -135,7 +135,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "HttpAccessCidr4": {
@@ -149,7 +149,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "HttpAccessCidr5": {
@@ -163,7 +163,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     },
     "HttpAccessCidr6": {
@@ -177,7 +177,7 @@
       "Type": "String",
       "Description": "Description of CIDR",
       "Default": "",
-      "AllowedPattern": "^[0-9a-zA-Z -]+$",
+      "AllowedPattern": "^[0-9a-zA-Z -]*$",
       "ConstraintDescription": "Valid description"
     }
   },
