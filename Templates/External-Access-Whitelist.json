@@ -81,7 +81,7 @@
               {
                 "Fn::If": [
                   "CidrDescription",
-                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "CidrDescription" },
                   { "Ref": "DefaultCidrDescription" }
                 ]
               },
@@ -107,7 +107,7 @@
               {
                 "Fn::If": [
                   "CidrDescription",
-                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "CidrDescription" },
                   { "Ref": "DefaultCidrDescription" }
                 ]
               },
@@ -132,7 +132,7 @@
               {
                 "Fn::If": [
                   "CidrDescription",
-                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "CidrDescription" },
                   { "Ref": "DefaultCidrDescription" }
                 ]
               },
@@ -157,7 +157,7 @@
               {
                 "Fn::If": [
                   "CidrDescription",
-                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "CidrDescription" },
                   { "Ref": "DefaultCidrDescription" }
                 ]
               },
@@ -182,7 +182,7 @@
               {
                 "Fn::If": [
                   "CidrDescription",
-                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "CidrDescription" },
                   { "Ref": "DefaultCidrDescription" }
                 ]
               },
@@ -207,7 +207,7 @@
               {
                 "Fn::If": [
                   "CidrDescription",
-                  { "Ref": "${CidrDescription}" },
+                  { "Ref": "CidrDescription" },
                   { "Ref": "DefaultCidrDescription" }
                 ]
               },
