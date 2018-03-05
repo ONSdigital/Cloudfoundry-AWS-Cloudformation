@@ -991,6 +991,18 @@
         "IpProtocol": "udp"
       }
     },
+    "RabbitmqToPrivateTcpPort8082": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "Description": "RabbitMQ Security Group To Private Security Group TCP Port 8082 (metron)",
+        "DestinationSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "FromPort": "8082",
+        "ToPort": "8082",
+        "IpProtocol": "tcp"
+      }
+    },
 
     "RabbitMqToExternalNtpCidr1UdpPort123": {
       "Type": "AWS::EC2::SecurityGroupEgress",

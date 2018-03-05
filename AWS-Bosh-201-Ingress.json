@@ -452,7 +452,6 @@
         "IpProtocol": "tcp"
       }
     },
-
     "RabbitmqToPrivateTcpPort8300": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
@@ -465,7 +464,6 @@
         "IpProtocol": "tcp"
       }
     },
-
     "RabbitmqToPrivateUdpPort8300": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Condition": "CreateRabbitmqNetworks",
@@ -478,6 +476,20 @@
         "IpProtocol": "udp"
       }
     },
+
+    "RabbitmqToPrivateTcpPort8082": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "CreateRabbitmqNetworks",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
+        "Description": "RabbitMQ Security Group To Private Security Group TCP Port 8082 (metron)",
+        "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
+        "FromPort": "8082",
+        "ToPort": "8082" ,
+        "IpProtocol": "tcp"
+      }
+    },
+
 
     "RabbitmqToRabbitmq": {
       "Type": "AWS::EC2::SecurityGroupIngress",
