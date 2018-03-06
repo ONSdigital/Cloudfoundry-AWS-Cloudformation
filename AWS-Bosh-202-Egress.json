@@ -158,6 +158,12 @@
       "Default": "tcp",
       "Description": "External Syslog Protocol",
       "AllowedValues": [ "tcp", "udp" ]
+    },
+    "AllowInternetAccess": {
+      "Type": "String",
+      "Default": "true",
+      "Description": "Allow outbound HTTP & HTTPS connections",
+      "AllowedValues": [ "true", "false" ]
     }
   },
 
@@ -193,6 +199,9 @@
     "DeployAppsRdsInstance": { "Fn::Equals": [ { "Ref": "DeployAppsRdsInstance" }, "true" ] },
     "DeployBoshRdsInstance": { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
+
+    "AllowInternetAccess": { "Fn::Equals": [ { "Ref": "AllowInternetAccess" }, "true" },
+
     "WhitelistExternalRdsCidr1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsCidr1" }, "" ] } ] },
     "WhitelistExternalRdsCidr2": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsCidr2" }, "" ] } ] },
     "WhitelistExternalRdsCidr3": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsCidr3" }, "" ] } ] },
@@ -368,6 +377,7 @@
     },
     "DirectorToPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "AllowInternetAccess",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "Description": "Director Instance Security Group Outbound TCP Port 80 (http)",
@@ -379,6 +389,7 @@
     },
     "DirectorToPort443": {
       "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "AllowInternetAccess",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-DirectorInstanceSecurityGroup" } },
         "Description": "Director Instance Security Group Outbound TCP Port 443 (https)",
@@ -558,6 +569,7 @@
 
     "PrivateToPort80": {
       "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "AllowInternetAccess",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "Description": "Private Security Group Outbound TCP Port 80 (http)",
@@ -569,6 +581,7 @@
     },
     "PrivateToPort443": {
       "Type": "AWS::EC2::SecurityGroupEgress",
+      "Condition": "AllowInternetAccess",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "Description": "Private Security Group Outbound TCP Port 443 (https)",
