@@ -200,7 +200,7 @@
     "DeployBoshRdsInstance": { "Fn::Equals": [ { "Ref": "DeployBoshRdsInstance" }, "true" ] },
     "DeployCfRdsInstance": { "Fn::Equals": [ { "Ref": "DeployCfRdsInstance" }, "true" ] },
 
-    "AllowInternetAccess": { "Fn::Equals": [ { "Ref": "AllowInternetAccess" }, "true" },
+    "AllowInternetAccess": { "Fn::Equals": [ { "Ref": "AllowInternetAccess" }, "true" ] },
 
     "WhitelistExternalRdsCidr1": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsCidr1" }, "" ] } ] },
     "WhitelistExternalRdsCidr2": { "Fn::Not": [ { "Fn::Equals": [ { "Ref": "ExternalRdsCidr2" }, "" ] } ] },
