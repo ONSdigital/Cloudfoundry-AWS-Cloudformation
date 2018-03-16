@@ -1,0 +1,366 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Director Subnet(s)",
+
+  "Parameters": {
+    "EnvironmentName": {
+      "Type": "String",
+      "Description": "EnvironmentName",
+      "MinLength": "1",
+      "MaxLength": "32",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$",
+      "ConstraintDescription": "Must be a single alpha-numeric word"
+    },
+    "OpsManagerAz": {
+      "Type": "String",
+      "Default": "0",
+      "Description": "Availability Zone Number",
+      "MinValue": "0",
+      "MaxValue": "5"
+    },
+    "OpsManagerCidr": {
+      "Type": "String",
+      "Default": "10.0.70.0/24",
+      "Description": "Ops Manager CIDR",
+      "AllowedPattern": "^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2])$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "OpsManagerKeyName": {
+      "Type": "AWS::EC2::KeyPair::KeyName",
+      "Description": "Ops Manager SSH Keypair Name",
+      "AllowedPattern": "^([A-Za-z0-9]+[A-Za-z0-9-]?)+[A-Za-z0-9]$"
+    },
+
+    "OpsManagerInstanceType": {
+      "Type": "String",
+      "Default": "t2.small",
+      "Description": "Ops Manager Instance Type",
+      "AllowedPattern": "^[cmrt][1-9]+\\.(nano|small|medium|(x|xx:q)?large)$"
+    },
+
+    "OpsManagerVersion": {
+      "Type": "String",
+      "Default": "v2.2.2",
+      "Description": "Ops Manager Version",
+      "AllowedPattern": "^v([0-9]+(-build)?\\.)+[0-9]+$"
+    },
+
+    "OpsManagerIpAllocationId": {
+      "Type": "String",
+      "Description": "Ops Manager EIP Allocation ID",
+      "Default": "",
+      "AllowedPattern": "FIXME"
+    },
+
+    "AccessCidr1": {
+      "Type": "String",
+      "Default": "10.0.71.0/24",
+      "Description": "Ops Manager CIDR",
+      "AllowedPattern": "^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2])$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "AccessCidr2": {
+      "Type": "String",
+      "Default": "10.0.72.0/24",
+      "Description": "Ops Manager CIDR",
+      "AllowedPattern": "^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2])$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "AccessCidr3": {
+      "Type": "String",
+      "Default": "10.0.73.0/24",
+      "Description": "Ops Manager CIDR",
+      "AllowedPattern": "^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2])$",
+      "ConstraintDescription": "Valid CIDR"
+    },
+    "AccessCidr4": {
+      "Type": "String",
+      "Default": "10.0.74.0/24",
+      "Description": "Ops Manager CIDR",
+      "AllowedPattern": "^(([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))\\.){3}([01]?[0-9]?[0-9]|2([0-4][0-9]|5[0-5]))/([0-2]?[0-9]|3[0-2])$",
+      "ConstraintDescription": "Valid CIDR"
+    }
+  },
+
+  "Outputs": {
+    "OpsManagerEipAllocationId": {
+      "Description": "Ops Manager EIP Allocation ID",
+      "Value": { "Fn::GetAtt": [ "OpsManagerEip", "AllocationId" ] },
+      "Export": { "Name": { "Fn::Sub": "${EnvironmentName}-OpsManagerEip" } }
+    }
+  },
+
+  "Conditions": {
+    "NewOpsManagerEip": { "Fn::Equals": [ { "Ref": "OpsManagerIpAllocationId" }, "" ] }
+  },
+
+  "Mappings": {
+    "OpsManagerAmi": {
+      "eu-central-1": { "2.0-build.263": "ami-57731b38" },
+      "eu-west-1": { "2.0-build.263": "ami-bc450bc5" },
+      "eu-west-2": { "2.0-build.263": "ami-a118ffc" }
+    }
+  },
+
+  "Resources": {
+    "OpsManagerRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [ "ec2.amazonaws.com" ]
+              },
+              "Action": [ "sts:AssumeRole" ]
+            }
+          ]
+        }
+      }
+    },
+
+    "OpsManagerInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Roles": [
+          { "Ref": "OpsManagerRole" }
+        ]
+      }
+    },
+
+    "OpsManagerEip": {
+      "Condition": "NewOpsManagerEip",
+      "Type": "AWS::EC2::EIP"
+    },
+
+    "OpsManagerVpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": { "Ref": "OpsManagerCidr" },
+        "InstanceTenancy": "default",
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${EnvironmentName}:OpsManagerVpc" } },
+          { "Key": "Environment", "Value": { "Ref": "EnvironmentName" } }
+        ]
+      }
+    },
+
+    "OpsManagerSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select": [ { "Ref": "OpsManagerAz" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "CidrBlock": { "Ref": "OpsManagerCidr" },
+        "MapPublicIpOnLaunch": false,
+        "VpcId": { "Ref": "OpsManagerVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${EnvironmentName}:OpsManagerSubnet" } },
+          { "Key": "Environment", "Value": { "Ref": "EnvironmentName" } }
+        ]
+      }
+    },
+
+    "OpsManagerInternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${EnvironmentName}:OpsManagerInternetGateway" } },
+          { "Key": "Environment", "Value": { "Ref": "EnvironmentName" } }
+        ]
+      }
+    },
+
+    "OpsManagerInternetGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": { "Ref": "OpsManagerVpc" },
+        "InternetGatewayId": { "Ref": "OpsManagerInternetGateway" }
+      }
+    },
+
+
+    "OpsManagerRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": { "Ref": "OpsManagerVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${EnvironmentName}:OpsManagerRouteTable" } },
+          { "Key": "Environment", "Value": { "Ref": "EnvironmentName" } }
+        ]
+      }
+    },
+
+    "OpsManagerInternetRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": { "Ref": "OpsManagerInternetGateway" },
+        "RouteTableId": { "Ref": "OpsManagerRouteTable" }
+      }
+    },
+
+    "OpsManagerSubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "SubnetId": { "Ref": "OpsManagerSubnet" },
+        "RouteTableId": { "Fn::ImportValue": { "Fn::Sub": "${EnvironmentName}-OpsManagerRouteTable" } }
+      }
+    },
+
+    "OpsManagerSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Ops Manager Security Grouo",
+        "VpcId": { "Ref": "AwsVpc" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${EnvironmentName}:OpsManagerRouteTable" } },
+          { "Key": "Environment", "Value": { "Ref": "EnvironmentName" } }
+        ]
+      }
+    },
+
+   "OpsManagerIngressCidr1Port22": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "OpsManagerIngressCidr1",
+      "Properties": {
+        "Description": "Access CIDR 1 - SSH (port 22)",
+        "GroupId": { "Ref": "OpsManagerSecurityGroup" },
+        "CidrIp": { "Ref": "AccessCidr1" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
+   "OpsManagerIngressCidr1Port443": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "OpsManagerIngressCidr1",
+      "Properties": {
+        "Description": "Access CIDR 1 - HTTPS (port 443)",
+        "GroupId": { "Ref": "OpsManagerSecurityGroup" },
+        "CidrIp": { "Ref": "AccessCidr1" },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+   "OpsManagerIngressCidr2Port22": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "OpsManagerIngressCidr2",
+      "Properties": {
+        "Description": "Access CIDR 2 - SSH (port 22)",
+        "GroupId": { "Ref": "OpsManagerSecurityGroup" },
+        "CidrIp": { "Ref": "AccessCidr2" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
+   "OpsManagerIngressCidr2Port443": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "OpsManagerIngressCidr2",
+      "Properties": {
+        "Description": "Access CIDR 2 - HTTPS (port 443)",
+        "GroupId": { "Ref": "OpsManagerSecurityGroup" },
+        "CidrIp": { "Ref": "AccessCidr2" },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+   "OpsManagerIngressCidr3Port22": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "OpsManagerIngressCidr3",
+      "Properties": {
+        "Description": "Access CIDR 3 - SSH (port 22)",
+        "GroupId": { "Ref": "OpsManagerSecurityGroup" },
+        "CidrIp": { "Ref": "AccessCidr3" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
+   "OpsManagerIngressCidr3Port443": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "OpsManagerIngressCidr3",
+      "Properties": {
+        "Description": "Access CIDR 3 - HTTPS (port 443)",
+        "GroupId": { "Ref": "OpsManagerSecurityGroup" },
+        "CidrIp": { "Ref": "AccessCidr3" },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+   "OpsManagerIngressCidr4Port22": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "OpsManagerIngressCidr4",
+      "Properties": {
+        "Description": "Access CIDR 4 - SSH (port 22)",
+        "GroupId": { "Ref": "OpsManagerSecurityGroup" },
+        "CidrIp": { "Ref": "AccessCidr4" },
+        "FromPort": "22",
+        "ToPort": "22",
+        "IpProtocol": "tcp"
+      }
+    },
+   "OpsManagerIngressCidr4Port443": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "OpsManagerIngressCidr4",
+      "Properties": {
+        "Description": "Access CIDR 4 - SSH (port 22)",
+        "GroupId": { "Ref": "OpsManagerSecurityGroup" },
+        "CidrIp": { "Ref": "AccessCidr4" },
+        "FromPort": "443",
+        "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+
+    "OpsManagerNetworkInterface": {
+      "Type": "AWS::EC2::NetworkInterface",
+      "Properties": {
+        "SubnetId": { "Ref": "OpsManagerSubnet" },
+        "SourceDestCheck": "true",
+        "GroupSet": [
+          { "Ref": "OpsManagerSecurityGroup" }
+        ],
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${EnvironmentName}:OpsManagerNetworkInterface" } },
+          { "Key": "Environment", "Value": { "Ref": "EnvironmentName" } }
+        ]
+      }
+    },
+
+    "OpsManagerEipAssociation": {
+      "Type": "AWS::EC2::EIPAssociation",
+      "Properties": {
+        "AllocationId": {
+          "Fn::If": [
+            "NewOpsManagerEip",
+            { "Fn::GetAtt": [ "OpsManagerEip", "AllocationId" ] },
+            { "Ref": "OpsManagerIpAllocationId" }
+          ]
+        },
+        "NetworkInterfaceId": { "Ref": "OpsManagerNetworkInterface" }
+      }
+    },
+
+    "OpsManagerInstance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "AvailabilityZone": { "Fn::Select": [ { "Ref": "AvailabilityZone" }, { "Fn::GetAZs": { "Ref": "AWS::Region" } } ] },
+        "ImageId": { "Fn::FindInMap": [ "OpsManagerAmi", { "Ref": "AWS::Region" }, { "Ref": "OpsManagerVersion" } ] },
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "InstanceType": { "Ref": "OpsManagerInstanceType" },
+        "IamInstanceProfile": { "Ref": "OpsManagerInstanceProfile" },
+        "NetworkInterfaces": [ { "NetworkInterfaceId": {"Ref": "OpsManagerNetworkInterface"}, "DeviceIndex": "0" } ],
+        "KeyName": { "Ref": "OpsManagerKeyName" },
+        "Tags": [
+          { "Key": "Name", "Value": { "Fn::Sub": "${EnvironmentName}:OpsManagerInstance" } },
+          { "Key": "Environment", "Value": { "Ref": "EnvironmentName" } }
+        ]
+      }
+    }
+  }
+}
