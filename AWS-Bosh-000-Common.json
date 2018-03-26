@@ -208,8 +208,8 @@
       "Properties": {
         "ResourceGroupTags": [
           {
-            "key": "deployment",
-            "value": { "Ref": "DeploymentName" }
+            "Key": "deployment",
+            "Value": { "Ref": "DeploymentName" }
           }
         ]
       }
