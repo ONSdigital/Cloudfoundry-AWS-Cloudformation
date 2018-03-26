@@ -201,6 +201,18 @@
           ]
         }
       }
+    },
+
+    "DeploymentResourceGroup": {
+      "Type": "AWS::Inspector::ResourceGroup",
+      "Properties": {
+        "ResourceGroupTags": [
+          {
+            "key": "deployment",
+            "value": { "Ref": "DeploymentName" }
+          }
+        ]
+      }
     }
   }
 }
