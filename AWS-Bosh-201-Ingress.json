@@ -370,10 +370,10 @@
       "Condition": "CreateRabbitmqNetworks",
       "Properties": {
         "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-RabbitmqSecurityGroup" } },
-        "Description": "Private Security Group To RabbitMQ Security Group TCP Port 5671 (amqp+ssl)",
+        "Description": "Private Security Group To RabbitMQ Security Group TCP Port 5671 and 5672 (amqp+ssl and amqp)",
         "SourceSecurityGroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-PrivateSecurityGroup" } },
         "FromPort": "5671",
-        "ToPort": "5671",
+        "ToPort": "5672",
         "IpProtocol": "tcp"
       }
     },
