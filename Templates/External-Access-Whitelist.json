@@ -28,21 +28,21 @@
       "Type": "String",
       "Description": "Application Load Balancer Security Group",
       "Default": "",
-      "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
+      "AllowedPattern": "^(sg-[0-9a-f]{17})?$",
       "ConstraintDescription": "Valid security group"
     },
     "CfSshSecurityGroup": {
       "Type": "String",
       "Default": "",
       "Description": "SSH ELB Security Group",
-      "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
+      "AllowedPattern": "^(sg-[0-9a-f]{17})?$",
       "ConstraintDescription": "Valid security group"
     },
     "DirectorSecurityGroup": {
       "Type": "String",
       "Description": "Director Security Group",
       "Default": "",
-      "AllowedPattern": "^(sg-[0-9a-f]{8})?$",
+      "AllowedPattern": "^(sg-[0-9a-f]{17})?$",
       "ConstraintDescription": "Valid security group"
     }
   },
