@@ -50,24 +50,24 @@
     },
     "ApplicationElbTimeout": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "30",
       "Description": "Application ELB Timeout",
-      "MinValue": "2",
-      "MaxValue": "60"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "ApplicationElbHealthCheckInternal": {
       "Type": "Number",
-      "Default": "5",
+      "Default": "40",
       "Description": "Application ELB Health Check Interval",
-      "MinValue": "5",
-      "MaxValue": "300"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "ApplicationElbHealthCheckTimeout": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "20",
       "Description": "Application ELB Health Check Timeout",
-      "MinValue": "2",
-      "MaxValue": "60"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "ApplicationElbScheme": {
       "Type": "String",
@@ -77,31 +77,31 @@
     },
     "DirectorElbHealthyThreshold": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "4",
       "Description": "Director ELB Healthy Threshold",
-      "MinValue": "2",
-      "MaxValue": "10"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "DirectorElbUnhealthyThreshold": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "4",
       "Description": "Director ELB Unhealth Threshold",
-      "MinValue": "2",
-      "MaxValue": "10"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "DirectorElbHealthCheckInternal": {
       "Type": "Number",
-      "Default": "5",
+      "Default": "40",
       "Description": "Director ELB Health Check Interval",
-      "MinValue": "5",
-      "MaxValue": "300"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "DirectorElbHealthCheckTimeout": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "20",
       "Description": "Director ELB Health Check Timeout",
-      "MinValue": "2",
-      "MaxValue": "60"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "DirectorElbScheme": {
       "Type": "String",
@@ -112,31 +112,31 @@
 
     "CfSshElbHealthyThreshold": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "4",
       "Description": "Cloudfoundry SSH ELB Healthy Threshold",
-      "MinValue": "2",
-      "MaxValue": "10"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "CfSshElbUnhealthyThreshold": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "4",
       "Description": "Cloudfoundry SSH ELB Unhealth Threshold",
-      "MinValue": "2",
-      "MaxValue": "10"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "CfSshElbHealthCheckInternal": {
       "Type": "Number",
-      "Default": "5",
+      "Default": "40",
       "Description": "Cloudfoundry SSH ELB Health Check Interval",
-      "MinValue": "5",
-      "MaxValue": "300"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "CfSshElbHealthCheckTimeout": {
       "Type": "Number",
-      "Default": "2",
+      "Default": "20",
       "Description": "Cloudfoundry SSH ELB Health Check Timeout",
-      "MinValue": "2",
-      "MaxValue": "60"
+      "MinValue": "1",
+      "MaxValue": "999"
     },
     "CfSshElbScheme": {
       "Type": "String",
