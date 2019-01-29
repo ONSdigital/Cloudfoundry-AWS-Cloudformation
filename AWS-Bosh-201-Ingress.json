@@ -182,6 +182,24 @@
         "IpProtocol": "tcp"
       }
     },
+    "NatAz1IpToApplicationLbTcpPort80": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+        "Description": "NAT AZ1 IP To Loadbalancer Security Group TCP Port 80 (http) - required To allow CF To call back into CF",
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz1Ip" } },
+              "32"
+            ]
+          ]
+        },
+        "FromPort": "80",
+        "ToPort": "80",
+        "IpProtocol": "tcp"
+      }
+    },
     "NatAz2IpToApplicationLbTcpPort443": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
@@ -197,6 +215,24 @@
         },
         "FromPort": "443",
         "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+    "NatAz2IpToApplicationLbTcpPort80": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+        "Description": "NAT AZ2 IP To Loadbalancer Security Group TCP Port 80 (http) - required To allow CF To call back into CF",
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz2Ip" } },
+              "32"
+            ]
+          ]
+        },
+        "FromPort": "80",
+        "ToPort": "80",
         "IpProtocol": "tcp"
       }
     },
@@ -216,6 +252,25 @@
         },
         "FromPort": "443",
         "ToPort": "443",
+        "IpProtocol": "tcp"
+      }
+    },
+    "NatAz3IpToApplicationLbTcpPort80": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Condition": "MultiAz",
+      "Properties": {
+        "GroupId": { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-ApplicationLbSecurityGroup" } },
+        "Description": "NAT AZ3 IP To Loadbalancer Security Group TCP Port 80 (http) - required To allow CF To call back into CF",
+        "CidrIp": {
+          "Fn::Join": [
+            "/", [
+              { "Fn::ImportValue": { "Fn::Sub": "${DeploymentName}-NatAz3Ip" } },
+              "32"
+            ]
+          ]
+        },
+        "FromPort": "80",
+        "ToPort": "80",
         "IpProtocol": "tcp"
       }
     },
